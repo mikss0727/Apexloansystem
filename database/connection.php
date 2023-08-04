@@ -15,7 +15,6 @@
 	
 	$con=mysqli_connect($host,$username,$password) or die ($err1);
 	mysqli_select_db($con,'u277381793_ApexLoanDb') or die ($err2);
-	// mysqli_select_db($con,'loandb') or die ($err2);
 	
 	?>
     
