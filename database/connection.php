@@ -6,7 +6,7 @@
 	
 	$host="localhost";
 	$username="u277381793_ApexFunding";
-	$password="P@ssword1$";
+	$password="P@ssword1";
 	$err1="Error Can't connect to MySQL";
 	$err2="Error Can't connect to Database";
 	
