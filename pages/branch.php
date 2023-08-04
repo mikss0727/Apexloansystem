@@ -6,7 +6,7 @@
               <div class="page-header">
                 <div class="row">
                   <div class="col-sm-6">
-                    <h3>Dashboard</h3>
+                    <h3>Branch</h3>
                     <ol class="breadcrumb">
                       <!-- <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li> -->
                     </ol>
