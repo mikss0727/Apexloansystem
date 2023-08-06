@@ -8,12 +8,12 @@ include("../../database/connection.php");
 if($_POST['process']=='addPosition'){
 
     $EmployeeID = $_POST['EmployeeID'];
-	$postitionID = $_POST['add_postitionID'];
-	$postitionName = $_POST['add_postitionName'];
+	$positionID = $_POST['add_positionID'];
+	$positionName = $_POST['add_positionName'];
 	$isActive = $_POST['add_isActive'];
 
     
-	$query_check=mysqli_query($con,"SELECT * FROM t_position WHERE PositionID='$postitionID'");
+	$query_check=mysqli_query($con,"SELECT * FROM t_position WHERE PositionID='$positionID'");
     
 
 	$num_rows=mysqli_num_rows($query_check);
@@ -26,7 +26,7 @@ if($_POST['process']=='addPosition'){
 
         
 		// insert new position 
-		$query=mysqli_query($con,"INSERT INTO t_position (PositionID, PositionName, isActive, CreatedAt, CreatedBy, UpdatedBy, UpdatedAt) VALUES ('$postitionID', '$postitionName', '$isActive', NOW(), '$EmployeeID', null, null)");
+		$query=mysqli_query($con,"INSERT INTO t_position (PositionID, PositionName, isActive, CreatedAt, CreatedBy, UpdatedBy, UpdatedAt) VALUES ('$positionID', '$positionName', '$isActive', NOW(), '$EmployeeID', null, null)");
     
 		if($query)
 		{
@@ -45,20 +45,20 @@ if($_POST['process']=='addPosition'){
 // edit user
 if($_POST['process']=='editPosition'){
 
-	$edit_postitionID = $_POST['edit_postitionID'];
-	$edit_postitionName = $_POST['edit_postitionName'];
+	$edit_positionID = $_POST['edit_positionID'];
+	$edit_positionName = $_POST['edit_positionName'];
 	$edit_isActive = $_POST['edit_isActive'];
 	$pk_id = $_POST['pk_id'];
     $EmployeeID = $_POST['EmployeeID'];
 
 
-	$query_check=mysqli_query($con,"SELECT * FROM t_position WHERE (id='$pk_id' AND PositionID='$edit_postitionID')");
+	$query_check=mysqli_query($con,"SELECT * FROM t_position WHERE (id='$pk_id' AND PositionID='$edit_positionID')");
 	$num_rows=mysqli_num_rows($query_check);
 	if($num_rows)
 	{
 
 			// update
-		$query=mysqli_query($con,"UPDATE t_position SET PositionName = '$edit_postitionName', isActive = '$edit_isActive', UpdatedBy = '$EmployeeID', UpdatedAt = NOW() WHERE (id='$pk_id' AND PositionID='$edit_postitionID')");
+		$query=mysqli_query($con,"UPDATE t_position SET PositionName = '$edit_positionName', isActive = '$edit_isActive', UpdatedBy = '$EmployeeID', UpdatedAt = NOW() WHERE (id='$pk_id' AND PositionID='$edit_positionID')");
 
 		if($query)
 		{

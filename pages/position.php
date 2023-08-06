@@ -20,7 +20,7 @@
                 <div class="col-sm-12">
 
 
-                    <div class="card"  id="tbl_postition">
+                    <div class="card"  id="tbl_position">
                     <div class="card-header pb-0">
                         <!-- <h5>Position</h5> -->
                     </div>
@@ -47,7 +47,7 @@
                             </thead>
                             <tbody>
                             <?php
-                                include("../database/connection.php");
+                                
                                 $result = mysqli_query($con,"SELECT 
                                                                 t1.id,
                                                                 t1.PositionID,
@@ -127,7 +127,7 @@
 
 
                      <!-- ADD FORM -->
-                    <div class="card"  id="add_postition" style="display:none">
+                    <div class="card"  id="add_position" style="display:none">
                     <div class="card-header pb-0">
                         <h5>Add New User Account</h5>
                     </div>
@@ -136,8 +136,8 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="mb-3">
-                                        <label class="form-label" for="add_postitionID">Position ID <span style="color: red;">*</span></label>
-                                        <input class="form-control" id="add_postitionID" name="add_postitionID" type="text" required="">
+                                        <label class="form-label" for="add_positionID">Position ID <span style="color: red;">*</span></label>
+                                        <input class="form-control" id="add_positionID" name="add_positionID" type="text" required="">
                                         <div class="valid-feedback">Looks good!</div>
                                         <div class="invalid-feedback">Please input a Position ID.</div>
                                     </div>
@@ -146,8 +146,8 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="mb-3">
-                                        <label class="form-label" for="add_postitionName">Position Name <span style="color: red;">*</span></label>
-                                        <input class="form-control" id="add_postitionName" name="add_postitionName" type="text" required="">
+                                        <label class="form-label" for="add_positionName">Position Name <span style="color: red;">*</span></label>
+                                        <input class="form-control" id="add_positionName" name="add_positionName" type="text" required="">
                                         <div class="valid-feedback">Looks good!</div>
                                         <div class="invalid-feedback">Please input a Position Name.</div>
                                     </div>
@@ -182,7 +182,7 @@
 
 
                     <!-- EDIT FORM -->
-                    <div class="card"  id="edit_postition" style="display:none">
+                    <div class="card"  id="edit_position" style="display:none">
                         <div class="card-header pb-0">
                             <h5>Edit Position</h5>
                         </div>
@@ -191,18 +191,18 @@
                             <div class="row">
                                 <div class="col">
                                 <div class="mb-3">
-                                    <label class="form-label" for="edit_postitionID">Position ID</label>
-                                    <input class="form-control" id="edit_postitionID" name="edit_postitionID" type="text" readonly>
+                                    <label class="form-label" for="edit_positionID">Position ID</label>
+                                    <input class="form-control" id="edit_positionID" name="edit_positionID" type="text" readonly>
                                 </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col">
                                 <div class="mb-3">
-                                    <label class="form-label" for="edit_postitionName">Position Name</label>
-                                    <input class="form-control" id="edit_postitionName" name="edit_postitionName" type="text" required="">
+                                    <label class="form-label" for="edit_positionName">Position Name</label>
+                                    <input class="form-control" id="edit_positionName" name="edit_positionName" type="text" required="">
                                     <div class="valid-feedback">Looks good!</div>
-                                    <div class="invalid-feedback">Please input a Email ID.</div>
+                                    <div class="invalid-feedback">Please input a Position Name.</div>
                                 </div>
                                 </div>
                             </div>
@@ -216,7 +216,7 @@
                                         <option value="1">Inactive</option>
                                         </select>
                                         <div class="valid-feedback">Looks good!</div>
-                                        <div class="invalid-feedback">Please Select Customer.</div>
+                                        <div class="invalid-feedback">Please Select Status.</div>
                                     </div>
                                 </div>
                             </div>
@@ -239,6 +239,6 @@
             <!-- Container-fluid Ends-->
           </div>
 
-<script src="position/position_js.js"></script>
+<script src="js/position-js.js"></script>
 
 <?php include '../layout/footer.php'; ?>

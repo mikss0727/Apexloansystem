@@ -138,7 +138,7 @@ $EmployeeID = $_SESSION['EmployeeID'];
                             </thead>
                             <tbody>
                             <?php
-                                include("../database/connection.php");
+                            
                                 $result = mysqli_query($con,"SELECT * FROM `t_capital`");
                                     while($row = mysqli_fetch_array($result)) {
                                 ?>
@@ -332,7 +332,7 @@ $EmployeeID = $_SESSION['EmployeeID'];
       <script src="../assets/js/script.js"></script>
       <script src="../custom_assets/sweetalert2/sweetalert2.min.js"></script>    
       <script src="../assets/js/theme-customizer/customizer.js"></script>
-      <script src="capital/capital_js.js"></script>
+      <script src="js/capital-js.js"></script>
 
       <!-- login js-->
       <!-- Plugin used-->

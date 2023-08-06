@@ -4,29 +4,29 @@ document.addEventListener('DOMContentLoaded', function() {
     // For example, you can add event listeners, modify elements, etc.
 
 	// show hide div
-	$(document).on('click','#addPosition',function(e) {
+	$(document).on('click','#addBranch',function(e) {
 		
-		$('#tbl_postition').hide();
-		$('#add_postition').show();
+		$('#tbl_branch').hide();
+		$('#add_branch').show();
 
 		
 	});
 
 	// edit user
-	$(document).on('click','#editPosition',function(e) {
+	$(document).on('click','#editBranch',function(e) {
 
-		$('#tbl_postition').hide();
-		$('#edit_postition').show();
+		$('#tbl_branch').hide();
+		$('#edit_branch').show();
 
-		var edit_postitionID=$(this).attr("data-pos_id");
-		var edit_postitionName=$(this).attr("data-pos_name");
+		var edit_branchID=$(this).attr("data-branch_id");
+		var edit_branchName=$(this).attr("data-pos_name");
 		var edit_isActive=$(this).attr("data-isactive");
 		var pk_id=$(this).attr("data-pk_id");
 
 
 
-		$('#edit_postitionID').val(edit_postitionID);
-		$('#edit_postitionName').val(edit_postitionName);
+		$('#edit_branchID').val(edit_branchID);
+		$('#edit_branchName').val(edit_branchName);
 		$('#edit_isActive').val(edit_isActive);
 		$('#pk_id').val(pk_id);
 	});
@@ -34,28 +34,28 @@ document.addEventListener('DOMContentLoaded', function() {
 	// show hide div
 	$(document).on('click','#cancel_add',function(e) {
 		// get data in form
-		$('#tbl_postition').show();
-		$('#add_postition').hide();
+		$('#tbl_branch').show();
+		$('#add_branch').hide();
 		
 	});
 
 	// show hide div
 	$(document).on('click','#cancel_edit',function(e) {
 		// get data in form
-		$('#tbl_postition').show();
-		$('#edit_postition').hide();
+		$('#tbl_branch').show();
+		$('#edit_branch').hide();
 		
 	});
 
 	// add user submit
-	$("#addPosition_form").submit(function(e) {
+	$("#addBranch_form").submit(function(e) {
 
 		
-		var add_postitionID = document.getElementById("add_postitionID").value;
-		var add_postitionName = document.getElementById("add_postitionName").value;
+		var add_branchID = document.getElementById("add_branchID").value;
+		var add_branchName = document.getElementById("add_branchName").value;
 		var add_isActive = document.getElementById("add_isActive").value;
 
-		if (add_postitionID =='' || add_postitionName =='' || add_isActive =='')
+		if (add_branchID =='' || add_branchName =='' || add_isActive =='')
 		{
 			e.preventDefault();
 
@@ -81,18 +81,18 @@ document.addEventListener('DOMContentLoaded', function() {
 			}).then((result) => {
 				if (result.isConfirmed) {
 
-					var data = $("#addPosition_form").serialize();
+					var data = $("#addBranch_form").serialize();
 					$.ajax({
 						data: data,
 						type: "post",
-						url: "position/position_query.php",
+						url: "sql/branch-sql-query.php",
 						success: function(dataResult){
 							var dataResult = JSON.parse(dataResult);
 
 							if(dataResult.statusCode==0){
 								
-								$('#add_postition').hide();
-								$('#tbl_postition').show();
+								$('#add_branch').hide();
+								$('#tbl_branch').show();
 
 									// alert('Data added successfully !'); 
 									Swal.fire({
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
 										title: 'Success...',
 										text: dataResult.message
 									}).then(function() {
-										window.location = 'position.php';
+										window.location = 'branch.php';
 									});
 
 								}
@@ -123,14 +123,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 	// edit user submit
-	$("#positionEdit_form").submit(function(e) {
+	$("#branchEdit_form").submit(function(e) {
 
 
-		var edit_postitionID = document.getElementById("edit_postitionID").value;
-		var edit_postitionName = document.getElementById("edit_postitionName").value;
+		var edit_branchID = document.getElementById("edit_branchID").value;
+		var edit_branchName = document.getElementById("edit_branchName").value;
 		var edit_isActive = document.getElementById("edit_isActive").value;
 
-		if (edit_postitionName == '' || edit_isActive == '')
+		if (edit_branchName == '' || edit_isActive == '')
 		{
 			// alert("Please Fill All Required Field");
 			e.preventDefault()
@@ -156,12 +156,12 @@ document.addEventListener('DOMContentLoaded', function() {
 			}).then((result) => {
 				if (result.isConfirmed) {
 					
-					var data = $("#positionEdit_form").serialize();
+					var data = $("#branchEdit_form").serialize();
 					console.log(data);
 					$.ajax({
 						data: data,
 						type: "post",
-						url: "position/position_query.php",
+						url: "sql/branch-sql-query.php",
 						success: function(dataResult){
 							var dataResult = JSON.parse(dataResult);
 
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
 										title: 'Success...',
 										text: dataResult.message
 									}).then(function() {
-										window.location = 'position.php';
+										window.location = 'branch.php';
 									});
 
 								}
@@ -193,9 +193,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	// delete position
-	$(document).on('click','#deletePosition',function(e) {
+	$(document).on('click','#deleteBranch',function(e) {
 		var pk_id=$(this).attr("data-pk_id");
-		var pos_id=$(this).attr("data-pos_id");
+		var branch_id=$(this).attr("data-branch_id");
 
 		Swal.fire({
 			title: 'Are you sure?',
@@ -210,12 +210,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				$.ajax({
 					data:{
-						process:'deletePosition',
+						process:'deleteBranch',
 						pk_id: pk_id,
-						pos_id: pos_id
+						branch_id: branch_id
 					},
 					type: "post",
-					url: "position/position_query.php",
+					url: "sql/branch-sql-query.php",
 					success: function(dataResult){
 						var dataResult = JSON.parse(dataResult);
 
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								title: 'Success...',
 								text: dataResult.message
 							}).then(function() {
-								window.location = 'position.php';
+								window.location = 'branch.php';
 							});
 
 						}
