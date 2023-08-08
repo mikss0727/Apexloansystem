@@ -4,29 +4,29 @@ document.addEventListener('DOMContentLoaded', function() {
     // For example, you can add event listeners, modify elements, etc.
 
 	// show hide div
-	$(document).on('click','#addPosition',function(e) {
+	$(document).on('click','#addDepartment',function(e) {
 		
-		$('#tbl_position').hide();
-		$('#add_position').show();
+		$('#tbl_department').hide();
+		$('#add_department').show();
 
 		
 	});
 
 	// edit user
-	$(document).on('click','#editPosition',function(e) {
+	$(document).on('click','#editDepartment',function(e) {
 
-		$('#tbl_position').hide();
-		$('#edit_position').show();
+		$('#tbl_department').hide();
+		$('#edit_department').show();
 
-		var edit_positionID=$(this).attr("data-pos_id");
-		var edit_positionName=$(this).attr("data-pos_name");
+		var edit_deptID=$(this).attr("data-dept_id");
+		var edit_deptName=$(this).attr("data-dept_name");
 		var edit_isActive=$(this).attr("data-isactive");
 		var pk_id=$(this).attr("data-pk_id");
 
 
 
-		$('#edit_positionID').val(edit_positionID);
-		$('#edit_positionName').val(edit_positionName);
+		$('#edit_deptID').val(edit_deptID);
+		$('#edit_deptName').val(edit_deptName);
 		$('#edit_isActive').val(edit_isActive);
 		$('#pk_id').val(pk_id);
 	});
@@ -34,28 +34,27 @@ document.addEventListener('DOMContentLoaded', function() {
 	// show hide div
 	$(document).on('click','#cancel_add',function(e) {
 		// get data in form
-		$('#tbl_position').show();
-		$('#add_position').hide();
+		$('#tbl_department').show();
+		$('#add_department').hide();
 		
 	});
 
 	// show hide div
 	$(document).on('click','#cancel_edit',function(e) {
 		// get data in form
-		$('#tbl_position').show();
-		$('#edit_position').hide();
+		$('#tbl_department').show();
+		$('#edit_department').hide();
 		
 	});
 
 	// add user submit
-	$("#addPosition_form").submit(function(e) {
-
+	$("#addDept_form").submit(function(e) {
 		
-		var add_positionID = document.getElementById("add_positionID").value;
-		var add_positionName = document.getElementById("add_positionName").value;
+		var add_deptID = document.getElementById("add_deptID").value;
+		var add_deptName = document.getElementById("add_deptName").value;
 		var add_isActive = document.getElementById("add_isActive").value;
 
-		if (add_positionID =='' || add_positionName =='' || add_isActive =='')
+		if (add_deptID =='' || add_deptName =='' || add_isActive =='')
 		{
 			e.preventDefault();
 
@@ -81,18 +80,19 @@ document.addEventListener('DOMContentLoaded', function() {
 			}).then((result) => {
 				if (result.isConfirmed) {
 
-					var data = $("#addPosition_form").serialize();
+					var data = $("#addDept_form").serialize();
+					console.log(data);
 					$.ajax({
 						data: data,
 						type: "post",
-						url: "sql/position-sql-query.php",
+						url: "sql/department-sql-query.php",
 						success: function(dataResult){
 							var dataResult = JSON.parse(dataResult);
 
 							if(dataResult.statusCode==0){
 								
-								$('#add_position').hide();
-								$('#tbl_position').show();
+								$('#add_department').hide();
+								$('#tbl_department').show();
 
 									// alert('Data added successfully !'); 
 									Swal.fire({
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
 										title: 'Success...',
 										text: dataResult.message
 									}).then(function() {
-										window.location = 'position.php';
+										window.location = 'department.php';
 									});
 
 								}
@@ -123,14 +123,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 	// edit user submit
-	$("#positionEdit_form").submit(function(e) {
+	$("#departmentEdit_form").submit(function(e) {
 
 
-		var edit_positionID = document.getElementById("edit_positionID").value;
-		var edit_positionName = document.getElementById("edit_positionName").value;
+		var edit_deptID = document.getElementById("edit_deptID").value;
+		var edit_deptName = document.getElementById("edit_deptName").value;
 		var edit_isActive = document.getElementById("edit_isActive").value;
 
-		if (edit_positionName == '' || edit_isActive == '' || edit_positionID == '')
+		if (edit_deptName == '' || edit_isActive == '')
 		{
 			// alert("Please Fill All Required Field");
 			e.preventDefault()
@@ -156,12 +156,12 @@ document.addEventListener('DOMContentLoaded', function() {
 			}).then((result) => {
 				if (result.isConfirmed) {
 					
-					var data = $("#positionEdit_form").serialize();
+					var data = $("#departmentEdit_form").serialize();
 					console.log(data);
 					$.ajax({
 						data: data,
 						type: "post",
-						url: "sql/position-sql-query.php",
+						url: "sql/department-sql-query.php",
 						success: function(dataResult){
 							var dataResult = JSON.parse(dataResult);
 
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
 										title: 'Success...',
 										text: dataResult.message
 									}).then(function() {
-										window.location = 'position.php';
+										window.location = 'department.php';
 									});
 
 								}
@@ -192,10 +192,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		}	
 	});
 
-	// delete position
-	$(document).on('click','#deletePosition',function(e) {
+	// delete Department
+	$(document).on('click','#deleteDepartment',function(e) {
 		var pk_id=$(this).attr("data-pk_id");
-		var pos_id=$(this).attr("data-pos_id");
+		var dept_id=$(this).attr("data-dept_id");
 
 		Swal.fire({
 			title: 'Are you sure?',
@@ -210,12 +210,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				$.ajax({
 					data:{
-						process:'deletePosition',
+						process:'deleteDepartment',
 						pk_id: pk_id,
-						pos_id: pos_id
+						dept_id: dept_id
 					},
 					type: "post",
-					url: "sql/position-sql-query.php",
+					url: "sql/department-sql-query.php",
 					success: function(dataResult){
 						var dataResult = JSON.parse(dataResult);
 
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								title: 'Success...',
 								text: dataResult.message
 							}).then(function() {
-								window.location = 'position.php';
+								window.location = 'department.php';
 							});
 
 						}

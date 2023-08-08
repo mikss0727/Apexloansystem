@@ -4,29 +4,29 @@ document.addEventListener('DOMContentLoaded', function() {
     // For example, you can add event listeners, modify elements, etc.
 
 	// show hide div
-	$(document).on('click','#addPosition',function(e) {
+	$(document).on('click','#addRole',function(e) {
 		
-		$('#tbl_position').hide();
-		$('#add_position').show();
+		$('#tbl_role').hide();
+		$('#add_role').show();
 
 		
 	});
 
 	// edit user
-	$(document).on('click','#editPosition',function(e) {
+	$(document).on('click','#editRole',function(e) {
 
-		$('#tbl_position').hide();
-		$('#edit_position').show();
+		$('#tbl_role').hide();
+		$('#edit_role').show();
 
-		var edit_positionID=$(this).attr("data-pos_id");
-		var edit_positionName=$(this).attr("data-pos_name");
+		var edit_roleID=$(this).attr("data-role_id");
+		var edit_roleName=$(this).attr("data-role_name");
 		var edit_isActive=$(this).attr("data-isactive");
 		var pk_id=$(this).attr("data-pk_id");
 
 
 
-		$('#edit_positionID').val(edit_positionID);
-		$('#edit_positionName').val(edit_positionName);
+		$('#edit_roleID').val(edit_roleID);
+		$('#edit_roleName').val(edit_roleName);
 		$('#edit_isActive').val(edit_isActive);
 		$('#pk_id').val(pk_id);
 	});
@@ -34,28 +34,28 @@ document.addEventListener('DOMContentLoaded', function() {
 	// show hide div
 	$(document).on('click','#cancel_add',function(e) {
 		// get data in form
-		$('#tbl_position').show();
-		$('#add_position').hide();
+		$('#tbl_role').show();
+		$('#add_role').hide();
 		
 	});
 
 	// show hide div
 	$(document).on('click','#cancel_edit',function(e) {
 		// get data in form
-		$('#tbl_position').show();
-		$('#edit_position').hide();
+		$('#tbl_role').show();
+		$('#edit_role').hide();
 		
 	});
 
 	// add user submit
-	$("#addPosition_form").submit(function(e) {
+	$("#addRole_form").submit(function(e) {
 
 		
-		var add_positionID = document.getElementById("add_positionID").value;
-		var add_positionName = document.getElementById("add_positionName").value;
+		var add_roleID = document.getElementById("add_roleID").value;
+		var add_roleName = document.getElementById("add_roleName").value;
 		var add_isActive = document.getElementById("add_isActive").value;
 
-		if (add_positionID =='' || add_positionName =='' || add_isActive =='')
+		if (add_roleID =='' || add_roleName =='' || add_isActive =='')
 		{
 			e.preventDefault();
 
@@ -81,18 +81,18 @@ document.addEventListener('DOMContentLoaded', function() {
 			}).then((result) => {
 				if (result.isConfirmed) {
 
-					var data = $("#addPosition_form").serialize();
+					var data = $("#addRole_form").serialize();
 					$.ajax({
 						data: data,
 						type: "post",
-						url: "sql/position-sql-query.php",
+						url: "sql/role-sql-query.php",
 						success: function(dataResult){
 							var dataResult = JSON.parse(dataResult);
 
 							if(dataResult.statusCode==0){
 								
-								$('#add_position').hide();
-								$('#tbl_position').show();
+								$('#add_role').hide();
+								$('#tbl_role').show();
 
 									// alert('Data added successfully !'); 
 									Swal.fire({
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
 										title: 'Success...',
 										text: dataResult.message
 									}).then(function() {
-										window.location = 'position.php';
+										window.location = 'role.php';
 									});
 
 								}
@@ -123,14 +123,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 	// edit user submit
-	$("#positionEdit_form").submit(function(e) {
+	$("#roleEdit_form").submit(function(e) {
 
 
-		var edit_positionID = document.getElementById("edit_positionID").value;
-		var edit_positionName = document.getElementById("edit_positionName").value;
+		var edit_roleID = document.getElementById("edit_roleID").value;
+		var edit_roleName = document.getElementById("edit_roleName").value;
 		var edit_isActive = document.getElementById("edit_isActive").value;
 
-		if (edit_positionName == '' || edit_isActive == '' || edit_positionID == '')
+		if (edit_roleName == '' || edit_isActive == '')
 		{
 			// alert("Please Fill All Required Field");
 			e.preventDefault()
@@ -156,12 +156,12 @@ document.addEventListener('DOMContentLoaded', function() {
 			}).then((result) => {
 				if (result.isConfirmed) {
 					
-					var data = $("#positionEdit_form").serialize();
+					var data = $("#roleEdit_form").serialize();
 					console.log(data);
 					$.ajax({
 						data: data,
 						type: "post",
-						url: "sql/position-sql-query.php",
+						url: "sql/role-sql-query.php",
 						success: function(dataResult){
 							var dataResult = JSON.parse(dataResult);
 
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
 										title: 'Success...',
 										text: dataResult.message
 									}).then(function() {
-										window.location = 'position.php';
+										window.location = 'role.php';
 									});
 
 								}
@@ -193,9 +193,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	// delete position
-	$(document).on('click','#deletePosition',function(e) {
+	$(document).on('click','#deleteRole',function(e) {
 		var pk_id=$(this).attr("data-pk_id");
-		var pos_id=$(this).attr("data-pos_id");
+		var role_id=$(this).attr("data-role_id");
 
 		Swal.fire({
 			title: 'Are you sure?',
@@ -210,12 +210,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				$.ajax({
 					data:{
-						process:'deletePosition',
+						process:'deleteRole',
 						pk_id: pk_id,
-						pos_id: pos_id
+						role_id: role_id
 					},
 					type: "post",
-					url: "sql/position-sql-query.php",
+					url: "sql/role-sql-query.php",
 					success: function(dataResult){
 						var dataResult = JSON.parse(dataResult);
 
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								title: 'Success...',
 								text: dataResult.message
 							}).then(function() {
-								window.location = 'position.php';
+								window.location = 'role.php';
 							});
 
 						}

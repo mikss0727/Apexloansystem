@@ -19,7 +19,7 @@
                 <div class="row">
                 <div class="col-sm-12">
 
-                    <div class="card"  id="tbl_postition">
+                    <div class="card"  id="tbl_position">
                       <div class="card-header pb-0">
                           <h5>Page Name</h5>
                       </div>

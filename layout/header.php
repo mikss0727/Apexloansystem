@@ -6,6 +6,7 @@ if(!isset($_SESSION['EmployeeID']))
 }
 
 $EmployeeID = $_SESSION['EmployeeID'];
+$RoleID = $_SESSION['RoleID'];
 ?>
 <!-- header.php -->
 <!DOCTYPE html>

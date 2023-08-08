@@ -1,32 +1,41 @@
+function validateDecimalInput(input) {
+    input.value = input.value.replace(/[^0-9.]/g, '');
 
+    // Remove extra decimal points
+    input.value = input.value.replace(/(\..*)\./g, '$1');
+}
 document.addEventListener('DOMContentLoaded', function() {
     // JavaScript code for the contact page content goes here
     // For example, you can add event listeners, modify elements, etc.
 
+
+
 	// show hide div
-	$(document).on('click','#addPosition',function(e) {
+	$(document).on('click','#addRate',function(e) {
 		
-		$('#tbl_position').hide();
-		$('#add_position').show();
+		$('#tbl_rate').hide();
+		$('#add_rate').show();
 
 		
 	});
 
 	// edit user
-	$(document).on('click','#editPosition',function(e) {
+	$(document).on('click','#editRate',function(e) {
 
-		$('#tbl_position').hide();
-		$('#edit_position').show();
+		$('#tbl_rate').hide();
+		$('#edit_rateForm').show();
 
-		var edit_positionID=$(this).attr("data-pos_id");
-		var edit_positionName=$(this).attr("data-pos_name");
+		var edit_rateID=$(this).attr("data-rate_id");
+		var edit_rateName=$(this).attr("data-rate_name");
+		var edit_rate=$(this).attr("data-rate");
 		var edit_isActive=$(this).attr("data-isactive");
 		var pk_id=$(this).attr("data-pk_id");
 
 
-
-		$('#edit_positionID').val(edit_positionID);
-		$('#edit_positionName').val(edit_positionName);
+        console.log(edit_rate);
+		$('#edit_rateID').val(edit_rateID);
+		$('#edit_rateName').val(edit_rateName);
+		$('#edit_rate').val(edit_rate);
 		$('#edit_isActive').val(edit_isActive);
 		$('#pk_id').val(pk_id);
 	});
@@ -34,28 +43,29 @@ document.addEventListener('DOMContentLoaded', function() {
 	// show hide div
 	$(document).on('click','#cancel_add',function(e) {
 		// get data in form
-		$('#tbl_position').show();
-		$('#add_position').hide();
+		$('#tbl_rate').show();
+		$('#add_rate').hide();
 		
 	});
 
 	// show hide div
 	$(document).on('click','#cancel_edit',function(e) {
 		// get data in form
-		$('#tbl_position').show();
-		$('#edit_position').hide();
+		$('#tbl_rate').show();
+		$('#edit_rateForm').hide();
 		
 	});
 
 	// add user submit
-	$("#addPosition_form").submit(function(e) {
+	$("#addRate_form").submit(function(e) {
 
 		
-		var add_positionID = document.getElementById("add_positionID").value;
-		var add_positionName = document.getElementById("add_positionName").value;
+		var add_rateID = document.getElementById("add_rateID").value;
+		var add_rateName = document.getElementById("add_rateName").value;
+		var add_rate = document.getElementById("add_rate").value;
 		var add_isActive = document.getElementById("add_isActive").value;
 
-		if (add_positionID =='' || add_positionName =='' || add_isActive =='')
+		if (add_rateID =='' || add_rateName =='' || add_rate =='' || add_isActive =='')
 		{
 			e.preventDefault();
 
@@ -81,18 +91,18 @@ document.addEventListener('DOMContentLoaded', function() {
 			}).then((result) => {
 				if (result.isConfirmed) {
 
-					var data = $("#addPosition_form").serialize();
+					var data = $("#addRate_form").serialize();
 					$.ajax({
 						data: data,
 						type: "post",
-						url: "sql/position-sql-query.php",
+						url: "sql/rate-sql-query.php",
 						success: function(dataResult){
 							var dataResult = JSON.parse(dataResult);
 
 							if(dataResult.statusCode==0){
 								
-								$('#add_position').hide();
-								$('#tbl_position').show();
+								$('#add_rate').hide();
+								$('#tbl_rate').show();
 
 									// alert('Data added successfully !'); 
 									Swal.fire({
@@ -100,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
 										title: 'Success...',
 										text: dataResult.message
 									}).then(function() {
-										window.location = 'position.php';
+										window.location = 'rate.php';
 									});
 
 								}
@@ -123,14 +133,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 	// edit user submit
-	$("#positionEdit_form").submit(function(e) {
+	$("#rateEdit_form").submit(function(e) {
 
 
-		var edit_positionID = document.getElementById("edit_positionID").value;
-		var edit_positionName = document.getElementById("edit_positionName").value;
+		var edit_rateID = document.getElementById("edit_rateID").value;
+		var edit_rateName = document.getElementById("edit_rateName").value;
+		var edit_rate = document.getElementById("edit_rate").value;
 		var edit_isActive = document.getElementById("edit_isActive").value;
 
-		if (edit_positionName == '' || edit_isActive == '' || edit_positionID == '')
+		if (edit_rateName == '' || edit_isActive == '' || edit_rate == '' || edit_rateID == '')
 		{
 			// alert("Please Fill All Required Field");
 			e.preventDefault()
@@ -156,12 +167,12 @@ document.addEventListener('DOMContentLoaded', function() {
 			}).then((result) => {
 				if (result.isConfirmed) {
 					
-					var data = $("#positionEdit_form").serialize();
+					var data = $("#rateEdit_form").serialize();
 					console.log(data);
 					$.ajax({
 						data: data,
 						type: "post",
-						url: "sql/position-sql-query.php",
+						url: "sql/rate-sql-query.php",
 						success: function(dataResult){
 							var dataResult = JSON.parse(dataResult);
 
@@ -173,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
 										title: 'Success...',
 										text: dataResult.message
 									}).then(function() {
-										window.location = 'position.php';
+										window.location = 'rate.php';
 									});
 
 								}
@@ -192,10 +203,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		}	
 	});
 
-	// delete position
-	$(document).on('click','#deletePosition',function(e) {
+	// delete rate
+	$(document).on('click','#deleteRate',function(e) {
 		var pk_id=$(this).attr("data-pk_id");
-		var pos_id=$(this).attr("data-pos_id");
+		var rate_id=$(this).attr("data-rate_id");
 
 		Swal.fire({
 			title: 'Are you sure?',
@@ -210,12 +221,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				$.ajax({
 					data:{
-						process:'deletePosition',
+						process:'deleteRate',
 						pk_id: pk_id,
-						pos_id: pos_id
+						rate_id: rate_id
 					},
 					type: "post",
-					url: "sql/position-sql-query.php",
+					url: "sql/rate-sql-query.php",
 					success: function(dataResult){
 						var dataResult = JSON.parse(dataResult);
 
@@ -228,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								title: 'Success...',
 								text: dataResult.message
 							}).then(function() {
-								window.location = 'position.php';
+								window.location = 'rate.php';
 							});
 
 						}

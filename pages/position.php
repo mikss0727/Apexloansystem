@@ -163,16 +163,16 @@
                                         <option value="1">Inactive</option>
                                         </select>
                                         <div class="valid-feedback">Looks good!</div>
-                                        <div class="invalid-feedback">Please Select Customer.</div>
+                                        <div class="invalid-feedback">Please Select Status.</div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer text-end">
-                        <!-- hidden value process name and sessionid -->
+                        <!-- hidden value process name and sessionid, roleid-->
                         <input value="addPosition" name="process" type="hidden">
                         <input value="<?php echo $_SESSION['EmployeeID']; ?>" name="EmployeeID" type="hidden">
-
+                        <input value="<?php echo $_SESSION['RoleID']; ?>" name="RoleID" type="hidden">
                         <button class="btn btn-primary" type="submit">Submit</button>
                         <input class="btn btn-light" type="reset" id="cancel_add" value="Cancel">
                         </div>
@@ -226,6 +226,7 @@
                             <input value="editPosition" name="process" type="hidden">
                             <input id="pk_id" name="pk_id" type="hidden">
                             <input value="<?php echo $_SESSION['EmployeeID']; ?>" name="EmployeeID" type="hidden">
+                            <input value="<?php echo $_SESSION['RoleID']; ?>" name="RoleID" type="hidden">
                             <button class="btn btn-primary" type="submit">Submit</button>
                             <input class="btn btn-light" type="reset" id="cancel_edit" value="Cancel">
                             </div>

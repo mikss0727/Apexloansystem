@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		var edit_branchName = document.getElementById("edit_branchName").value;
 		var edit_isActive = document.getElementById("edit_isActive").value;
 
-		if (edit_branchName == '' || edit_isActive == '')
+		if (edit_branchName == '' || edit_isActive == '' || edit_branchID == '')
 		{
 			// alert("Please Fill All Required Field");
 			e.preventDefault()
