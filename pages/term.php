@@ -215,7 +215,7 @@
                                     <label class="form-label" for="edit_termName">Term Name</label>
                                     <input class="form-control" id="edit_termName" name="edit_termName" type="text" required="">
                                     <div class="valid-feedback">Looks good!</div>
-                                    <div class="invalid-feedback">Please input a Department Name.</div>
+                                    <div class="invalid-feedback">Please input a Term Name.</div>
                                 </div>
                                 </div>
                             </div>
