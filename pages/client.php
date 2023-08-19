@@ -632,7 +632,7 @@
                         <div class="row">
                             <div class="col">
                             <div class="mb-3">
-                                <label class="form-label" for="v_status">Marital Status</label>
+                                <label class="form-label" for="v_status">Client Status</label>
                                 <input class="form-control" id="v_status" name="v_status" readonly>
                             </div>
                             </div>
