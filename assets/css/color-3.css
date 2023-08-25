@@ -11011,17 +11011,17 @@ label {
 .form-control, .form-select {
   background-color: #fff;
   font-size: 14px;
-  border-color: #168eead4;
+  border-color: #e6edef;
   color: #717171; }
   .form-control:focus, .form-select:focus {
-    border-color: #168eea;
+    border-color: #e6edef;
     background-color: #fff;
-    -webkit-box-shadow: 0 0 0 0.2rem rgba(22, 142, 234, 0.83);
-            box-shadow: 0 0 0 0.2rem rgba(22, 142, 234, 0.83); }
+    -webkit-box-shadow: 0 0 0 0.2rem rgba(171, 140, 228, 0.05);
+            box-shadow: 0 0 0 0.2rem rgba(171, 140, 228, 0.05); }
 
 .theme-form .form-control :focus {
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(22, 142, 234, 0.83);
-          box-shadow: 0 0 0 0.2rem rgba(22, 142, 234, 0.83); }
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(171, 140, 228, 0.05);
+          box-shadow: 0 0 0 0.2rem rgba(171, 140, 228, 0.05); }
 
 .theme-form.sm-form .form-group {
   margin-bottom: 14px; }
@@ -26726,7 +26726,7 @@ span.twitter-typeahead .tt-suggestion {
     color: #fff; }
 
 .mobile-clock-widget {
-  
+  background: url(../images/other-images/mobile-clock-wallpaper.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   height: 350px;

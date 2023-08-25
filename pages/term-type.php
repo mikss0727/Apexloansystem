@@ -6,7 +6,7 @@
               <div class="page-header">
                 <div class="row">
                   <div class="col-sm-6">
-                    <h3>Term Module</h3>
+                    <h3>Term Type Module</h3>
                     <ol class="breadcrumb">
                       <!-- <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li> -->
                     </ol>
@@ -19,14 +19,14 @@
                 <div class="row">
                 <div class="col-sm-12">
 
-                    <div class="card"  id="tbl_term">
+                    <div class="card"  id="tbl_termType">
                       <div class="card-header pb-0">
-                          <h5>Term</h5>
+                          <h5>Term Type</h5>
                       </div>
                     <div class="card-body">
                       <div class="row" style="margin-bottom: 10px;">
                           <div class="col-sm-12" style="text-align: right;">  
-                          <button class="btn btn-primary" id="addTerm"><i class="fa fa-plus"></i> Add Term</button>     
+                          <button class="btn btn-primary" id="addTermType"><i class="fa fa-plus"></i> Add Term Type</button>     
 
                           </div>
                       </div>
@@ -34,9 +34,9 @@
                             <table class="display" id="basic-1">
                                 <thead>
                                 <tr>
-                                    <th>Term ID</th>
-                                    <th>Term Name</th>
-                                    <th>Term No</th>
+                                    <th>Type ID</th>
+                                    <th>Type Name</th>
+                                    <th>Days No</th>
                                     <th>Created By</th>
                                     <th>Created On</th>
                                     <th>Updated By</th>
@@ -50,15 +50,15 @@
                                         
                                         $result = mysqli_query($con,"SELECT 
                                                                         t1.id,
-                                                                        t1.TermID,
-                                                                        t1.TermName,
-                                                                        t1.TermNo,
+                                                                        t1.TypeID,
+                                                                        t1.TypeName,
+                                                                        t1.DaysNo,
                                                                         t1.CreatedAt,
                                                                         CONCAT(t2.LastName,', ',t2.FirstName,' ',t2.MiddleName) AS 'CreatedBy',
                                                                         t1.isActive,
                                                                         t1.UpdatedAt,
                                                                         CONCAT(t3.LastName,', ',t3.FirstName,' ',t3.MiddleName) AS 'UpdatedBy'
-                                                                    FROM t_product_term t1 
+                                                                    FROM t_term_type t1 
                                                                     LEFT JOIN t_employee t2
                                                                     ON t1.CreatedBy = t2.EmployeeID 
                                                                     LEFT JOIN t_employee t3
@@ -69,9 +69,9 @@
                                             while($row = mysqli_fetch_array($result)) {
                                         ?>
                                         <tr>
-                                            <td> <?php echo $row["TermID"]; ?></td>
-                                            <td> <?php echo $row["TermName"]; ?></td>
-                                            <td> <?php echo $row["TermNo"]; ?></td>
+                                            <td> <?php echo $row["TypeID"]; ?></td>
+                                            <td> <?php echo $row["TypeName"]; ?></td>
+                                            <td> <?php echo $row["DaysNo"]; ?></td>
                                             <td> <?php echo $row["CreatedBy"]; ?></td>
                                             <td><?php 
                                                     if($row["CreatedAt"] == '' || $row["CreatedAt"] == null)
@@ -98,18 +98,18 @@
                                             
 
                                             <td style="text-align: center;">
-                                                <a href="#" class="btn btn-pill btn-outline-primary btn-xs" id="editTerm" data-toggle="modal"
+                                                <a href="#" class="btn btn-pill btn-outline-primary btn-xs" id="editTermType" data-toggle="modal"
                                                     data-pk_id="<?php echo $row["id"]; ?>"
-                                                    data-term_id="<?php echo $row["TermID"]; ?>"
-                                                    data-term_name="<?php echo $row["TermName"]; ?>"
-                                                    data-term_no="<?php echo $row["TermNo"]; ?>"
+                                                    data-type_id="<?php echo $row["TypeID"]; ?>"
+                                                    data-type_name="<?php echo $row["TypeName"]; ?>"
+                                                    data-days_no="<?php echo $row["DaysNo"]; ?>"
                                                     data-isactive="<?php echo $row["isActive"]; ?>">
                                                     <i class="fa fa-edit" data-toggle="tooltip" 
                                                     title="Edit"></i>
                                                 </a>
-                                                <a href="#" class="btn btn-pill btn-outline-danger btn-xs" id="deleteTerm"
+                                                <a href="#" class="btn btn-pill btn-outline-danger btn-xs" id="deleteTermType"
                                                 data-pk_id="<?php echo $row["id"]; ?>"
-                                                data-term_id="<?php echo $row["TermID"]; ?>">
+                                                data-type_id="<?php echo $row["TypeID"]; ?>">
                                                     <i class="fa fa-trash-o" data-toggle="tooltip" 
                                                     title="Delete"></i>
                                                 </a>
@@ -129,39 +129,39 @@
 
 
                     <!-- ADD FORM -->
-                    <div class="card"  id="add_term" style="display:none">
+                    <div class="card"  id="add_termType" style="display:none">
                       <div class="card-header pb-0">
                           <h5>Add New Term</h5>
                       </div>
-                      <form class="needs-validation" id="addTerm_form" novalidate="">
+                      <form class="needs-validation" id="addTermType_form" novalidate="">
                           <div class="card-body">
                               <div class="row">
                                   <div class="col">
                                       <div class="mb-3">
-                                          <label class="form-label" for="add_termID">Term ID <span style="color: red;">*</span></label>
-                                          <input class="form-control" id="add_termID" name="add_termID" type="text" required="">
+                                          <label class="form-label" for="add_typeID">Type ID <span style="color: red;">*</span></label>
+                                          <input class="form-control" id="add_typeID" name="add_typeID" type="text" required="">
                                           <div class="valid-feedback">Looks good!</div>
-                                          <div class="invalid-feedback">Please input a Term ID.</div>
+                                          <div class="invalid-feedback">Please input a Type ID.</div>
                                       </div>
                                   </div>
                               </div>
                               <div class="row">
                                   <div class="col">
                                       <div class="mb-3">
-                                          <label class="form-label" for="add_termName">Term Name <span style="color: red;">*</span></label>
-                                          <input class="form-control" id="add_termName" name="add_termName" type="text" required="">
+                                          <label class="form-label" for="add_typeName">Type Name <span style="color: red;">*</span></label>
+                                          <input class="form-control" id="add_typeName" name="add_typeName" type="text" required="">
                                           <div class="valid-feedback">Looks good!</div>
-                                          <div class="invalid-feedback">Please input a Term Name.</div>
+                                          <div class="invalid-feedback">Please input a Type Name.</div>
                                       </div>
                                   </div>
                               </div>
                               <div class="row">
                                   <div class="col">
                                       <div class="mb-3">
-                                          <label class="form-label" for="add_termNo">Term Number <span style="color: red;">*</span></label>
-                                          <input class="form-control" id="add_termNo" name="add_termNo" type="text" required="" oninput="validateDecimalInput(this)">
+                                          <label class="form-label" for="add_daysNo">Number of Days <span style="color: red;">*</span></label>
+                                          <input class="form-control" id="add_daysNo" name="add_daysNo" type="text" required="" oninput="validateDecimalInput(this)">
                                           <div class="valid-feedback">Looks good!</div>
-                                          <div class="invalid-feedback">Please input a Term Number.</div>
+                                          <div class="invalid-feedback">Please input a Number of Days.</div>
                                       </div>
                                   </div>
                               </div>
@@ -182,7 +182,7 @@
                           </div>
                           <div class="card-footer text-end">
                           <!-- hidden value process name and sessionid, roleid -->
-                          <input value="addTerm" name="process" type="hidden">
+                          <input value="addTermType" name="process" type="hidden">
                           <input value="<?php echo $_SESSION['EmployeeID']; ?>" name="EmployeeID" type="hidden">
                           <input value="<?php echo $_SESSION['RoleID']; ?>" name="RoleID" type="hidden">
 
@@ -195,37 +195,37 @@
 
 
                      <!-- EDIT FORM -->
-                    <div class="card"  id="edit_term" style="display:none">
+                    <div class="card"  id="edit_termType" style="display:none">
                         <div class="card-header pb-0">
                             <h5>Edit Term</h5>
                         </div>
-                        <form  class="needs-validation" novalidate="" id="termEdit_form">
+                        <form  class="needs-validation" novalidate="" id="termTypeEdit_form">
                             <div class="card-body">
                             <div class="row">
                                 <div class="col">
                                 <div class="mb-3">
-                                    <label class="form-label" for="edit_termID">Term ID</label>
-                                    <input class="form-control" id="edit_termID" name="edit_termID" type="text" readonly>
+                                    <label class="form-label" for="edit_typeID">Type ID</label>
+                                    <input class="form-control" id="edit_typeID" name="edit_typeID" type="text" readonly>
                                 </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col">
                                 <div class="mb-3">
-                                    <label class="form-label" for="edit_termName">Term Name</label>
-                                    <input class="form-control" id="edit_termName" name="edit_termName" type="text" required="">
+                                    <label class="form-label" for="edit_typeName">Type Name</label>
+                                    <input class="form-control" id="edit_typeName" name="edit_typeName" type="text" required="">
                                     <div class="valid-feedback">Looks good!</div>
-                                    <div class="invalid-feedback">Please input a Term Name.</div>
+                                    <div class="invalid-feedback">Please input a Type Name.</div>
                                 </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col">
                                 <div class="mb-3">
-                                    <label class="form-label" for="edit_termNo">Term Number</label>
-                                    <input class="form-control" id="edit_termNo" name="edit_termNo" type="text" required="" oninput="validateDecimalInput(this)">
+                                    <label class="form-label" for="edit_daysNo">Number of Days</label>
+                                    <input class="form-control" id="edit_daysNo" name="edit_daysNo" type="text" required="" oninput="validateDecimalInput(this)">
                                     <div class="valid-feedback">Looks good!</div>
-                                    <div class="invalid-feedback">Please input a term Number.</div>
+                                    <div class="invalid-feedback">Please input a Number of Days.</div>
                                 </div>
                                 </div>
                             </div>
@@ -246,7 +246,7 @@
                             </div>
                             <div class="card-footer text-end">
                                 <!-- hidden value process name and sessionid primaryid ,roleid-->
-                            <input value="editTerm" name="process" type="hidden">
+                            <input value="editTermType" name="process" type="hidden">
                             <input id="pk_id" name="pk_id" type="hidden">
                             <input value="<?php echo $_SESSION['EmployeeID']; ?>" name="EmployeeID" type="hidden">
                             <input value="<?php echo $_SESSION['RoleID']; ?>" name="RoleID" type="hidden">
@@ -265,6 +265,6 @@
             <!-- Container-fluid Ends-->
           </div>
 
-<script src="js/term-js.js"></script>
+<script src="js/term-type-js.js"></script>
 
 <?php include '../layout/footer.php'; ?>

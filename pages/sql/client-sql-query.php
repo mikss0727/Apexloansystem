@@ -66,6 +66,47 @@ if($_POST['process']=='addClient'){
 
 }
 
+// process Client
+if($_POST['process']=='processClient'){
+
+	$pk_id = $_POST['p_pk_id'];
+	$client_id = $_POST['p_client_id'];
+    $EmployeeID = $_POST['EmployeeID'];
+	$status_id = $_POST['v_statusID'];
+
+
+	$query_check=mysqli_query($con,"SELECT * FROM t_client WHERE (id='$pk_id' AND ClientID='$client_id')");
+	$num_rows=mysqli_num_rows($query_check);
+	if($num_rows)
+	{
+
+		// Apprved/reject client
+		$query=mysqli_query($con,"UPDATE t_client SET  StatusID = '$status_id', UpdatedAt = NOW(), UpdatedBy = '$EmployeeID'
+		WHERE (id='$pk_id' AND ClientID='$client_id')");
+
+		if($query)
+		{
+			echo json_encode(array("statusCode"=>0,"message"=>'Client process successfully!'));
+
+		}
+		else
+		{
+			echo json_encode(array("statusCode"=>1,"message"=>'Process Error, Please Contact the IT Administrator!'));
+		}
+		
+	}
+	else
+	{
+
+		echo json_encode(array("statusCode"=>1,"message"=>'Client Does Not Exist!'));
+
+
+		
+	}
+
+}
+
+
 // edit Client
 if($_POST['process']=='editClient'){
 

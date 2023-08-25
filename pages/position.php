@@ -22,7 +22,7 @@
 
                     <div class="card"  id="tbl_position">
                     <div class="card-header pb-0">
-                        <!-- <h5>Position</h5> -->
+                        <h5>Position</h5>
                     </div>
                     <div class="card-body">
                     <div class="row" style="margin-bottom: 10px;">

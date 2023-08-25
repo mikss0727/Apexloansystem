@@ -1,7 +1,9 @@
 $(document).ready(function() {
     $('product-list').DataTable();
     // Basic table example 
-    $('#basic-1').DataTable();
+    $('#basic-1').DataTable({
+        "deferRender": true
+    });
     $('#basic-2').DataTable({
         "paging":   true,
         "ordering": false,

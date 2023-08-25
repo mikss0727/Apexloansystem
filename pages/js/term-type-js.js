@@ -6,31 +6,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // For example, you can add event listeners, modify elements, etc.
 
 	// show hide div
-	$(document).on('click','#addTerm',function(e) {
+	$(document).on('click','#addTermType',function(e) {
 		
-		$('#tbl_term').hide();
-		$('#add_term').show();
+		$('#tbl_termType').hide();
+		$('#add_termType').show();
 
 		
 	});
 
 	// edit user
-	$(document).on('click','#editTerm',function(e) {
+	$(document).on('click','#editTermType',function(e) {
 
-		$('#tbl_term').hide();
-		$('#edit_term').show();
+		$('#tbl_termType').hide();
+		$('#edit_termType').show();
 
-		var edit_termID=$(this).attr("data-term_id");
-		var edit_termName=$(this).attr("data-term_name");
-		var edit_termNo=$(this).attr("data-term_no");
+		var edit_typeID=$(this).attr("data-type_id");
+		var edit_typeName=$(this).attr("data-type_name");
+		var edit_daysNo=$(this).attr("data-days_no");
 		var edit_isActive=$(this).attr("data-isactive");
 		var pk_id=$(this).attr("data-pk_id");
 
 
 
-		$('#edit_termID').val(edit_termID);
-		$('#edit_termName').val(edit_termName);
-		$('#edit_termNo').val(edit_termNo);
+		$('#edit_typeID').val(edit_typeID);
+		$('#edit_typeName').val(edit_typeName);
+		$('#edit_daysNo').val(edit_daysNo);
 		$('#edit_isActive').val(edit_isActive);
 		$('#pk_id').val(pk_id);
 	});
@@ -38,29 +38,29 @@ document.addEventListener('DOMContentLoaded', function() {
 	// show hide div
 	$(document).on('click','#cancel_add',function(e) {
 		// get data in form
-		$('#tbl_term').show();
-		$('#add_term').hide();
+		$('#tbl_termType').show();
+		$('#add_termType').hide();
 		
 	});
 
 	// show hide div
 	$(document).on('click','#cancel_edit',function(e) {
 		// get data in form
-		$('#tbl_term').show();
-		$('#edit_term').hide();
+		$('#tbl_termType').show();
+		$('#edit_termType').hide();
 		
 	});
 
 	// add user submit
-	$("#addTerm_form").submit(function(e) {
+	$("#addTermType_form").submit(function(e) {
 
 		
-		var add_termID = document.getElementById("add_termID").value;
-		var add_termName = document.getElementById("add_termName").value;
-		var add_termNo = document.getElementById("add_termNo").value;
+		var add_typeID = document.getElementById("add_typeID").value;
+		var add_typeName = document.getElementById("add_typeName").value;
+		var add_daysNo = document.getElementById("add_daysNo").value;
 		var add_isActive = document.getElementById("add_isActive").value;
 
-		if (add_termID =='' || add_termName =='' || add_isActive =='' || add_termNo =='')
+		if (add_typeID =='' || add_typeName =='' || add_isActive =='' || add_daysNo =='')
 		{
 			e.preventDefault();
 
@@ -86,18 +86,18 @@ document.addEventListener('DOMContentLoaded', function() {
 			}).then((result) => {
 				if (result.isConfirmed) {
 
-					var data = $("#addTerm_form").serialize();
+					var data = $("#addTermType_form").serialize();
 					$.ajax({
 						data: data,
 						type: "post",
-						url: "sql/term-sql-query.php",
+						url: "sql/term-type-sql-query.php",
 						success: function(dataResult){
 							var dataResult = JSON.parse(dataResult);
 
 							if(dataResult.statusCode==0){
 								
-								$('#add_term').hide();
-								$('#tbl_term').show();
+								$('#add_termType').hide();
+								$('#tbl_termType').show();
 
 									// alert('Data added successfully !'); 
 									Swal.fire({
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
 										title: 'Success...',
 										text: dataResult.message
 									}).then(function() {
-										window.location = 'term.php';
+										window.location = 'term-type.php';
 									});
 
 								}
@@ -128,15 +128,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 	// edit user submit
-	$("#termEdit_form").submit(function(e) {
+	$("#termTypeEdit_form").submit(function(e) {
 
 
-		var edit_termID = document.getElementById("edit_termID").value;
-		var edit_termName = document.getElementById("edit_termName").value;
-		var edit_termNo = document.getElementById("edit_termNo").value;
+		var edit_typeID = document.getElementById("edit_typeID").value;
+		var edit_typeName = document.getElementById("edit_typeName").value;
+		var edit_daysNo = document.getElementById("edit_daysNo").value;
 		var edit_isActive = document.getElementById("edit_isActive").value;
 
-		if (edit_termName == '' || edit_isActive == '' || edit_termID == '' || edit_termNo == '')
+		if (edit_typeName == '' || edit_isActive == '' || edit_typeID == '' || edit_daysNo == '')
 		{
 			// alert("Please Fill All Required Field");
 			e.preventDefault()
@@ -162,12 +162,12 @@ document.addEventListener('DOMContentLoaded', function() {
 			}).then((result) => {
 				if (result.isConfirmed) {
 					
-					var data = $("#termEdit_form").serialize();
+					var data = $("#termTypeEdit_form").serialize();
 					console.log(data);
 					$.ajax({
 						data: data,
 						type: "post",
-						url: "sql/term-sql-query.php",
+						url: "sql/term-type-sql-query.php",
 						success: function(dataResult){
 							var dataResult = JSON.parse(dataResult);
 
@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
 										title: 'Success...',
 										text: dataResult.message
 									}).then(function() {
-										window.location = 'term.php';
+										window.location = 'term-type.php';
 									});
 
 								}
@@ -199,9 +199,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	// delete Term
-	$(document).on('click','#deleteTerm',function(e) {
+	$(document).on('click','#deleteTermType',function(e) {
 		var pk_id=$(this).attr("data-pk_id");
-		var term_id=$(this).attr("data-term_id");
+		var type_id=$(this).attr("data-type_id");
 
 		Swal.fire({
 			title: 'Are you sure?',
@@ -216,12 +216,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				$.ajax({
 					data:{
-						process:'deleteTerm',
+						process:'deleteTermType',
 						pk_id: pk_id,
-						term_id: term_id
+						type_id: type_id
 					},
 					type: "post",
-					url: "sql/term-sql-query.php",
+					url: "sql/term-type-sql-query.php",
 					success: function(dataResult){
 						var dataResult = JSON.parse(dataResult);
 
@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								title: 'Success...',
 								text: dataResult.message
 							}).then(function() {
-								window.location = 'term.php';
+								window.location = 'term-type.php';
 							});
 
 						}

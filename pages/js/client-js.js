@@ -1,3 +1,6 @@
+// global variable 
+var activeTabValue = '';
+
 // Accept number only 
 function validateDecimalInput(input) {
     input.value = input.value.replace(/\D/g, '');
@@ -135,6 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		$('#view_client').show();
 
 		
+		var v_pkID = $(this).attr("data-pk_id");
 		var v_clientID = $(this).attr("data-client_id");
 		var v_clientName = $(this).attr("data-last_name")+', '+$(this).attr("data-first_name")+' '+$(this).attr("data-middle_name");
 		var v_branch = $(this).attr("data-branch_id")+' - '+$(this).attr("data-branch_name");
@@ -153,8 +157,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 		var v_maritalStatus = $(this).attr("data-marital_name");
 		var v_status = $(this).attr("data-status_name");
+		var v_statusID = $(this).attr("data-status_id");
 
 
+		$('#p_pk_id').val(v_pkID);
+		$('#p_client_id').val(v_clientID);
+		$('#v_statusID').val(v_statusID);
 		$('#v_clientID').val(v_clientID);
 		$('#v_clientName').val(v_clientName);
 		$('#v_branch').val(v_branch);
@@ -170,6 +178,86 @@ document.addEventListener('DOMContentLoaded', function() {
 		$('#v_status').val(v_status);
 		
 	});
+
+	// approved client button
+	$("#clientApproval_form").submit(function(e) {
+        e.preventDefault();
+		var data = $("#clientApproval_form").serialize();
+		console.log(data);
+	
+		var p_statusID = document.getElementById("v_statusID").value;
+
+		if (p_statusID =='' || p_statusID ==null || p_statusID =='PND')
+		{
+			e.preventDefault();
+
+			// alert("Please Fill All Required Field");
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: 'Status must be Approved or Reject Only!'
+			})
+
+		}
+		else{
+        
+    
+			Swal.fire({
+				title: 'Are you sure?',
+				text: "You won't be able to revert this!",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Yes, Continue!'
+			}).then((result) => {
+				if (result.isConfirmed) {
+
+					var data = $("#clientApproval_form").serialize();
+					$.ajax({
+						data: data,
+						type: "post",
+						url: "sql/client-sql-query.php",
+						success: function(dataResult){
+							var dataResult = JSON.parse(dataResult);
+
+							if(dataResult.statusCode==0){
+								
+								$('#view_client').hide();
+								$('#tbl_client').show();
+
+									Swal.fire({
+										icon: 'success',
+										title: 'Success...',
+										text: dataResult.message
+									}).then(function() {
+										window.location = 'client.php';
+									});
+
+								}
+								else if(dataResult.statusCode==1){
+									
+									Swal.fire({
+										icon: 'error',
+										title: 'Oops...',
+										text: dataResult.message
+									})
+								}
+							}
+						});
+				}
+			})
+		}
+	});
+
+		// show hide div
+		$(document).on('click','#reject_client',function(e) {
+			// get data in form
+			var data = $("#clientApproval_form").serialize();
+
+		console.log(data);
+		});
+
 
 	// show hide div
 	$(document).on('click','#back',function(e) {
@@ -268,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 	});
 
-	
+
 	// edit client
 	$(document).on('click','#editClient',function(e) {
 
@@ -429,5 +517,65 @@ document.addEventListener('DOMContentLoaded', function() {
 		})
 	});
 
+
+
+// 	function activeTab(tabClass) {
+// 		console.log('.'+tabClass);
+// 		console.log($(this));
+	
+// 		$('.'+tabClass).removeClass('active'); // Remove active class from all tabs
+// 		$(this).addClass('active'); // Add active class to clicked tab
+		
+// 		var tabValue = $(this).data('value');
+// 		console.log(tabValue);
+		
+// 	  }
+
+// // tab 
+// 	$('.client-tab').click(function () {
+// 		activeTab('client-tab');
+		
+// 	});
+
+	$(document).ready(function () {
+		
+		// Set active tab on page load (you can choose a default active tab)
+		$('.client-tab[data-value="tab1"]').addClass('active');
+		activeTabValue = $('.client-tab.active').data('value');
+		
+			$.ajax({
+				data:{
+					statusID:'deleteMarital',
+				},
+				type: "post",
+				url: "client.php",
+				success: function(response){
+					// Process the response from the PHP script if needed
+					console.log(response);
+				}
+			});
+
+		// Handle tab click
+		$('.client-tab').click(function () {
+			$('.client-tab').removeClass('active'); // Remove active class from all tabs
+			$(this).addClass('active'); // Add active class to clicked tab
+			
+			activeTabValue = $(this).data('value');
+			$.ajax({
+				data:{
+					statusID:'deleteMarital',
+				},
+				type: "post",
+				url: "client.php",
+				success: function(response){
+					// Process the response from the PHP script if needed
+					console.log(response);
+				}
+			});
+		});
+
+		
+	});
+	
 
 });

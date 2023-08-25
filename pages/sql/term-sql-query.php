@@ -10,7 +10,7 @@ if($_POST['process']=='addTerm'){
     $EmployeeID = $_POST['EmployeeID'];
 	$termID = $_POST['add_termID'];
 	$termName = $_POST['add_termName'];
-	$weeksNo = $_POST['add_weeksNo'];
+	$termNo = $_POST['add_termNo'];
 	$isActive = $_POST['add_isActive'];
 
     
@@ -27,7 +27,7 @@ if($_POST['process']=='addTerm'){
 
         
 		// insert new Term 
-		$query=mysqli_query($con,"INSERT INTO t_product_term (TermID, TermName, WeeksNo, isActive, CreatedAt, CreatedBy, UpdatedBy, UpdatedAt) VALUES ('$termID', '$termName', '$weeksNo', '$isActive', NOW(), '$EmployeeID', null, null)");
+		$query=mysqli_query($con,"INSERT INTO t_product_term (TermID, TermName, TermNo, isActive, CreatedAt, CreatedBy, UpdatedBy, UpdatedAt) VALUES ('$termID', '$termName', '$termNo', '$isActive', NOW(), '$EmployeeID', null, null)");
     
 		if($query)
 		{
@@ -48,7 +48,7 @@ if($_POST['process']=='editTerm'){
 
 	$edit_termID = $_POST['edit_termID'];
 	$edit_termName = $_POST['edit_termName'];
-	$edit_weeksNo = $_POST['edit_weeksNo'];
+	$edit_termNo = $_POST['edit_termNo'];
 	$edit_isActive = $_POST['edit_isActive'];
 	$pk_id = $_POST['pk_id'];
     $EmployeeID = $_POST['EmployeeID'];
@@ -60,7 +60,7 @@ if($_POST['process']=='editTerm'){
 	{
 
 			// update
-		$query=mysqli_query($con,"UPDATE t_product_term SET TermName = '$edit_termName',WeeksNo = '$edit_weeksNo', isActive = '$edit_isActive', UpdatedBy = '$EmployeeID', UpdatedAt = NOW() WHERE (id='$pk_id' AND TermID='$edit_termID')");
+		$query=mysqli_query($con,"UPDATE t_product_term SET TermName = '$edit_termName',TermNo = '$edit_termNo', isActive = '$edit_isActive', UpdatedBy = '$EmployeeID', UpdatedAt = NOW() WHERE (id='$pk_id' AND TermID='$edit_termID')");
 
 		if($query)
 		{
@@ -76,7 +76,7 @@ if($_POST['process']=='editTerm'){
 	else
 	{
 
-		echo json_encode(array("statusCode"=>1,"message"=>'Branch ID Does Not Exist!'));
+		echo json_encode(array("statusCode"=>1,"message"=>'Term ID Does Not Exist!'));
 
 
 		
