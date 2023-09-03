@@ -1,4 +1,8 @@
 
+function reloadSelectUi(){
+	// Trigger the 'change' event to update the Select2 UI
+	$('.js-example-basic-single').trigger('change');
+}
 document.addEventListener('DOMContentLoaded', function() {
     // JavaScript code for the contact page content goes here
     // For example, you can add event listeners, modify elements, etc.
@@ -12,14 +16,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 	});
 
-	// edit user
+	// edit branch
 	$(document).on('click','#editBranch',function(e) {
 
 		$('#tbl_branch').hide();
 		$('#edit_branch').show();
 
 		var edit_branchID=$(this).attr("data-branch_id");
-		var edit_branchName=$(this).attr("data-pos_name");
+		var edit_branchName=$(this).attr("data-branch_name");
 		var edit_isActive=$(this).attr("data-isactive");
 		var pk_id=$(this).attr("data-pk_id");
 
@@ -29,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		$('#edit_branchName').val(edit_branchName);
 		$('#edit_isActive').val(edit_isActive);
 		$('#pk_id').val(pk_id);
+		reloadSelectUi();
 	});
 
 	// show hide div

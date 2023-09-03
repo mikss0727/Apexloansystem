@@ -3,6 +3,76 @@ error_reporting(0);
 
 include("../../database/connection.php");
 
+if($_POST['process']=='getData'){
+    $activeTab = $_POST['status'];
+	
+	$query = "SELECT 
+					t1.id,
+					t1.ClientID,
+					t1.LastName,
+					t1.FirstName,
+					t1.MiddleName,
+					t1.BranchID,
+					t4.BranchName,
+					t1.Birthday,
+					t1.ContactNo,
+					t1.Address,
+					t1.Email,
+					t1.BusinessName,
+					t1.BusinessAddress,
+					t1.Gender,
+					t1.MaritalStatus,
+					t6.MaritalName,
+					t1.Age,
+					t1.StatusID,
+					t5.StatusName,
+					t1.CreatedAt,
+					CONCAT(t2.LastName,', ',t2.FirstName,' ',t2.MiddleName) AS 'CreatedBy',
+					t1.UpdatedAt,
+					CONCAT(t3.LastName,', ',t3.FirstName,' ',t3.MiddleName) AS 'UpdatedBy'
+				FROM t_client t1 
+				LEFT JOIN t_employee t2
+				ON t1.CreatedBy = t2.EmployeeID 
+				LEFT JOIN t_employee t3
+				ON t1.UpdatedBy = t3.EmployeeID
+				LEFT JOIN t_branch t4
+				ON t1.BranchID = t4.BranchID
+				LEFT JOIN t_status t5
+				ON t1.StatusID = t5.StatusID
+				LEFT JOIN t_marital_status t6
+				ON t1.MaritalStatus = t6.MaritalID
+				WHERE t1.StatusID = ?";
+
+				$stmt = mysqli_prepare($con, $query);
+				mysqli_stmt_bind_param($stmt, "s", $activeTab);
+				mysqli_stmt_execute($stmt);
+				$result = mysqli_stmt_get_result($stmt);
+
+				$dataArray = array(); // Initialize an empty array to store the data
+
+				if ($result->num_rows > 0) {
+					while ($row = $result->fetch_assoc()) {
+						$dataArray[] = $row; // Add each row to the array
+					}
+					echo json_encode(
+						array(
+							"message" => "Successfully fetched data.", 
+							"data" => $dataArray
+						)
+					);
+				} else {
+					echo json_encode(
+						array(
+							"message" => "No Application found.",
+							"data" => $dataArray
+						)
+					);
+				}
+												
+												
+}
+
+
 
 // add branch
 if($_POST['process']=='addClient'){
@@ -114,9 +184,9 @@ if($_POST['process']=='editClient'){
     $EmployeeID = $_POST['EmployeeID'];
 	$client_id = $_POST['client_id'];
 	$status_id = $_POST['status_id'];
-	$edit_lname = $_POST['edit_lname'];
-	$edit_fname = $_POST['edit_fname'];
-	$edit_mname = $_POST['edit_mname'];
+	$edit_lname = strtoupper($_POST['edit_lname']);
+	$edit_fname = strtoupper($_POST['edit_fname']);
+	$edit_mname = strtoupper($_POST['edit_mname']);
 	$edit_branchid = $_POST['edit_branchid'];
 	$edit_bday = $_POST['edit_bday'];
 	$edit_contactno = $_POST['edit_contactno'];
@@ -135,7 +205,7 @@ if($_POST['process']=='editClient'){
 	{
 
 			// update
-		$query=mysqli_query($con,"UPDATE t_client SET BranchID = '$edit_branchid', FirstName = '$edit_fname', MiddleName = '$edit_mname', LastName = '$edit_fname', Birthday = '$edit_bday', ContactNo = '$edit_contactno', Address = '$edit_address', Email = '$edit_email', BusinessName = '$edit_bussName', BusinessAddress = '$edit_bussAdd', Gender = '$edit_gender', MaritalStatus = '$edit_maritalStatus', Age = '$edit_age', UpdatedAt = NOW(), UpdatedBy = '$EmployeeID'
+		$query=mysqli_query($con,"UPDATE t_client SET BranchID = '$edit_branchid', FirstName = '$edit_fname', MiddleName = '$edit_mname', LastName = '$edit_lname', Birthday = '$edit_bday', ContactNo = '$edit_contactno', Address = '$edit_address', Email = '$edit_email', BusinessName = '$edit_bussName', BusinessAddress = '$edit_bussAdd', Gender = '$edit_gender', MaritalStatus = '$edit_maritalStatus', Age = '$edit_age', UpdatedAt = NOW(), UpdatedBy = '$EmployeeID'
 		WHERE (id='$pk_id' AND ClientID='$client_id')");
 
 		if($query)

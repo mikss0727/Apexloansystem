@@ -11,6 +11,8 @@
 <!-- Plugins css start-->
 <link rel="stylesheet" type="text/css" href="../assets/css/date-picker.css">
 <link rel="stylesheet" type="text/css" href="../assets/css/datatables.css">
+<link rel="stylesheet" type="text/css" href="../assets/css/datatable-extension.css">
+<link rel="stylesheet" type="text/css" href="../assets/css/select2.css">
 <!-- Plugins css Ends-->
 <!-- Bootstrap css-->
 <link rel="stylesheet" type="text/css" href="../assets/css/bootstrap.css">

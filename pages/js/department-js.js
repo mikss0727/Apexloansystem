@@ -1,4 +1,9 @@
 
+function reloadSelectUi(){
+	// Trigger the 'change' event to update the Select2 UI
+	$('.js-example-basic-single').trigger('change');
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // JavaScript code for the contact page content goes here
     // For example, you can add event listeners, modify elements, etc.
@@ -12,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 	});
 
-	// edit user
+	// edit department
 	$(document).on('click','#editDepartment',function(e) {
 
 		$('#tbl_department').hide();
@@ -29,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		$('#edit_deptName').val(edit_deptName);
 		$('#edit_isActive').val(edit_isActive);
 		$('#pk_id').val(pk_id);
+		reloadSelectUi();
 	});
 
 	// show hide div

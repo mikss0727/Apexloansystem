@@ -1,3 +1,7 @@
+function reloadSelectUi(){
+	// Trigger the 'change' event to update the Select2 UI
+	$('.js-example-basic-single').trigger('change');
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     // JavaScript code for the contact page content goes here
@@ -12,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 	});
 
-	// edit user
+	// edit position
 	$(document).on('click','#editPosition',function(e) {
 
 		$('#tbl_position').hide();
@@ -29,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		$('#edit_positionName').val(edit_positionName);
 		$('#edit_isActive').val(edit_isActive);
 		$('#pk_id').val(pk_id);
+		reloadSelectUi();
 	});
 
 	// show hide div
@@ -47,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 	});
 
-	// add user submit
+	// add position submit
 	$("#addPosition_form").submit(function(e) {
 
 		
@@ -122,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-	// edit user submit
+	// edit position submit
 	$("#positionEdit_form").submit(function(e) {
 
 

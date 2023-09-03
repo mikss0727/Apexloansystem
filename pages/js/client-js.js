@@ -1,6 +1,7 @@
-// global variable 
-var activeTabValue = '';
-
+function reloadSelectUi(){
+	// Trigger the 'change' event to update the Select2 UI
+	$('.js-example-basic-single').trigger('change');
+}
 // Accept number only 
 function validateDecimalInput(input) {
     input.value = input.value.replace(/\D/g, '');
@@ -130,7 +131,6 @@ function ValidationFeedback(form) {
 document.addEventListener('DOMContentLoaded', function() {
     // JavaScript code for the contact page content goes here
     // For example, you can add event listeners, modify elements, etc.
-
 	// view client
 	$(document).on('click','#viewClient',function(e) {
 		
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		$('#v_gender').val(v_gender);
 		$('#v_maritalStatus').val(v_maritalStatus);
 		$('#v_status').val(v_status);
-		
+		reloadSelectUi();
 	});
 
 	// approved client button
@@ -360,6 +360,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	// edit client
 	$(document).on('click','#editClient',function(e) {
 
+		
 		$('#tbl_client').hide();
 		$('#edit_client').show();
 
@@ -398,6 +399,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		$('#edit_gender').val(edit_gender);
 		$('#edit_age').val(edit_age);
 		$('#edit_maritalStatus').val(edit_maritalStatus);
+
+		reloadSelectUi();
 	});
 
 
@@ -538,44 +541,184 @@ document.addEventListener('DOMContentLoaded', function() {
 // 	});
 
 	$(document).ready(function () {
-		
-		// Set active tab on page load (you can choose a default active tab)
-		$('.client-tab[data-value="tab1"]').addClass('active');
-		activeTabValue = $('.client-tab.active').data('value');
-		
-			$.ajax({
-				data:{
-					statusID:'deleteMarital',
-				},
-				type: "post",
-				url: "client.php",
-				success: function(response){
-					// Process the response from the PHP script if needed
-					console.log(response);
-				}
-			});
+		// Function to set the active tab value to localStorage
+		function setActiveTabToLocalStorage(activeTabValue) {
+			localStorage.setItem('activeTab', activeTabValue);
+		}
+	
+		// Function to get the active tab value from localStorage
+		function getActiveTabFromLocalStorage() {
+			return localStorage.getItem('activeTab');
+		}
+	
+		// Function to set the active tab on page load or use a default if none is stored
+		function setActiveTabOnLoad() {
+			$('.client-tab').removeClass('active'); // Remove active class from all tabs
 
+			const storedActiveTab = getActiveTabFromLocalStorage();
+			const defaultActiveTab = 'PND'; // Set your default active tab here
+			
+			console.log(localStorage);
+			if(performance.navigation.type=== 1){
+				// refresh reset tab to pending
+				initialActiveTab = defaultActiveTab;
+				// remove active tab in local storage 
+				localStorage.removeItem('activeTab');
+			}
+			else{
+				// not refresh load to same tab 
+				initialActiveTab = storedActiveTab;
+			}
+
+			
+			$(`.client-tab[data-value="${initialActiveTab}"]`).addClass('active');
+			loadTable(initialActiveTab);
+		}
+	
+		// Initialize the active tab
+		setActiveTabOnLoad();
+	
 		// Handle tab click
 		$('.client-tab').click(function () {
 			$('.client-tab').removeClass('active'); // Remove active class from all tabs
 			$(this).addClass('active'); // Add active class to clicked tab
-			
-			activeTabValue = $(this).data('value');
-			$.ajax({
-				data:{
-					statusID:'deleteMarital',
-				},
-				type: "post",
-				url: "client.php",
-				success: function(response){
-					// Process the response from the PHP script if needed
-					console.log(response);
-				}
-			});
+			const activeTabValue = $(this).data('value');
+			setActiveTabToLocalStorage(activeTabValue);
+			loadTable(activeTabValue);
 		});
 
-		
 	});
+
+	function loadTable(activeTabValue) {
+
+        // start ajax 
+        $.ajax({
+          url: 'sql/client-sql-query.php',
+          type: 'POST',
+          dataType: 'json',
+          data: {
+            process: 'getData',
+            status: activeTabValue
+          },
+          success: function(res) {
+            
+            data = res.data;
+
+            if(data.length <= 0){
+
+              Swal.fire({
+                icon: 'info',
+                title: 'Oopss!...',
+                text: res.message
+              }).then(function() {
+                $('#basic-1').DataTable().clear();
+                $('#basic-1').DataTable().destroy();
+                $('#basic-1').DataTable({
+                  dom: 'Bfrtip',
+                  lengthMenu: [
+                  [ 10, 25, 50 ],
+                  [ '10 rows', '25 rows', '50 rows' ]
+                  ],
+                  buttons: [
+                  'pageLength'
+                  ]});
+              });
+            }
+            else{
+              $('#basic-1').DataTable().clear();
+              $('#basic-1').DataTable().destroy();
+              $('#basic-1 tfoot th').each( function () {
+                // var title = $(this).text();
+                // $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+              } );
+			  console.log(data);
+
+              $('#basic-1').DataTable({
+                "data": data,
+                "columns": [
+                { "data": "ClientID"},
+                { "data": null,
+				  "render": function(data, type, row) {
+					return data.LastName + ', ' + data.FirstName+ ' ' + data.MiddleName;
+				  }
+				},
+				{ "data": null,
+				  "render": function(data, type, row) {
+					return data.BranchID + ' - ' + data.BranchName;
+				  }
+				},
+                { "data": "StatusName"},
+                {  "data": "CreatedAt",
+					"render": function(data, type, row) {
+					// Convert the date to "Y-m-d g:i a" format
+					var date = new Date(data);
+					var year = date.getFullYear();
+					var month = String(date.getMonth() + 1).padStart(2, '0');
+					var day = String(date.getDate()).padStart(2, '0');
+					var hours = date.getHours();
+					var minutes = String(date.getMinutes()).padStart(2, '0');
+					var period = hours >= 12 ? 'PM' : 'AM';
+					hours = hours % 12;
+					hours = hours ? hours : 12; // Handle midnight (0 hours)
+					var formattedDate = `${year}-${month}-${day} ${hours}:${minutes} ${period}`;
+					return formattedDate;
+					}
+				},
+                {
+                  "data": function(item) {
+                    return '<a class="btn btn-pill btn-outline-info btn-xs" id="viewClient"  data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '" data-last_name="' + item.LastName + '" data-first_name="' + item.FirstName + '" data-middle_name="' + item.MiddleName + '" data-branch_name="' + item.BranchName + '" data-branch_id="' + item.BranchID + '" data-birthday="' + item.Birthday + '" data-contact_no="' + item.ContactNo + '" data-address="' + item.Address + '" data-email="' + item.Email + '" data-business_name="' + item.BusinessName + '" data-business_address="' + item.BusinessAddress + '" data-gender="' + item.Gender + '" data-marital_name="' + item.MaritalName + '" data-age="' + item.Age + '" data-status_id="' + item.StatusID + '" data-status_name="' + item.StatusName + '"><i class="fa fa-eye" title="view"></i></a> <a class="btn btn-pill btn-outline-primary btn-xs" id="editClient"  data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '" data-last_name="' + item.LastName + '" data-first_name="' + item.FirstName + '" data-middle_name="' + item.MiddleName + '" data-branch_id="' + item.BranchID + '" data-birthday="' + item.Birthday + '" data-contact_no="' + item.ContactNo + '" data-address="' + item.Address + '" data-email="' + item.Email + '" data-business_name="' + item.BusinessName + '" data-business_address="' + item.BusinessAddress + '" data-gender="' + item.Gender + '" data-marital_status="' + item.MaritalStatus + '" data-age="' + item.Age + '" data-status_id="' + item.StatusID + '"><i class="fa fa-edit" title="Edit"></i></a><a href="#" class="btn btn-pill btn-outline-danger btn-xs" id="deleteClient" data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '" ><i class="fa fa-trash-o"title="Delete"></i></a>';
+
+                  }
+                }
+                ],
+                //      "columnDefs": [
+                  //   {
+                  //     "targets": 5,
+                  //     "render": $.fn.dataTable.render.number(',', '$')
+                  //   }
+                  // ],
+                  dom: 'Blfrtip',
+                  lengthMenu: [
+                  [ 10, 25, 50],
+                  [ '10 rows', '25 rows', '50 rows']
+                  ],
+                  buttons: [ 'pageLength',
+                //   { extend: 'copyHtml5', footer: true },
+                //   { extend: 'excelHtml5', footer: true },
+                //   { extend: 'csvHtml5', footer: true },
+                //   { extend: 'print', footer: true },
+                //   { extend: 'pdfHtml5', footer: true }
+
+
+                  ],
+                  "bDestroy": true,
+                  "deferRender": true,
+                  "bLengthChange": false,
+                //   initComplete: function () {
+                //   // Apply the search
+                //   this.api().columns().every( function () {
+                //     var that = this;
+
+                //     $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                //       if ( that.search() !== this.value ) {
+                //         that
+                //         .search( this.value )
+                //         .draw();
+                //       }
+                //     } );
+                //   } );
+                //   }
+              });
+
+            }
+
+          }, error: function(err) {
+            console.log(err);
+          }
+        
+        }); // end ajax 
+
+}  
 	
 
 });

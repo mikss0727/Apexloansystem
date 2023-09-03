@@ -1,4 +1,3 @@
-
 <?php include '../layout/header.php'; ?>
 
           <div class="page-body">
@@ -30,20 +29,27 @@
                           </div>
                       </div>
                       <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item"><a class="nav-link client-tab active" data-value="tab1" id="pending-tabs" data-bs-toggle="tab" href="#pending" role="tab" aria-controls="pending" aria-selected="true">Pending</a></li>
-                            <li class="nav-item"><a class="nav-link client-tab" data-value="tab2" id="approved-tabs" data-bs-toggle="tab" href="#approved" role="tab" aria-controls="approved" aria-selected="false">Approved</a></li>
-                            <li class="nav-item"><a class="nav-link client-tab" data-value="tab3" id="rejected-tabs" data-bs-toggle="tab" href="#rejected" role="tab" aria-controls="rejected" aria-selected="false">Rejected</a></li>
+                            <li class="nav-item"><a class="nav-link client-tab active" data-value="PND" id="pending-tabs" data-bs-toggle="tab" href="#pending" role="tab" aria-controls="pending" aria-selected="true">Pending</a></li>
+                            <li class="nav-item"><a class="nav-link client-tab" data-value="APR" id="approved-tabs" data-bs-toggle="tab" href="#approved" role="tab" aria-controls="approved" aria-selected="false">Approved</a></li>
+                            <li class="nav-item"><a class="nav-link client-tab" data-value="REJ" id="rejected-tabs" data-bs-toggle="tab" href="#rejected" role="tab" aria-controls="rejected" aria-selected="false">Rejected</a></li>
                             </ul>
-                            <div class="tab-content" id="myTabContent">
-                              <?php 
-                              
-                              if (isset($_POST['statusID'])) {
-                                    $statusID = $_POST['statusID'];
-                                    echo "statusID received: " . $statusID;
-                                } else {
-                                    echo "statusID not received.";
-                                }
-                             ?>
+                            <div class="tab-content mt-5" id="myTabContent">
+                                <div class="table-responsive">
+                                    <table class="display" id="basic-1">
+                                        <thead>
+                                        <tr>
+                                            <th>Client ID</th>
+                                            <th>Client Name</th>
+                                            <th>Branch</th>
+                                            <th>Status</th>
+                                            <th>Created On</th>
+                                            <th>ACTION</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
 
 
@@ -186,7 +192,7 @@
                                 <div class="col">
                                     <div class="mb-3">
                                         <label class="form-label" for="add_gender">Gender <span style="color: red;">*</span></label>
-                                        <select class="form-control col-sm-12" style="width: 100%;" id="add_gender" name="add_gender" required="">
+                                        <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="add_gender" name="add_gender" required="">
                                         <option value="">Select Gender...</option>
                                         <option value="M">Male</option>
                                         <option value="F">Female</option>
@@ -327,7 +333,6 @@
                                   <div class="mb-3">
                                     <label class="form-label" for="edit_branchid">Branch</label>
                                     <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="edit_branchid" name="edit_branchid" required="">
-                                      <option value="">Select Branch...</option>
                                           <?php
                                                   $result_type = mysqli_query($con,"SELECT * FROM t_branch WHERE isActive = 0");
                                                   
@@ -368,8 +373,7 @@
                                 <div class="col">
                                     <div class="mb-3">
                                         <label class="form-label" for="edit_gender">Gender <span style="color: red;">*</span></label>
-                                        <select class="form-control col-sm-12" style="width: 100%;" id="edit_gender" name="edit_gender" required="">
-                                        <option value="">Select Gender...</option>
+                                        <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="edit_gender" name="edit_gender" required="">
                                         <option value="M">Male</option>
                                         <option value="F">Female</option>
                                         </select>
@@ -383,7 +387,6 @@
                                   <div class="mb-3">
                                     <label class="form-label" for="edit_maritalStatus">Marital Status <span style="color: red;">*</span></label>
                                     <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="edit_maritalStatus" name="edit_maritalStatus" required="">
-                                      <option value="">Select Marital Status...</option>
                                           <?php
                                                   $result_type = mysqli_query($con,"SELECT * FROM t_marital_status WHERE isActive = 0");
                                                   
@@ -534,7 +537,6 @@
                                 <div class="mb-3">
                                 <label class="form-label" for="v_statusID">Status <span style="color: red;">*</span></label>
                                 <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="v_statusID" name="v_statusID" required="">
-                                    <option value="">Select Status...</option>
                                         <?php
                                                 $result_type = mysqli_query($con,"SELECT * FROM t_status WHERE isActive = 0 AND StatusID IN ('APR','REJ','PND')");
                                                 

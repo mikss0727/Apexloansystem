@@ -4,6 +4,10 @@ function validateDecimalInput(input) {
     // Remove extra decimal points
     input.value = input.value.replace(/(\..*)\./g, '$1');
 }
+function reloadSelectUi(){
+	// Trigger the 'change' event to update the Select2 UI
+	$('.js-example-basic-single').trigger('change');
+}
 document.addEventListener('DOMContentLoaded', function() {
     // JavaScript code for the contact page content goes here
     // For example, you can add event listeners, modify elements, etc.
@@ -19,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 	});
 
-	// edit user
+	// edit rate
 	$(document).on('click','#editRate',function(e) {
 
 		$('#tbl_rate').hide();
@@ -32,12 +36,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		var pk_id=$(this).attr("data-pk_id");
 
 
-        console.log(edit_rate);
 		$('#edit_rateID').val(edit_rateID);
 		$('#edit_rateName').val(edit_rateName);
 		$('#edit_rate').val(edit_rate);
 		$('#edit_isActive').val(edit_isActive);
 		$('#pk_id').val(pk_id);
+		reloadSelectUi();
 	});
 
 	// show hide div
@@ -56,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 	});
 
-	// add user submit
+	// add rate submit
 	$("#addRate_form").submit(function(e) {
 
 		
@@ -132,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-	// edit user submit
+	// edit rate submit
 	$("#rateEdit_form").submit(function(e) {
 
 

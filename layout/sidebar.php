@@ -22,6 +22,8 @@
         <li><a href="term-type.php">Term Type</a></li>
         <li><a href="status.php">Status</a></li>
         <li><a href="rate.php">Rate</a></li>
+        <li><a href="user-account.php">User</a></li>
+        <li><a href="employee.php">Employee</a></li>
         <li><a href="product.php">Product</a></li>
         <li><a href="marital.php">Marital Status</a></li>
         <li><a href="client.php">Client</a></li>

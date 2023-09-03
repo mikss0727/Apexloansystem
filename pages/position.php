@@ -157,7 +157,7 @@
                                 <div class="col">
                                     <div class="mb-3">
                                         <label class="form-label" for="add_isActive">Status</label>
-                                        <select class="form-control col-sm-12" style="width: 100%;" id="add_isActive" name="add_isActive" required="">
+                                        <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="add_isActive" name="add_isActive" required="">
                                         <option value="">Select Status...</option>
                                         <option value="0">Active</option>
                                         <option value="1">Inactive</option>
@@ -210,8 +210,8 @@
                                 <div class="col">
                                     <div class="mb-3">
                                         <label class="form-label" for="edit_isActive">Status</label>
-                                        <select class="form-control col-sm-12" style="width: 100%;" id="edit_isActive" name="edit_isActive" required="">
-                                        <option value="">Select Status...</option>
+                                        <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="edit_isActive" name="edit_isActive" required="">
+                                        
                                         <option value="0">Active</option>
                                         <option value="1">Inactive</option>
                                         </select>

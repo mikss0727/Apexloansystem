@@ -13234,9 +13234,9 @@ ul.pro-services li:nth-child(n+2) {
 .nav-tabs {
   border-color: #e6edef; }
   .nav-tabs .nav-link.active {
-    background-color: rgba(22, 142, 234, 0.1);
+    background-color: rgba(22, 142, 234);
     border-color: #e6edef;
-    color: #168eea; }
+    color: #ffffff; }
   .nav-tabs .nav-item.show .nav-link {
     background-color: rgba(22, 142, 234, 0.1); }
 

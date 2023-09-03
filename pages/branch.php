@@ -98,7 +98,7 @@
                                               <a href="#" class="btn btn-pill btn-outline-primary btn-xs" id="editBranch" data-toggle="modal"
                                                   data-pk_id="<?php echo $row["id"]; ?>"
                                                   data-branch_id="<?php echo $row["BranchID"]; ?>"
-                                                  data-pos_name="<?php echo $row["BranchName"]; ?>"
+                                                  data-branch_name="<?php echo $row["BranchName"]; ?>"
                                                   data-isactive="<?php echo $row["isActive"]; ?>">
                                                   <i class="fa fa-edit" data-toggle="tooltip" 
                                                   title="Edit"></i>
@@ -157,7 +157,7 @@
                                   <div class="col">
                                       <div class="mb-3">
                                           <label class="form-label" for="add_isActive">Status</label>
-                                          <select class="form-control col-sm-12" style="width: 100%;" id="add_isActive" name="add_isActive" required="">
+                                          <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="add_isActive" name="add_isActive" required="">
                                           <option value="">Select Status...</option>
                                           <option value="0">Active</option>
                                           <option value="1">Inactive</option>
@@ -212,8 +212,8 @@
                                 <div class="col">
                                     <div class="mb-3">
                                         <label class="form-label" for="edit_isActive">Status</label>
-                                        <select class="form-control col-sm-12" style="width: 100%;" id="edit_isActive" name="edit_isActive" required="">
-                                        <option value="">Select Status...</option>
+                                        <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="edit_isActive" name="edit_isActive" required="">
+                                        
                                         <option value="0">Active</option>
                                         <option value="1">Inactive</option>
                                         </select>

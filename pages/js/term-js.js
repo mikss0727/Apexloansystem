@@ -1,6 +1,10 @@
 function validateDecimalInput(input) {
     input.value = input.value.replace(/\D/g, '');
 }
+function reloadSelectUi(){
+	// Trigger the 'change' event to update the Select2 UI
+	$('.js-example-basic-single').trigger('change');
+}
 document.addEventListener('DOMContentLoaded', function() {
     // JavaScript code for the contact page content goes here
     // For example, you can add event listeners, modify elements, etc.
@@ -14,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 	});
 
-	// edit user
+	// edit term
 	$(document).on('click','#editTerm',function(e) {
 
 		$('#tbl_term').hide();
@@ -33,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		$('#edit_termNo').val(edit_termNo);
 		$('#edit_isActive').val(edit_isActive);
 		$('#pk_id').val(pk_id);
+		reloadSelectUi();
 	});
 
 	// show hide div
@@ -51,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 	});
 
-	// add user submit
+	// add term submit
 	$("#addTerm_form").submit(function(e) {
 
 		
@@ -127,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-	// edit user submit
+	// edit term submit
 	$("#termEdit_form").submit(function(e) {
 
 

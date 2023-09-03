@@ -1,4 +1,9 @@
 
+function reloadSelectUi(){
+	// Trigger the 'change' event to update the Select2 UI
+	$('.js-example-basic-single').trigger('change');
+}
+
 // show hide div
 $(document).on('click','#addCapital',function(e) {
 	
