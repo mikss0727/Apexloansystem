@@ -1,21 +1,176 @@
-function validateDecimalInput(input) {
-    input.value = input.value.replace(/[^0-9.]/g, '');
+	// table data 
+	function loadTable() {
+		Swal.fire({
+			title: 'Loading',
+			text: 'Please wait while data is being loaded...',
+			allowOutsideClick: false,
+			showCancelButton: false,
+			showConfirmButton: false,
+			onBeforeOpen: () => {
+				Swal.showLoading();
+			}
+		});
+        // start ajax 
+        $.ajax({
+          url: 'sql/rate-sql-query.php',
+          type: 'POST',
+          dataType: 'json',
+          data: {
+            process: 'getData'
+          },
+          success: function(res) {
+            swal.close();
+            data = res.data;
 
-    // Remove extra decimal points
-    input.value = input.value.replace(/(\..*)\./g, '$1');
-}
-function reloadSelectUi(){
-	// Trigger the 'change' event to update the Select2 UI
-	$('.js-example-basic-single').trigger('change');
-}
+            if(data.length <= 0){
+
+              Swal.fire({
+                icon: 'info',
+                title: 'Oopss!...',
+                text: res.message
+              }).then(function() {
+                $('#basic-1').DataTable().clear();
+                $('#basic-1').DataTable().destroy();
+                $('#basic-1').DataTable({
+                  dom: 'Bfrtip',
+                  lengthMenu: [
+                  [ 10, 25, 50 ],
+                  [ '10 rows', '25 rows', '50 rows' ]
+                  ],
+                  buttons: [
+                  'pageLength'
+                  ]});
+              });
+            }
+            else{
+              $('#basic-1').DataTable().clear();
+              $('#basic-1').DataTable().destroy();
+
+              // header footer title 
+              // $('#basic-1 tfoot th').each( function () {
+                // var title = $(this).text();
+                // $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+              // } );
+
+
+              $('#basic-1').DataTable({
+                "data": data,
+                "columns": [
+                { "data": "RateID"},
+                { "data": "RateName"},
+                { "data": "Rate"},
+                { "data": "CreatedBy"},
+                {  "data": "CreatedAt",
+					"render": function(data, type, row) {
+					// Convert the date to "Y-m-d g:i a" format
+					var date = new Date(data);
+					var year = date.getFullYear();
+					var month = String(date.getMonth() + 1).padStart(2, '0');
+					var day = String(date.getDate()).padStart(2, '0');
+					var hours = date.getHours();
+					var minutes = String(date.getMinutes()).padStart(2, '0');
+					var period = hours >= 12 ? 'PM' : 'AM';
+					hours = hours % 12;
+					hours = hours ? hours : 12; // Handle midnight (0 hours)
+					var formattedDate = `${year}-${month}-${day} ${hours}:${minutes} ${period}`;
+					return formattedDate;
+					}
+            	},
+                { "data": "UpdatedBy"},
+				{  "data": "UpdatedAt",
+					"render": function(data, type, row) {
+					// Convert the date to "Y-m-d g:i a" format
+					var date = new Date(data);
+					var year = date.getFullYear();
+					var month = String(date.getMonth() + 1).padStart(2, '0');
+					var day = String(date.getDate()).padStart(2, '0');
+					var hours = date.getHours();
+					var minutes = String(date.getMinutes()).padStart(2, '0');
+					var period = hours >= 12 ? 'PM' : 'AM';
+					hours = hours % 12;
+					hours = hours ? hours : 12; // Handle midnight (0 hours)
+					var formattedDate = `${year}-${month}-${day} ${hours}:${minutes} ${period}`;
+					return formattedDate;
+					}
+            	},
+                {
+					"data": function(item) {
+						if ((item.isActive == null) || (item.isActive == 0)){ 
+							return	'<span class="label label-success">Active</span>'; 
+						}
+						else { 
+							return '<span class="label label-info">Inactive</span>';
+						}
+					}
+				  },
+
+
+                    {
+                      "data": function(item) {
+                        return '<a class="btn btn-pill btn-outline-primary btn-xs" id="editRate" data-toggle="modal" data-pk_id="' + item.id + '" data-rate_id="' + item.RateID + '" data-rate_name="' + item.RateName + '" data-rate="' + item.Rate + '" data-isactive="' + item.isActive + '"> <i class="fa fa-edit" data-toggle="tooltip"  title="Edit"></i></a>  <a href="#" class="btn btn-pill btn-outline-danger btn-xs" id="deleteRate" data-pk_id="' + item.id + '" data-rate_id="' + item.RateID + '"><i class="fa fa-trash-o" data-toggle="tooltip" title="Delete"></i></a>';
+
+                      }
+                    }
+                    ],
+                    //      "columnDefs": [
+                      //   {
+                      //     "targets": 5,
+                      //     "render": $.fn.dataTable.render.number(',', '$')
+                      //   }
+                      // ],
+                      dom: 'Blfrtip',
+                      lengthMenu: [
+                      [ 10, 25, 50],
+                      [ '10 rows', '25 rows', '50 rows']
+                      ],
+                      buttons: [ 'pageLength',
+                    //   { extend: 'copyHtml5', footer: true },
+                    //   { extend: 'excelHtml5', footer: true },
+                    //   { extend: 'csvHtml5', footer: true },
+                    //   { extend: 'print', footer: true },
+                    //   { extend: 'pdfHtml5', footer: true }
+
+
+                      ],
+                      "bDestroy": true,
+                      "deferRender": true,
+                      "bLengthChange": false,
+                    //   initComplete: function () {
+                    //   // Apply the search
+                    //   this.api().columns().every( function () {
+                    //     var that = this;
+
+                    //     $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                    //       if ( that.search() !== this.value ) {
+                    //         that
+                    //         .search( this.value )
+                    //         .draw();
+                    //       }
+                    //     } );
+                    //   } );
+                    //   }
+                  });
+
+                }
+
+              }, error: function(err) {
+                console.log(err);
+              }
+            
+        }); // end ajax 
+
+}  
+
+
 document.addEventListener('DOMContentLoaded', function() {
     // JavaScript code for the contact page content goes here
     // For example, you can add event listeners, modify elements, etc.
 
-
+	loadTable();
 
 	// show hide div
 	$(document).on('click','#addRate',function(e) {
+		resetForm(addRate_form);
 		
 		$('#tbl_rate').hide();
 		$('#add_rate').show();
@@ -29,18 +184,18 @@ document.addEventListener('DOMContentLoaded', function() {
 		$('#tbl_rate').hide();
 		$('#edit_rateForm').show();
 
+		var pk_id=$(this).attr("data-pk_id");
 		var edit_rateID=$(this).attr("data-rate_id");
 		var edit_rateName=$(this).attr("data-rate_name");
 		var edit_rate=$(this).attr("data-rate");
 		var edit_isActive=$(this).attr("data-isactive");
-		var pk_id=$(this).attr("data-pk_id");
 
 
-		$('#edit_rateID').val(edit_rateID);
+		$('#pk_id').val(pk_id);
+		$('#rate_id').val(edit_rateID);
 		$('#edit_rateName').val(edit_rateName);
 		$('#edit_rate').val(edit_rate);
 		$('#edit_isActive').val(edit_isActive);
-		$('#pk_id').val(pk_id);
 		reloadSelectUi();
 	});
 
@@ -62,25 +217,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	// add rate submit
 	$("#addRate_form").submit(function(e) {
+		e.preventDefault();
 
-		
-		var add_rateID = document.getElementById("add_rateID").value;
-		var add_rateName = document.getElementById("add_rateName").value;
-		var add_rate = document.getElementById("add_rate").value;
-		var add_isActive = document.getElementById("add_isActive").value;
-
-		if (add_rateID =='' || add_rateName =='' || add_rate =='' || add_isActive =='')
-		{
-			e.preventDefault();
-
-			// alert("Please Fill All Required Field");
-			Swal.fire({
-				icon: 'error',
-				title: 'Oops...',
-				text: 'Some fields does not meet the condition!'
-			})
-
-		}
+		const form = document.getElementById("addRate_form");
+	
+        if (!ValidationFeedback(form)) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: 'Some fields are empty or does not meet the condition!'
+				})
+        }
 		else{
 			e.preventDefault();
 
@@ -114,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
 										title: 'Success...',
 										text: dataResult.message
 									}).then(function() {
-										window.location = 'rate.php';
+										loadTable();
 									});
 
 								}
@@ -138,25 +285,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	// edit rate submit
 	$("#rateEdit_form").submit(function(e) {
+		e.preventDefault();
 
-
-		var edit_rateID = document.getElementById("edit_rateID").value;
-		var edit_rateName = document.getElementById("edit_rateName").value;
-		var edit_rate = document.getElementById("edit_rate").value;
-		var edit_isActive = document.getElementById("edit_isActive").value;
-
-		if (edit_rateName == '' || edit_isActive == '' || edit_rate == '' || edit_rateID == '')
-		{
-			// alert("Please Fill All Required Field");
-			e.preventDefault()
-
-			Swal.fire({
-				icon: 'error',
-				title: 'Oops...',
-				text: 'Some fields does not meet the condition!'
-			})
-
-		}
+		const form = document.getElementById("rateEdit_form");
+	
+        if (!ValidationFeedback(form)) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: 'Some fields are empty or does not meet the condition!'
+				})
+        }
 		else{
 			e.preventDefault()
 
@@ -172,7 +311,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				if (result.isConfirmed) {
 					
 					var data = $("#rateEdit_form").serialize();
-					console.log(data);
 					$.ajax({
 						data: data,
 						type: "post",
@@ -182,13 +320,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 							if(dataResult.statusCode==0){
 								
+									$('#tbl_rate').show();
+									$('#edit_rateForm').hide();
+								
 									// alert('Data added successfully !'); 
 									Swal.fire({
 										icon: 'success',
 										title: 'Success...',
 										text: dataResult.message
 									}).then(function() {
-										window.location = 'rate.php';
+										loadTable();
 									});
 
 								}
@@ -243,7 +384,7 @@ document.addEventListener('DOMContentLoaded', function() {
 								title: 'Success...',
 								text: dataResult.message
 							}).then(function() {
-								window.location = 'rate.php';
+								loadTable();
 							});
 
 						}

@@ -4,6 +4,54 @@ error_reporting(0);
 include("../../database/connection.php");
 
 
+// get table data 
+
+if($_POST['process']=='getData'){
+	
+	$query = "SELECT 
+				t1.id,
+				t1.RoleID,
+				t1.RoleName,
+				t1.CreatedAt,
+				CONCAT(t2.LastName,', ',t2.FirstName,' ',t2.MiddleName) AS 'CreatedBy',
+				t1.isActive,
+				t1.UpdatedAt,
+				CONCAT(t3.LastName,', ',t3.FirstName,' ',t3.MiddleName) AS 'UpdatedBy'
+			FROM t_user_roles t1 
+			LEFT JOIN t_employee t2
+			ON t1.CreatedBy = t2.EmployeeID 
+			LEFT JOIN t_employee t3
+			ON t1.UpdatedBy = t3.EmployeeID";
+
+				$stmt = mysqli_prepare($con, $query);
+				mysqli_stmt_execute($stmt);
+				$result = mysqli_stmt_get_result($stmt);
+
+				$dataArray = array(); // Initialize an empty array to store the data
+
+				if ($result->num_rows > 0) {
+					while ($row = $result->fetch_assoc()) {
+						$dataArray[] = $row; // Add each row to the array
+					}
+					echo json_encode(
+						array(
+							"message" => "Successfully fetched data.", 
+							"data" => $dataArray
+						)
+					);
+				} else {
+					echo json_encode(
+						array(
+							"message" => "No Data found.",
+							"data" => $dataArray
+						)
+					);
+				}
+												
+												
+}
+
+
 // add role
 if($_POST['process']=='addRole'){
     
@@ -45,7 +93,7 @@ if($_POST['process']=='addRole'){
 // edit Role
 if($_POST['process']=='editRole'){
 
-	$edit_roleID = $_POST['edit_roleID'];
+	$edit_roleID = $_POST['role_id'];
 	$edit_roleName = $_POST['edit_roleName'];
 	$edit_isActive = $_POST['edit_isActive'];
 	$pk_id = $_POST['pk_id'];

@@ -4,6 +4,55 @@ error_reporting(0);
 include("../../database/connection.php");
 
 
+// get table data 
+
+if($_POST['process']=='getData'){
+	
+	$query = "SELECT 
+					t1.id,
+					t1.RateID,
+					t1.RateName,
+					t1.Rate,
+					t1.CreatedAt,
+					CONCAT(t2.LastName,', ',t2.FirstName,' ',t2.MiddleName) AS 'CreatedBy',
+					t1.isActive,
+					t1.UpdatedAt,
+					CONCAT(t3.LastName,', ',t3.FirstName,' ',t3.MiddleName) AS 'UpdatedBy'
+				FROM t_interest_rate t1 
+				LEFT JOIN t_employee t2
+				ON t1.CreatedBy = t2.EmployeeID 
+				LEFT JOIN t_employee t3
+				ON t1.UpdatedBy = t3.EmployeeID";
+
+				$stmt = mysqli_prepare($con, $query);
+				mysqli_stmt_execute($stmt);
+				$result = mysqli_stmt_get_result($stmt);
+
+				$dataArray = array(); // Initialize an empty array to store the data
+
+				if ($result->num_rows > 0) {
+					while ($row = $result->fetch_assoc()) {
+						$dataArray[] = $row; // Add each row to the array
+					}
+					echo json_encode(
+						array(
+							"message" => "Successfully fetched data.", 
+							"data" => $dataArray
+						)
+					);
+				} else {
+					echo json_encode(
+						array(
+							"message" => "No Data found.",
+							"data" => $dataArray
+						)
+					);
+				}
+												
+												
+}
+
+
 // add rate
 if($_POST['process']=='addRate'){
     
@@ -46,7 +95,7 @@ if($_POST['process']=='addRate'){
 // edit Rate
 if($_POST['process']=='editRate'){
 
-	$edit_rateID = $_POST['edit_rateID'];
+	$edit_rateID = $_POST['rate_id'];
 	$edit_rateName = $_POST['edit_rateName'];
 	$edit_rate = $_POST['edit_rate'];
 	$edit_isActive = $_POST['edit_isActive'];

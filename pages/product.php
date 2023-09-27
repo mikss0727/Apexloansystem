@@ -37,6 +37,7 @@
                                     <th>Product ID</th>
                                     <th>Product Name</th>
                                     <th>Amount</th>
+                                    <th>Collection No</th>
                                     <th>Created By</th>
                                     <th>Created On</th>
                                     <th>Updated By</th>
@@ -46,81 +47,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                      <?php
-                                          
-                                          $result = mysqli_query($con,"SELECT 
-                                                                          t1.id,
-                                                                          t1.ProductID,
-                                                                          t1.ProductName,
-                                                                          t1.LoanAmount,
-                                                                          t1.CreatedAt,
-                                                                          CONCAT(t2.LastName,', ',t2.FirstName,' ',t2.MiddleName) AS 'CreatedBy',
-                                                                          t1.isActive,
-                                                                          t1.UpdatedAt,
-                                                                          CONCAT(t3.LastName,', ',t3.FirstName,' ',t3.MiddleName) AS 'UpdatedBy'
-                                                                      FROM t_product t1 
-                                                                      LEFT JOIN t_employee t2
-                                                                      ON t1.CreatedBy = t2.EmployeeID 
-                                                                      LEFT JOIN t_employee t3
-                                                                      ON t1.UpdatedBy = t3.EmployeeID");
-
-                                          
-
-                                              while($row = mysqli_fetch_array($result)) {
-                                          ?>
-                                          <tr>
-                                              <td> <?php echo $row["ProductID"]; ?></td>
-                                              <td> <?php echo $row["ProductName"]; ?></td>
-                                              <td> <?php echo $row["LoanAmount"]; ?></td>
-                                              <td> <?php echo $row["CreatedBy"]; ?></td>
-                                              <td><?php 
-                                                      if($row["CreatedAt"] == '' || $row["CreatedAt"] == null)
-                                                      {
-                                                          echo '';
-                                                      }
-                                                      else{
-                                                          $date_created=date_create($row["CreatedAt"]);
-                                                          echo date_format($date_created,"Y-m-d g:i a");
-                                                      }
-                                              ?></td>
-                                              <td> <?php echo $row["UpdatedBy"]; ?></td>
-                                              <td><?php 
-                                                      if($row["UpdatedAt"] == '' || $row["UpdatedAt"] == null)
-                                                      {
-                                                          echo '';
-                                                      }
-                                                      else{
-                                                          $date_update=date_create($row["UpdatedAt"]);
-                                                          echo date_format($date_update,"Y-m-d g:i a");
-                                                      }
-                                              ?></td>
-                                              <td><?php if ($row["isActive"] == 0){ ?><span class="label label-success">Active</span> <?php }else { ?><span class="label label-info">Inactive</span>  <?php } ?></td>
-                                              
-
-                                              <td style="text-align: center;">
-                                                  <a href="#" class="btn btn-pill btn-outline-primary btn-xs" id="editProduct" data-toggle="modal"
-                                                      data-pk_id="<?php echo $row["id"]; ?>"
-                                                      data-product_id="<?php echo $row["ProductID"]; ?>"
-                                                      data-product_name="<?php echo $row["ProductName"]; ?>"
-                                                      data-loan_amount="<?php echo $row["LoanAmount"]; ?>"
-                                                      data-isactive="<?php echo $row["isActive"]; ?>">
-                                                      <i class="fa fa-edit" data-toggle="tooltip" 
-                                                      title="Edit"></i>
-                                                  </a>
-                                                  <a href="#" class="btn btn-pill btn-outline-danger btn-xs" id="deleteProduct"
-                                                  data-pk_id="<?php echo $row["id"]; ?>"
-                                                  data-product_id="<?php echo $row["ProductID"]; ?>">
-                                                      <i class="fa fa-trash-o" data-toggle="tooltip" 
-                                                      title="Delete"></i>
-                                                  </a>
-
-                                              </td>
-                                          </tr>
-                                          <?php
-                                          
-                                          }
-                                          ?>
-                                    </tbody>
+                                </tbody>
                             </table>
                           </div>
                       </div>
@@ -164,6 +91,29 @@
                                       </div>
                                   </div>
                               </div>
+                            <!-- Product Term Number / collection number -->
+                              <div class="row">
+                                <div class="col">
+                                  <div class="mb-3">
+                                    <label class="form-label" for="add_term">Term Number / Collection No</label>
+                                    <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="add_term" name="add_term" required="">
+                                      <option value="">Select Term Number...</option>
+                                          <?php
+                                                  $result_type = mysqli_query($con,"SELECT * FROM t_product_term WHERE isActive = 0");
+                                                  
+                                                  while($row_type = mysqli_fetch_array($result_type)) {
+                                          ?>
+                                          <option value="<?php echo $row_type["TermID"]; ?>"><?php echo $row_type["TermName"]. ' - '. $row_type["TermNo"]; ?></option>
+                                          <?php
+                                          
+                                          }
+                                          ?>
+                                    </select>
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback">Please Select Term.</div>
+                                  </div>
+                                </div>
+                              </div>
                               <div class="row">
                                   <div class="col">
                                       <div class="mb-3">
@@ -203,14 +153,6 @@
                             <div class="row">
                                 <div class="col">
                                 <div class="mb-3">
-                                    <label class="form-label" for="edit_productID">Product ID</label>
-                                    <input class="form-control" id="edit_productID" name="edit_productID" type="text" readonly>
-                                </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                <div class="mb-3">
                                     <label class="form-label" for="edit_productName">Product Name</label>
                                     <input class="form-control" id="edit_productName" name="edit_productName" type="text" required="">
                                     <div class="valid-feedback">Looks good!</div>
@@ -228,25 +170,49 @@
                                 </div>
                                 </div>
                             </div>
-                            <div class="row">
+                             <!-- Product Term Number / collection number -->
+                             <div class="row">
                                 <div class="col">
-                                    <div class="mb-3">
-                                        <label class="form-label" for="edit_isActive">Status</label>
-                                        <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="edit_isActive" name="edit_isActive" required="">
-                                        
-                                        <option value="0">Active</option>
-                                        <option value="1">Inactive</option>
-                                        </select>
-                                        <div class="valid-feedback">Looks good!</div>
-                                        <div class="invalid-feedback">Please Select Status.</div>
+                                  <div class="mb-3">
+                                    <label class="form-label" for="edit_term">Term Number / Collection No</label>
+                                    <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="edit_term" name="edit_term" required="">
+                                          <?php
+                                                  $result_type = mysqli_query($con,"SELECT * FROM t_product_term WHERE isActive = 0");
+                                                  
+                                                  while($row_type = mysqli_fetch_array($result_type)) {
+                                          ?>
+                                          <option value="<?php echo $row_type["TermID"]; ?>"><?php echo $row_type["TermName"]. ' - '. $row_type["TermNo"]; ?></option>
+                                          <?php
+                                          
+                                          }
+                                          ?>
+                                    </select>
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback">Please Select Term.</div>
+                                  </div>
+                                </div>
+                              </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="edit_isActive">Status</label>
+                                            <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="edit_isActive" name="edit_isActive" required="">
+                                            
+                                            <option value="0">Active</option>
+                                            <option value="1">Inactive</option>
+                                            </select>
+                                            <div class="valid-feedback">Looks good!</div>
+                                            <div class="invalid-feedback">Please Select Status.</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                             </div>
                             <div class="card-footer text-end">
                                 <!-- hidden value process name and sessionid primaryid ,roleid-->
                             <input value="editProduct" name="process" type="hidden">
                             <input id="pk_id" name="pk_id" type="hidden">
+                            <input id="product_id" name="product_id" type="hidden">
                             <input value="<?php echo $_SESSION['EmployeeID']; ?>" name="EmployeeID" type="hidden">
                             <input value="<?php echo $_SESSION['RoleID']; ?>" name="RoleID" type="hidden">
                             <button class="btn btn-primary" type="submit">Submit</button>

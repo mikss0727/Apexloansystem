@@ -1,37 +1,181 @@
+	// table data 
+	function loadTable() {
+		Swal.fire({
+			title: 'Loading',
+			text: 'Please wait while data is being loaded...',
+			allowOutsideClick: false,
+			showCancelButton: false,
+			showConfirmButton: false,
+			onBeforeOpen: () => {
+				Swal.showLoading();
+			}
+		});
+        // start ajax 
+        $.ajax({
+          url: 'sql/user-account-sql-query.php',
+          type: 'POST',
+          dataType: 'json',
+          data: {
+            process: 'getData'
+          },
+          success: function(res) {
+            swal.close();
+            data = res.data;
 
-function reloadSelectUi(){
-	// Trigger the 'change' event to update the Select2 UI
-	$('.js-example-basic-single').trigger('change');
-}
+            if(data.length <= 0){
+
+              Swal.fire({
+                icon: 'info',
+                title: 'Oopss!...',
+                text: res.message
+              }).then(function() {
+                $('#basic-1').DataTable().clear();
+                $('#basic-1').DataTable().destroy();
+                $('#basic-1').DataTable({
+                  dom: 'Bfrtip',
+                  lengthMenu: [
+                  [ 10, 25, 50 ],
+                  [ '10 rows', '25 rows', '50 rows' ]
+                  ],
+                  buttons: [
+                  'pageLength'
+                  ]});
+              });
+            }
+            else{
+              $('#basic-1').DataTable().clear();
+              $('#basic-1').DataTable().destroy();
+
+              // header footer title 
+              // $('#basic-1 tfoot th').each( function () {
+                // var title = $(this).text();
+                // $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+              // } );
+
+
+              $('#basic-1').DataTable({
+                "data": data,
+                "columns": [
+                { "data": "EmployeeID"},
+                { "data": "EmployeeName"},
+				{ "data": null,
+				  "render": function(data, type, row) {
+					return data.BranchID + ' - ' + data.BranchName;
+				  }
+				},
+                { "data": "CreatedBy"},
+                {  "data": "CreatedAt",
+					"render": function(data, type, row) {
+					// Convert the date to "Y-m-d g:i a" format
+					var date = new Date(data);
+					var year = date.getFullYear();
+					var month = String(date.getMonth() + 1).padStart(2, '0');
+					var day = String(date.getDate()).padStart(2, '0');
+					var hours = date.getHours();
+					var minutes = String(date.getMinutes()).padStart(2, '0');
+					var period = hours >= 12 ? 'PM' : 'AM';
+					hours = hours % 12;
+					hours = hours ? hours : 12; // Handle midnight (0 hours)
+					var formattedDate = `${year}-${month}-${day} ${hours}:${minutes} ${period}`;
+					return formattedDate;
+					}
+            	},
+                { "data": "UpdatedBy"},
+				{  "data": "UpdatedAt",
+					"render": function(data, type, row) {
+					// Convert the date to "Y-m-d g:i a" format
+					var date = new Date(data);
+					var year = date.getFullYear();
+					var month = String(date.getMonth() + 1).padStart(2, '0');
+					var day = String(date.getDate()).padStart(2, '0');
+					var hours = date.getHours();
+					var minutes = String(date.getMinutes()).padStart(2, '0');
+					var period = hours >= 12 ? 'PM' : 'AM';
+					hours = hours % 12;
+					hours = hours ? hours : 12; // Handle midnight (0 hours)
+					var formattedDate = `${year}-${month}-${day} ${hours}:${minutes} ${period}`;
+					return formattedDate;
+					}
+            	},
+                {
+					"data": function(item) {
+						if ((item.isActive == null) || (item.isActive == 0)){ 
+							return	'<span class="label label-success">Active</span>'; 
+						}
+						else { 
+							return '<span class="label label-info">Inactive</span>';
+						}
+					}
+				  },
+
+
+                    {
+                      "data": function(item) {
+                        return '<a class="btn btn-pill btn-outline-primary btn-xs" id="editUserAccount" data-toggle="modal" data-pk_id="' + item.id + '" data-user_id="' + item.EmployeeID + '" data-branch_id="' + item.BranchID + '" data-role_id="' + item.RoleID + '" data-isactive="' + item.isActive + '"> <i class="fa fa-edit" data-toggle="tooltip"  title="Edit"></i></a>  <a href="#" class="btn btn-pill btn-outline-warning btn-xs" id="resetPassword" data-pk_id="' + item.id + '" data-user_id="' + item.EmployeeID + '"> <i class="fa fa-rotate-right" data-toggle="tooltip"  title="Reset Password"></i></a>  <a href="#" class="btn btn-pill btn-outline-danger btn-xs" id="deleteUserAccount" data-pk_id="' + item.id + '" data-user_id="' + item.EmployeeID + '"> <i class="fa fa-trash-o" data-toggle="tooltip"  title="Delete"></i></a>';
+
+                      }
+                    }
+                    ],
+                    //      "columnDefs": [
+                      //   {
+                      //     "targets": 5,
+                      //     "render": $.fn.dataTable.render.number(',', '$')
+                      //   }
+                      // ],
+                      dom: 'Blfrtip',
+                      lengthMenu: [
+                      [ 10, 25, 50],
+                      [ '10 rows', '25 rows', '50 rows']
+                      ],
+                      buttons: [ 'pageLength',
+                    //   { extend: 'copyHtml5', footer: true },
+                    //   { extend: 'excelHtml5', footer: true },
+                    //   { extend: 'csvHtml5', footer: true },
+                    //   { extend: 'print', footer: true },
+                    //   { extend: 'pdfHtml5', footer: true }
+
+
+                      ],
+                      "bDestroy": true,
+                      "deferRender": true,
+                      "bLengthChange": false,
+                    //   initComplete: function () {
+                    //   // Apply the search
+                    //   this.api().columns().every( function () {
+                    //     var that = this;
+
+                    //     $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                    //       if ( that.search() !== this.value ) {
+                    //         that
+                    //         .search( this.value )
+                    //         .draw();
+                    //       }
+                    //     } );
+                    //   } );
+                    //   }
+                  });
+
+                }
+
+              }, error: function(err) {
+                console.log(err);
+              }
+            
+        }); // end ajax 
+
+}  
+
+
 document.addEventListener('DOMContentLoaded', function() {
     // JavaScript code for the contact page content goes here
     // For example, you can add event listeners, modify elements, etc.
 
-// field validation
-function ValidationFeedback(form) {
 
-    const inputFields = form.querySelectorAll('.form-control');
-    const validFeedbackList = form.querySelectorAll('.valid-feedback');
-    const invalidFeedbackList = form.querySelectorAll('.invalid-feedback');
-
-    let allFieldsValid = true;
-
-    inputFields.forEach((inputField, index) => {
-        if (inputField.validity.valid) {
-            validFeedbackList[index].style.display = 'block';
-            invalidFeedbackList[index].style.display = 'none';
-        } else {
-            validFeedbackList[index].style.display = 'none';
-            invalidFeedbackList[index].style.display = 'block';
-            allFieldsValid = false;
-        }
-    
-    });
-    return allFieldsValid;
-}
+	loadTable();
 
 	// show hide div
 	$(document).on('click','#addUser',function(e) {
+		resetForm(addUser_form);
 		
 		$('#tbl_user').hide();
 		$('#add_user').show();
@@ -47,19 +191,27 @@ function ValidationFeedback(form) {
 		
 	});
 
+	// show hide div
+	$(document).on('click','#cancel_edit',function(e) {
+		// get data in form
+		$('#tbl_user').show();
+		$('#edit_user').hide();
+		
+	});
+
     // add user submit
 	$("#addUser_form").submit(function(e) {
-        e.preventDefault();
-        // validate form
-        const form = document.getElementById("addUser_form");
+		e.preventDefault();
+
+		const form = document.getElementById("addUser_form");
 	
         if (!ValidationFeedback(form)) {
-            Swal.fire({
+				Swal.fire({
 					icon: 'error',
 					title: 'Oops...',
 					text: 'Some fields are empty or does not meet the condition!'
 				})
-        } else {
+        }else {
             
             Swal.fire({
                 title: 'Are you sure?',
@@ -82,15 +234,15 @@ function ValidationFeedback(form) {
 
                             if(dataResult.statusCode==0){
                                 
-                                $('#add_client').hide();
-                                $('#tbl_client').show();
+								$('#tbl_user').show();
+								$('#add_user').hide();
 
                                     Swal.fire({
                                         icon: 'success',
                                         title: 'Success...',
                                         text: dataResult.message
                                     }).then(function() {
-                                        window.location = 'user-account.php';
+                                        loadTable();
                                     });
 
                                 }
@@ -168,6 +320,9 @@ function ValidationFeedback(form) {
 							var dataResult = JSON.parse(dataResult);
 
 							if(dataResult.statusCode==0){
+
+									$('#tbl_user').show();
+									$('#edit_user').hide();
 								
 									// alert('Data added successfully !'); 
 									Swal.fire({
@@ -175,7 +330,7 @@ function ValidationFeedback(form) {
 										title: 'Success...',
 										text: dataResult.message
 									}).then(function() {
-										window.location = 'user-account.php';
+										loadTable();
 									});
 
 								}
@@ -232,7 +387,7 @@ function ValidationFeedback(form) {
 								title: 'Success...',
 								text: dataResult.message
 							}).then(function() {
-								window.location = 'user-account.php';
+								loadTable();
 							});
 
 						}
@@ -287,7 +442,7 @@ function ValidationFeedback(form) {
 								title: 'Success...',
 								text: dataResult.message
 							}).then(function() {
-								window.location = 'user-account.php';
+								loadTable();
 							});
 
 						}

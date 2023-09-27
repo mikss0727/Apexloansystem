@@ -4,7 +4,62 @@ error_reporting(0);
 include("../../database/connection.php");
 
 
-// add branch
+// get table data 
+
+if($_POST['process']=='getData'){
+	
+	$query = "SELECT 
+				t1.id,
+				t1.EmployeeID,
+				CONCAT(t2.LastName,', ',t2.FirstName,' ',t2.MiddleName) AS 'EmployeeName',
+				t1.RoleID,
+				t1.BranchID,
+				t5.BranchName,
+				t1.CreatedAt,
+				CONCAT(t3.LastName,', ',t3.FirstName,' ',t3.MiddleName) AS 'CreatedBy',
+				t1.isActive,
+				t1.UpdatedAt,
+				CONCAT(t4.LastName,', ',t4.FirstName,' ',t4.MiddleName) AS 'UpdatedBy'
+			FROM t_user_account t1 
+			LEFT JOIN t_employee t2
+			ON t1.EmployeeID = t2.EmployeeID 
+			LEFT JOIN t_employee t3
+			ON t1.CreatedBy = t3.EmployeeID
+			LEFT JOIN t_employee t4
+			ON t1.UpdatedBy = t4.EmployeeID
+			LEFT JOIN t_branch t5
+			ON t1.BranchID = t5.BranchID";
+
+				$stmt = mysqli_prepare($con, $query);
+				mysqli_stmt_execute($stmt);
+				$result = mysqli_stmt_get_result($stmt);
+
+				$dataArray = array(); // Initialize an empty array to store the data
+
+				if ($result->num_rows > 0) {
+					while ($row = $result->fetch_assoc()) {
+						$dataArray[] = $row; // Add each row to the array
+					}
+					echo json_encode(
+						array(
+							"message" => "Successfully fetched data.", 
+							"data" => $dataArray
+						)
+					);
+				} else {
+					echo json_encode(
+						array(
+							"message" => "No Data found.",
+							"data" => $dataArray
+						)
+					);
+				}
+												
+												
+}
+
+
+// add addUserAccount
 if($_POST['process']=='addUserAccount'){
     
     $EmployeeID = $_POST['EmployeeID'];
@@ -14,7 +69,7 @@ if($_POST['process']=='addUserAccount'){
 	$add_isActive = $_POST['add_isActive'];
 
 
-	$query_check=mysqli_query($con,"SELECT * FROM t_user_account WHERE EmployeeID='$EmployeeID'");
+	$query_check=mysqli_query($con,"SELECT * FROM t_user_account WHERE EmployeeID='$add_EmpID'");
 	$num_rows=mysqli_num_rows($query_check);
 
 	if($num_rows)

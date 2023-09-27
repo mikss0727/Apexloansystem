@@ -45,77 +45,6 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                  <?php
-                                      
-                                      $result = mysqli_query($con,"SELECT 
-                                                                      t1.id,
-                                                                      t1.DeptID,
-                                                                      t1.DeptName,
-                                                                      t1.CreatedAt,
-                                                                      CONCAT(t2.LastName,', ',t2.FirstName,' ',t2.MiddleName) AS 'CreatedBy',
-                                                                      t1.isActive,
-                                                                      t1.UpdatedAt,
-                                                                      CONCAT(t3.LastName,', ',t3.FirstName,' ',t3.MiddleName) AS 'UpdatedBy'
-                                                                  FROM t_department t1 
-                                                                  LEFT JOIN t_employee t2
-                                                                  ON t1.CreatedBy = t2.EmployeeID 
-                                                                  LEFT JOIN t_employee t3
-                                                                  ON t1.UpdatedBy = t3.EmployeeID");
-
-                                      
-
-                                          while($row = mysqli_fetch_array($result)) {
-                                      ?>
-                                      <tr>
-                                          <td> <?php echo $row["DeptID"]; ?></td>
-                                          <td> <?php echo $row["DeptName"]; ?></td>
-                                          <td> <?php echo $row["CreatedBy"]; ?></td>
-                                          <td><?php 
-                                                  if($row["CreatedAt"] == '' || $row["CreatedAt"] == null)
-                                                  {
-                                                      echo '';
-                                                  }
-                                                  else{
-                                                      $date_created=date_create($row["CreatedAt"]);
-                                                      echo date_format($date_created,"Y-m-d g:i a");
-                                                  }
-                                          ?></td>
-                                          <td> <?php echo $row["UpdatedBy"]; ?></td>
-                                          <td><?php 
-                                                  if($row["UpdatedAt"] == '' || $row["UpdatedAt"] == null)
-                                                  {
-                                                      echo '';
-                                                  }
-                                                  else{
-                                                      $date_update=date_create($row["UpdatedAt"]);
-                                                      echo date_format($date_update,"Y-m-d g:i a");
-                                                  }
-                                          ?></td>
-                                          <td><?php if ($row["isActive"] == 0){ ?><span class="label label-success">Active</span> <?php }else { ?><span class="label label-info">Inactive</span>  <?php } ?></td>
-                                          
-
-                                          <td style="text-align: center;">
-                                              <a href="#" class="btn btn-pill btn-outline-primary btn-xs" id="editDepartment" data-toggle="modal"
-                                                  data-pk_id="<?php echo $row["id"]; ?>"
-                                                  data-dept_id="<?php echo $row["DeptID"]; ?>"
-                                                  data-dept_name="<?php echo $row["DeptName"]; ?>"
-                                                  data-isactive="<?php echo $row["isActive"]; ?>">
-                                                  <i class="fa fa-edit" data-toggle="tooltip" 
-                                                  title="Edit"></i>
-                                              </a>
-                                              <a href="#" class="btn btn-pill btn-outline-danger btn-xs" id="deleteDepartment"
-                                              data-pk_id="<?php echo $row["id"]; ?>"
-                                              data-dept_id="<?php echo $row["DeptID"]; ?>">
-                                                  <i class="fa fa-trash-o" data-toggle="tooltip" 
-                                                  title="Delete"></i>
-                                              </a>
-
-                                          </td>
-                                      </tr>
-                                      <?php
-                                      
-                                      }
-                                      ?>
                                 </tbody>
                             </table>
                           </div>
@@ -194,14 +123,6 @@
                             <div class="row">
                                 <div class="col">
                                 <div class="mb-3">
-                                    <label class="form-label" for="edit_deptID">Department ID</label>
-                                    <input class="form-control" id="edit_deptID" name="edit_deptID" type="text" readonly>
-                                </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                <div class="mb-3">
                                     <label class="form-label" for="edit_deptName">Department Name</label>
                                     <input class="form-control" id="edit_deptName" name="edit_deptName" type="text" required="">
                                     <div class="valid-feedback">Looks good!</div>
@@ -214,7 +135,6 @@
                                     <div class="mb-3">
                                         <label class="form-label" for="edit_isActive">Status</label>
                                         <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="edit_isActive" name="edit_isActive" required="">
-                                        
                                         <option value="0">Active</option>
                                         <option value="1">Inactive</option>
                                         </select>
@@ -228,6 +148,7 @@
                                 <!-- hidden value process name and sessionid primaryid ,roleid-->
                             <input value="editDepartment" name="process" type="hidden">
                             <input id="pk_id" name="pk_id" type="hidden">
+                            <input id="dept_id" name="dept_id" type="hidden">
                             <input value="<?php echo $_SESSION['EmployeeID']; ?>" name="EmployeeID" type="hidden">
                             <input value="<?php echo $_SESSION['RoleID']; ?>" name="RoleID" type="hidden">
                             <button class="btn btn-primary" type="submit">Submit</button>

@@ -1,4 +1,3 @@
-
 <?php include '../layout/header.php'; ?>
 
           <div class="page-body">
@@ -6,7 +5,7 @@
               <div class="page-header">
                 <div class="row">
                   <div class="col-sm-6">
-                    <h3>Loan Application</h3>
+                    <h3>Application</h3>
                     <ol class="breadcrumb">
                       <!-- <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li> -->
                     </ol>
@@ -17,463 +16,300 @@
             <!-- Container-fluid starts-->
             <div class="container-fluid">
                 <div class="row">
+                <div class="col-sm-12">
 
-                  <div class="col-sm-12 col-xl-12">
-                      <div class="card">
-                        <div class="card-header pb-0">
-                            <!-- <h5>Basic Tabs</h5> -->
-                        </div>
-                        <div class="card-body">
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item"><a class="nav-link active" id="pending-tabs" data-bs-toggle="tab" href="#pending" role="tab" aria-controls="pending" aria-selected="true">Pending</a></li>
-                            <li class="nav-item"><a class="nav-link" id="approved-tabs" data-bs-toggle="tab" href="#approved" role="tab" aria-controls="approved" aria-selected="false">Approved</a></li>
-                            <li class="nav-item"><a class="nav-link" id="rejected-tabs" data-bs-toggle="tab" href="#rejected" role="tab" aria-controls="rejected" aria-selected="false">Rejected</a></li>
+                    <div class="card"  id="tbl_application">
+                      <div class="card-header pb-0">
+                          <h5>Application Page</h5>
+                      </div>
+                    <div class="card-body">
+                      <div class="row" style="margin-bottom: 10px;">
+                          <div class="col-sm-12" style="text-align: right;">  
+                          <button class="btn btn-primary" id="addApplication"><i class="fa fa-plus"></i> Search Application</button>
+                          </div>
+                      </div>
+                      <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item"><a class="nav-link application-tab active" data-value="PND" id="pending-tabs" data-bs-toggle="tab" href="#pending" role="tab" aria-controls="pending" aria-selected="false">Pending</a></li>
+                            <li class="nav-item"><a class="nav-link application-tab" data-value="FORDISB" id="fordisb-tabs" data-bs-toggle="tab" href="#fordisb" role="tab" aria-controls="fordisb" aria-selected="false">For Disbursement</a></li>
+                            <li class="nav-item"><a class="nav-link application-tab" data-value="DISB" id="disb-tabs" data-bs-toggle="tab" href="#disb" role="tab" aria-controls="disb" aria-selected="false">Disbursed</a></li>
+                            <li class="nav-item"><a class="nav-link application-tab" data-value="CNCL" id="cancel-tabs" data-bs-toggle="tab" href="#cancel" role="tab" aria-controls="cancel" aria-selected="false">Cancelled</a></li>
                             </ul>
-                            <div class="tab-content" id="myTabContent">
-                              <!-- PENDING TAB  -->
-                            <div class="tab-pane fade show active" id="pending" role="tabpanel" aria-labelledby="pending-tabs">
-                                
-                                
-                            <div class="card"  id="tbl_branch_pnd">
-                                <div class="card-header pb-0">
-                                    <h5>PENDING</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
+                            <div class="tab-content mt-5" id="myTabContent">
+                                <div class="table-responsive">
                                     <table class="display" id="basic-1">
                                         <thead>
                                         <tr>
-                                        <th>Client ID</th>
-                                        <th>Client Name</th>
-                                        <th>Branch</th>
-                                        <th>Status</th>
-                                        <th>Created On</th>
-                                        <th>ACTION</th>
+                                            <th>Client ID</th>
+                                            <th>Application No</th>
+                                            <th>Client Name</th>
+                                            <th>Branch</th>
+                                            <th>Loan Amount</th>
+                                            <th>DisbursementDate</th>
+                                            <th>LoanType</th>
+                                            <th>ClosedDate</th>
+                                            <th>ACTION</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                            <?php
-                                                
-                                                $result = mysqli_query($con,"SELECT 
-                                                                                t1.id,
-                                                                        t1.ClientID,
-                                                                        t1.LastName,
-                                                                        t1.FirstName,
-                                                                        t1.MiddleName,
-                                                                        t1.BranchID,
-                                                                        t4.BranchName,
-                                                                        t1.Birthday,
-                                                                        t1.ContactNo,
-                                                                        t1.Address,
-                                                                        t1.Email,
-                                                                        t1.BusinessName,
-                                                                        t1.BusinessAddress,
-                                                                        t1.Gender,
-                                                                        t1.MaritalStatus,
-                                                                        t6.MaritalName,
-                                                                        t1.Age,
-                                                                        t1.StatusID,
-                                                                        t5.StatusName,
-                                                                        t1.CreatedAt,
-                                                                        CONCAT(t2.LastName,', ',t2.FirstName,' ',t2.MiddleName) AS 'CreatedBy',
-                                                                        t1.UpdatedAt,
-                                                                        CONCAT(t3.LastName,', ',t3.FirstName,' ',t3.MiddleName) AS 'UpdatedBy'
-                                                                    FROM t_client t1 
-                                                                    LEFT JOIN t_employee t2
-                                                                    ON t1.CreatedBy = t2.EmployeeID 
-                                                                    LEFT JOIN t_employee t3
-                                                                    ON t1.UpdatedBy = t3.EmployeeID
-                                                                    LEFT JOIN t_branch t4
-                                                                    ON t1.BranchID = t4.BranchID
-                                                                    LEFT JOIN t_status t5
-                                                                    ON t1.StatusID = t5.StatusID
-                                                                    LEFT JOIN t_marital_status t6
-                                                                    ON t1.MaritalStatus = t6.MaritalID
-                                                                    WHERE t1.StatusID = 'PND'");
-
-                                                
-
-                                                    while($row = mysqli_fetch_array($result)) {
-                                                ?>
-                                                <tr>
-                                            <td> <?php echo $row["ClientID"]; ?></td>
-                                            <td> <?php echo $row["LastName"].', '.$row["FirstName"].' '.$row["MiddleName"]; ?></td>
-                                            <td> <?php echo $row["BranchID"].' - '.$row["BranchName"]?></td>
-                                            <td> <?php echo $row["StatusName"]?></td>
-                                            <td><?php 
-                                                    if($row["CreatedAt"] == '' || $row["CreatedAt"] == null)
-                                                    {
-                                                        echo '';
-                                                    }
-                                                    else{
-                                                        $date_created=date_create($row["CreatedAt"]);
-                                                        echo date_format($date_created,"Y-m-d g:i a");
-                                                    }
-                                            ?></td>
-
-                                            <td style="text-align: center;">
-                                                <a href="#" class="btn btn-pill btn-outline-info btn-xs" id="viewClient"
-                                                  data-pk_id="<?php echo $row["id"]; ?>"
-                                                  data-client_id="<?php echo $row["ClientID"]; ?>"
-                                                  data-last_name="<?php echo $row["LastName"]; ?>"
-                                                  data-first_name="<?php echo $row["FirstName"]; ?>"
-                                                  data-middle_name="<?php echo $row["MiddleName"]; ?>"
-                                                  data-branch_name="<?php echo $row["BranchName"]; ?>"
-                                                  data-branch_id="<?php echo $row["BranchID"]; ?>"
-                                                  data-birthday="<?php echo $row["Birthday"]; ?>"
-                                                  data-contact_no="<?php echo $row["ContactNo"]; ?>"
-                                                  data-address="<?php echo $row["Address"]; ?>"
-                                                  data-email="<?php echo $row["Email"]; ?>"
-                                                  data-business_name="<?php echo $row["BusinessName"]; ?>"
-                                                  data-business_address="<?php echo $row["BusinessAddress"]; ?>"
-                                                  data-gender="<?php echo $row["Gender"]; ?>"
-                                                  data-marital_name="<?php echo $row["MaritalName"]; ?>"
-                                                  data-age="<?php echo $row["Age"]; ?>"
-                                                  data-status_id="<?php echo $row["StatusID"]; ?>"
-                                                  data-status_name="<?php echo $row["StatusName"]; ?>">
-                                                    <i class="fa fa-eye" title="view"></i>
-                                                </a>
-                                                
-                                                <a href="#" class="btn btn-pill btn-outline-primary btn-xs" id="editClient"
-                                                  data-pk_id="<?php echo $row["id"]; ?>"
-                                                  data-client_id="<?php echo $row["ClientID"]; ?>"
-                                                  data-last_name="<?php echo $row["LastName"]; ?>"
-                                                  data-first_name="<?php echo $row["FirstName"]; ?>"
-                                                  data-middle_name="<?php echo $row["MiddleName"]; ?>"
-                                                  data-branch_id="<?php echo $row["BranchID"]; ?>"
-                                                  data-birthday="<?php echo $row["Birthday"]; ?>"
-                                                  data-contact_no="<?php echo $row["ContactNo"]; ?>"
-                                                  data-address="<?php echo $row["Address"]; ?>"
-                                                  data-email="<?php echo $row["Email"]; ?>"
-                                                  data-business_name="<?php echo $row["BusinessName"]; ?>"
-                                                  data-business_address="<?php echo $row["BusinessAddress"]; ?>"
-                                                  data-gender="<?php echo $row["Gender"]; ?>"
-                                                  data-marital_status="<?php echo $row["MaritalStatus"]; ?>"
-                                                  data-age="<?php echo $row["Age"]; ?>"
-                                                  data-status_id="<?php echo $row["StatusID"]; ?>">
-                                                    <i class="fa fa-edit"
-                                                    title="Edit"></i>
-                                                </a>
-                                                <a href="#" class="btn btn-pill btn-outline-danger btn-xs" id="deleteClient"
-                                                data-pk_id="<?php echo $row["id"]; ?>"
-                                                data-client_id="<?php echo $row["ClientID"]; ?>">
-                                                    <i class="fa fa-trash-o"
-                                                    title="Delete"></i>
-                                                </a>
-
-                                            </td>
-                                        </tr>
-                                                <?php
-                                                
-                                                }
-                                                ?>
-                                            </tbody>
+                                        </tbody>
                                     </table>
-                                    </div>
-                                </div>
-                            </div>
-                                
-
-                            </div>
-                            <!-- END PENDING TAB  -->
-
-                            <!-- APPROVED TAB  -->
-                            <div class="tab-pane fade" id="approved" role="tabpanel" aria-labelledby="approved-tabs">
-                                
-                            <div class="card"  id="tbl_branch_apr">
-                                <div class="card-header pb-0">
-                                    <h5>APPROVED</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                    <table class="display" id="basic-2">
-                                        <thead>
-                                        <tr>
-                                        <th>Client ID</th>
-                                        <th>Client Name</th>
-                                        <th>Branch</th>
-                                        <th>Status</th>
-                                        <th>Created On</th>
-                                        <th>ACTION</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                                
-                                                $result = mysqli_query($con,"SELECT 
-                                                                                t1.id,
-                                                                        t1.ClientID,
-                                                                        t1.LastName,
-                                                                        t1.FirstName,
-                                                                        t1.MiddleName,
-                                                                        t1.BranchID,
-                                                                        t4.BranchName,
-                                                                        t1.Birthday,
-                                                                        t1.ContactNo,
-                                                                        t1.Address,
-                                                                        t1.Email,
-                                                                        t1.BusinessName,
-                                                                        t1.BusinessAddress,
-                                                                        t1.Gender,
-                                                                        t1.MaritalStatus,
-                                                                        t6.MaritalName,
-                                                                        t1.Age,
-                                                                        t1.StatusID,
-                                                                        t5.StatusName,
-                                                                        t1.CreatedAt,
-                                                                        CONCAT(t2.LastName,', ',t2.FirstName,' ',t2.MiddleName) AS 'CreatedBy',
-                                                                        t1.UpdatedAt,
-                                                                        CONCAT(t3.LastName,', ',t3.FirstName,' ',t3.MiddleName) AS 'UpdatedBy'
-                                                                    FROM t_client t1 
-                                                                    LEFT JOIN t_employee t2
-                                                                    ON t1.CreatedBy = t2.EmployeeID 
-                                                                    LEFT JOIN t_employee t3
-                                                                    ON t1.UpdatedBy = t3.EmployeeID
-                                                                    LEFT JOIN t_branch t4
-                                                                    ON t1.BranchID = t4.BranchID
-                                                                    LEFT JOIN t_status t5
-                                                                    ON t1.StatusID = t5.StatusID
-                                                                    LEFT JOIN t_marital_status t6
-                                                                    ON t1.MaritalStatus = t6.MaritalID
-                                                                    WHERE t1.StatusID = 'APR'");
-
-                                                
-
-                                                    while($row = mysqli_fetch_array($result)) {
-                                                ?>
-                                                <tr>
-                                            <td> <?php echo $row["ClientID"]; ?></td>
-                                            <td> <?php echo $row["LastName"].', '.$row["FirstName"].' '.$row["MiddleName"]; ?></td>
-                                            <td> <?php echo $row["BranchID"].' - '.$row["BranchName"]?></td>
-                                            <td> <?php echo $row["StatusName"]?></td>
-                                            <td><?php 
-                                                    if($row["CreatedAt"] == '' || $row["CreatedAt"] == null)
-                                                    {
-                                                        echo '';
-                                                    }
-                                                    else{
-                                                        $date_created=date_create($row["CreatedAt"]);
-                                                        echo date_format($date_created,"Y-m-d g:i a");
-                                                    }
-                                            ?></td>
-
-                                            <td style="text-align: center;">
-                                                <a href="#" class="btn btn-pill btn-outline-info btn-xs" id="viewClient"
-                                                  data-pk_id="<?php echo $row["id"]; ?>"
-                                                  data-client_id="<?php echo $row["ClientID"]; ?>"
-                                                  data-last_name="<?php echo $row["LastName"]; ?>"
-                                                  data-first_name="<?php echo $row["FirstName"]; ?>"
-                                                  data-middle_name="<?php echo $row["MiddleName"]; ?>"
-                                                  data-branch_name="<?php echo $row["BranchName"]; ?>"
-                                                  data-branch_id="<?php echo $row["BranchID"]; ?>"
-                                                  data-birthday="<?php echo $row["Birthday"]; ?>"
-                                                  data-contact_no="<?php echo $row["ContactNo"]; ?>"
-                                                  data-address="<?php echo $row["Address"]; ?>"
-                                                  data-email="<?php echo $row["Email"]; ?>"
-                                                  data-business_name="<?php echo $row["BusinessName"]; ?>"
-                                                  data-business_address="<?php echo $row["BusinessAddress"]; ?>"
-                                                  data-gender="<?php echo $row["Gender"]; ?>"
-                                                  data-marital_name="<?php echo $row["MaritalName"]; ?>"
-                                                  data-age="<?php echo $row["Age"]; ?>"
-                                                  data-status_id="<?php echo $row["StatusID"]; ?>"
-                                                  data-status_name="<?php echo $row["StatusName"]; ?>">
-                                                    <i class="fa fa-eye" title="view"></i>
-                                                </a>
-                                                
-                                                <a href="#" class="btn btn-pill btn-outline-primary btn-xs" id="editClient"
-                                                  data-pk_id="<?php echo $row["id"]; ?>"
-                                                  data-client_id="<?php echo $row["ClientID"]; ?>"
-                                                  data-last_name="<?php echo $row["LastName"]; ?>"
-                                                  data-first_name="<?php echo $row["FirstName"]; ?>"
-                                                  data-middle_name="<?php echo $row["MiddleName"]; ?>"
-                                                  data-branch_id="<?php echo $row["BranchID"]; ?>"
-                                                  data-birthday="<?php echo $row["Birthday"]; ?>"
-                                                  data-contact_no="<?php echo $row["ContactNo"]; ?>"
-                                                  data-address="<?php echo $row["Address"]; ?>"
-                                                  data-email="<?php echo $row["Email"]; ?>"
-                                                  data-business_name="<?php echo $row["BusinessName"]; ?>"
-                                                  data-business_address="<?php echo $row["BusinessAddress"]; ?>"
-                                                  data-gender="<?php echo $row["Gender"]; ?>"
-                                                  data-marital_status="<?php echo $row["MaritalStatus"]; ?>"
-                                                  data-age="<?php echo $row["Age"]; ?>"
-                                                  data-status_id="<?php echo $row["StatusID"]; ?>">
-                                                    <i class="fa fa-edit"
-                                                    title="Edit"></i>
-                                                </a>
-                                                <a href="#" class="btn btn-pill btn-outline-danger btn-xs" id="deleteClient"
-                                                data-pk_id="<?php echo $row["id"]; ?>"
-                                                data-client_id="<?php echo $row["ClientID"]; ?>">
-                                                    <i class="fa fa-trash-o"
-                                                    title="Delete"></i>
-                                                </a>
-
-                                            </td>
-                                        </tr>
-                                                <?php
-                                                
-                                                }
-                                                ?>
-                                            </tbody>
-                                    </table>
-                                    </div>
                                 </div>
                             </div>
 
-                            </div>
-                            <!-- END APPROVED TAB  -->
+                      </div>
+                    </div>
 
-                            <!-- REJECTED TAB  -->
-                            <div class="tab-pane fade" id="rejected" role="tabpanel" aria-labelledby="rejected-tabs">
-                                
-                            <div class="card"  id="tbl_branch_rej">
-                                <div class="card-header pb-0">
-                                    <h5>REJECTED</h5>
+                    
+                <!-- EDIT LOAN APPLICATION FORM -->
+                <div class="card"  id="edit_application" style="display:none">
+                    <div class="card-header pb-0">
+                        <h5>Client Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label" for="a_clientID">Client ID </label>
+                                    <input class="form-control" id="a_clientID" name="a_clientID" type="text" readonly style="text-transform:uppercase">
                                 </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                    <table class="display" id="basic-3">
-                                        <thead>
-                                        <tr>
-                                        <th>Client ID</th>
-                                        <th>Client Name</th>
-                                        <th>Branch</th>
-                                        <th>Status</th>
-                                        <th>Created On</th>
-                                        <th>ACTION</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                                
-                                                $result = mysqli_query($con,"SELECT 
-                                                                                t1.id,
-                                                                        t1.ClientID,
-                                                                        t1.LastName,
-                                                                        t1.FirstName,
-                                                                        t1.MiddleName,
-                                                                        t1.BranchID,
-                                                                        t4.BranchName,
-                                                                        t1.Birthday,
-                                                                        t1.ContactNo,
-                                                                        t1.Address,
-                                                                        t1.Email,
-                                                                        t1.BusinessName,
-                                                                        t1.BusinessAddress,
-                                                                        t1.Gender,
-                                                                        t1.MaritalStatus,
-                                                                        t6.MaritalName,
-                                                                        t1.Age,
-                                                                        t1.StatusID,
-                                                                        t5.StatusName,
-                                                                        t1.CreatedAt,
-                                                                        CONCAT(t2.LastName,', ',t2.FirstName,' ',t2.MiddleName) AS 'CreatedBy',
-                                                                        t1.UpdatedAt,
-                                                                        CONCAT(t3.LastName,', ',t3.FirstName,' ',t3.MiddleName) AS 'UpdatedBy'
-                                                                    FROM t_client t1 
-                                                                    LEFT JOIN t_employee t2
-                                                                    ON t1.CreatedBy = t2.EmployeeID 
-                                                                    LEFT JOIN t_employee t3
-                                                                    ON t1.UpdatedBy = t3.EmployeeID
-                                                                    LEFT JOIN t_branch t4
-                                                                    ON t1.BranchID = t4.BranchID
-                                                                    LEFT JOIN t_status t5
-                                                                    ON t1.StatusID = t5.StatusID
-                                                                    LEFT JOIN t_marital_status t6
-                                                                    ON t1.MaritalStatus = t6.MaritalID
-                                                                    WHERE t1.StatusID = 'REJ'");
-
-                                                
-
-                                                    while($row = mysqli_fetch_array($result)) {
-                                                ?>
-                                                <tr>
-                                            <td> <?php echo $row["ClientID"]; ?></td>
-                                            <td> <?php echo $row["LastName"].', '.$row["FirstName"].' '.$row["MiddleName"]; ?></td>
-                                            <td> <?php echo $row["BranchID"].' - '.$row["BranchName"]?></td>
-                                            <td> <?php echo $row["StatusName"]?></td>
-                                            <td><?php 
-                                                    if($row["CreatedAt"] == '' || $row["CreatedAt"] == null)
-                                                    {
-                                                        echo '';
-                                                    }
-                                                    else{
-                                                        $date_created=date_create($row["CreatedAt"]);
-                                                        echo date_format($date_created,"Y-m-d g:i a");
-                                                    }
-                                            ?></td>
-
-                                            <td style="text-align: center;">
-                                                <a href="#" class="btn btn-pill btn-outline-info btn-xs" id="viewClient"
-                                                  data-pk_id="<?php echo $row["id"]; ?>"
-                                                  data-client_id="<?php echo $row["ClientID"]; ?>"
-                                                  data-last_name="<?php echo $row["LastName"]; ?>"
-                                                  data-first_name="<?php echo $row["FirstName"]; ?>"
-                                                  data-middle_name="<?php echo $row["MiddleName"]; ?>"
-                                                  data-branch_name="<?php echo $row["BranchName"]; ?>"
-                                                  data-branch_id="<?php echo $row["BranchID"]; ?>"
-                                                  data-birthday="<?php echo $row["Birthday"]; ?>"
-                                                  data-contact_no="<?php echo $row["ContactNo"]; ?>"
-                                                  data-address="<?php echo $row["Address"]; ?>"
-                                                  data-email="<?php echo $row["Email"]; ?>"
-                                                  data-business_name="<?php echo $row["BusinessName"]; ?>"
-                                                  data-business_address="<?php echo $row["BusinessAddress"]; ?>"
-                                                  data-gender="<?php echo $row["Gender"]; ?>"
-                                                  data-marital_name="<?php echo $row["MaritalName"]; ?>"
-                                                  data-age="<?php echo $row["Age"]; ?>"
-                                                  data-status_id="<?php echo $row["StatusID"]; ?>"
-                                                  data-status_name="<?php echo $row["StatusName"]; ?>">
-                                                    <i class="fa fa-eye" title="view"></i>
-                                                </a>
-                                                
-                                                <a href="#" class="btn btn-pill btn-outline-primary btn-xs" id="editClient"
-                                                  data-pk_id="<?php echo $row["id"]; ?>"
-                                                  data-client_id="<?php echo $row["ClientID"]; ?>"
-                                                  data-last_name="<?php echo $row["LastName"]; ?>"
-                                                  data-first_name="<?php echo $row["FirstName"]; ?>"
-                                                  data-middle_name="<?php echo $row["MiddleName"]; ?>"
-                                                  data-branch_id="<?php echo $row["BranchID"]; ?>"
-                                                  data-birthday="<?php echo $row["Birthday"]; ?>"
-                                                  data-contact_no="<?php echo $row["ContactNo"]; ?>"
-                                                  data-address="<?php echo $row["Address"]; ?>"
-                                                  data-email="<?php echo $row["Email"]; ?>"
-                                                  data-business_name="<?php echo $row["BusinessName"]; ?>"
-                                                  data-business_address="<?php echo $row["BusinessAddress"]; ?>"
-                                                  data-gender="<?php echo $row["Gender"]; ?>"
-                                                  data-marital_status="<?php echo $row["MaritalStatus"]; ?>"
-                                                  data-age="<?php echo $row["Age"]; ?>"
-                                                  data-status_id="<?php echo $row["StatusID"]; ?>">
-                                                    <i class="fa fa-edit"
-                                                    title="Edit"></i>
-                                                </a>
-                                                <a href="#" class="btn btn-pill btn-outline-danger btn-xs" id="deleteClient"
-                                                data-pk_id="<?php echo $row["id"]; ?>"
-                                                data-client_id="<?php echo $row["ClientID"]; ?>">
-                                                    <i class="fa fa-trash-o"
-                                                    title="Delete"></i>
-                                                </a>
-
-                                            </td>
-                                        </tr>
-                                                <?php
-                                                
-                                                }
-                                                ?>
-                                            </tbody>
-                                    </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            </div>
-                            <!-- END REJECTED TAB  -->
                             </div>
                         </div>
-                      </div>
-                  </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label" for="a_applicationNo">Application No </label>
+                                    <input class="form-control" id="a_applicationNo" name="a_applicationNo" type="text" readonly style="text-transform:uppercase">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label" for="a_clientName">Client Name </label>
+                                    <input class="form-control" id="a_clientName" name="a_clientName" type="text" readonly style="text-transform:uppercase">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label" for="a_branch">Branch Name </label>
+                                    <input class="form-control" id="a_branch" name="a_branch" type="text" readonly style="text-transform:uppercase">
+                                </div>
+                            </div>
+                        </div>
+                        
+                    <form  class="needs-validation" novalidate="" id="application_form">
+                        <!-- loan/ product  -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                <label class="form-label" for="a_loan_product">Product <span style="color: red;">*</span></label>
+                                <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="a_loan_product" name="a_loan_product" required="">
+                                        <?php
+                                                $result_type = mysqli_query($con,"SELECT * FROM t_product WHERE isActive = 0");
+                                                
+                                                while($row_type = mysqli_fetch_array($result_type)) {
+                                        ?>
+                                        <option value="<?php echo $row_type["ProductID"]; ?>"><?php echo $row_type["ProductName"].' - '.$row_type["LoanAmount"]; ?>.00</option>
+                                        <?php
+                                        
+                                        }
+                                        ?>
+                                </select>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please Select Product.</div>
+                                </div>
+                            </div>
+                        </div>
 
+                        <!-- interest rate  -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                <label class="form-label" for="a_loan_rate">Rate <span style="color: red;">*</span></label>
+                                <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="a_loan_rate" name="a_loan_rate" required="">
+                                        <?php
+                                                $result_type = mysqli_query($con,"SELECT * FROM t_interest_rate WHERE isActive = 0");
+                                                
+                                                while($row_type = mysqli_fetch_array($result_type)) {
+                                        ?>
+                                        <option value="<?php echo $row_type["RateID"]; ?>"><?php echo $row_type["Rate"]; ?></option>
+                                        <?php
+                                        
+                                        }
+                                        ?>
+                                </select>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please Select Rate.</div>
+                                </div>
+                            </div>
+                        </div>
 
+                         <!-- Term  -->
+                         <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                <label class="form-label" for="a_loan_term_type">Term Type<span style="color: red;">*</span></label>
+                                <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="a_loan_term_type" name="a_loan_term_type" required="">
+                                        <?php
+                                                $result_type = mysqli_query($con,"SELECT * FROM t_term_type WHERE isActive = 0");
+                                                
+                                                while($row_type = mysqli_fetch_array($result_type)) {
+                                        ?>
+                                        <option value="<?php echo $row_type["TypeID"]; ?>"><?php echo $row_type["TypeName"].' Collection'; ?></option>
+                                        <?php
+                                        
+                                        }
+                                        ?>
+                                </select>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please Select Term.</div>
+                                </div>
+                            </div>
+                        </div>
 
+                        <!-- disb date  -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label" for="a_loan_disbDate">Disbursement Date <span style="color: red;">*</span></label>
+                                    <input class="form-control" id="a_loan_disbDate" name="a_loan_disbDate" type="date" required="">
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback">Please input a Disbursement Date.</div>
+                                </div>
+                            </div>
+                        </div>
+                       
 
+                        
+                    </div>
+                        <div class="card-footer text-end">
+                         <!-- hidden value process name and sessionid primaryid ,roleid-->
+                         <input value="editApplication" name="process" type="hidden">
+                        <input id="pk_id" name="pk_id" type="hidden">
+                        <input id="a_application_no" name="a_application_no" type="hidden">
+                        <input value="<?php echo $_SESSION['EmployeeID']; ?>" name="EmployeeID" type="hidden">
+                        <input value="<?php echo $_SESSION['RoleID']; ?>" name="RoleID" type="hidden">
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                        <input class="btn btn-light" type="reset" id="back" value="Cancel">
+                        </div>
+                    </form>
+                </div>
+                <!-- END LOAN APPLICATION FORM -->
+
+                <!-- View LOAN APPLICATION FORM -->
+                <div class="card"  id="view_application" style="display:none">
+                    <div class="card-header pb-0">
+                        <h5>Application Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label" for="v_applicationNo">Application No </label>
+                                    <input class="form-control" id="v_applicationNo" name="v_applicationNo" type="text" readonly style="text-transform:uppercase">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label" for="v_clientName">Client Name </label>
+                                    <input class="form-control" id="v_clientName" name="v_clientName" type="text" readonly style="text-transform:uppercase">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label" for="v_branch">Branch Name </label>
+                                    <input class="form-control" id="v_branch" name="v_branch" type="text" readonly style="text-transform:uppercase">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- loan/ product  -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label" for="v_loan_product">Product </label>
+                                    <input class="form-control" id="v_loan_product" name="v_loan_product" type="text" readonly style="text-transform:uppercase">
+                                </div>
+                            </div>
+                        </div>
+
+                         <!-- Term  -->
+                         <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label" for="v_loan_term">Term </label>
+                                    <input class="form-control" id="v_loan_term" name="v_loan_term" type="text" readonly style="text-transform:uppercase">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- disb date  -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label" for="v_loan_disbDate">Disbursement Date </label>
+                                    <input class="form-control" id="v_loan_disbDate" name="v_loan_disbDate" type="text" readonly style="text-transform:uppercase">
+                                </div>
+                            </div>
+                        </div>
+
+                    <form  class="needs-validation" novalidate="" id="process_application_form">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                <label class="form-label" for="v_loan_status">Application Status<span style="color: red;">*</span></label>
+                                <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="v_loan_status" name="v_loan_status" required="">
+                                    <option value="">Select Status...</option>
+                                        <?php
+                                                $result_type = mysqli_query($con,"SELECT * FROM t_status WHERE StatusID IN ('APR','REJ','CNCL') AND isActive = 0");
+                                                
+                                                while($row_type = mysqli_fetch_array($result_type)) {
+                                        ?>
+                                        <option value="<?php echo $row_type["StatusID"]; ?>"><?php echo $row_type["StatusName"]; ?></option>
+                                        <?php
+                                        
+                                        }
+                                        ?>
+                                </select>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please Select Status.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label" for="remarks">Remarks</label>
+                                    <textarea class="form-control" id="remarks" name="remarks" rows="3" required=""></textarea>
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback">Please Select Status.</div>
+                                </div>
+                            </div>
+                        </div>
+                       
+
+                        
+                    </div>
+                        <div class="card-footer text-end">
+                         <!-- hidden value process name and sessionid primaryid ,roleid-->
+                         <input value="processApplication" name="process" type="hidden">
+                        <input id="v_pk_id" name="v_pk_id" type="hidden">
+                        <input id="v_clientID" name="v_clientID" type="hidden">
+                        <input id="v_application_no" name="v_application_no" type="hidden">
+                        <input value="<?php echo $_SESSION['EmployeeID']; ?>" name="EmployeeID" type="hidden">
+                        <input value="<?php echo $_SESSION['RoleID']; ?>" name="RoleID" type="hidden">
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                        <input class="btn btn-light" type="reset" id="cancel_process" value="Cancel">
+                        </div>
+                    </form>
+                </div>
+                <!-- END View APPLICATION FORM -->
 
                 </div>
                 </div>
@@ -481,6 +317,6 @@
             <!-- Container-fluid Ends-->
           </div>
 
-<script src="js/branch-js.js"></script>
+<script src="js/application-js.js"></script>
 
 <?php include '../layout/footer.php'; ?>

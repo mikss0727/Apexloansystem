@@ -4,6 +4,54 @@ error_reporting(0);
 include("../../database/connection.php");
 
 
+// get table data 
+
+if($_POST['process']=='getData'){
+	
+	$query = "SELECT 
+			t1.id,
+			t1.MaritalID,
+			t1.MaritalName,
+			t1.CreatedAt,
+			CONCAT(t2.LastName,', ',t2.FirstName,' ',t2.MiddleName) AS 'CreatedBy',
+			t1.isActive,
+			t1.UpdatedAt,
+			CONCAT(t3.LastName,', ',t3.FirstName,' ',t3.MiddleName) AS 'UpdatedBy'
+		FROM t_marital_status t1 
+		LEFT JOIN t_employee t2
+		ON t1.CreatedBy = t2.EmployeeID 
+		LEFT JOIN t_employee t3
+		ON t1.UpdatedBy = t3.EmployeeID";
+
+				$stmt = mysqli_prepare($con, $query);
+				mysqli_stmt_execute($stmt);
+				$result = mysqli_stmt_get_result($stmt);
+
+				$dataArray = array(); // Initialize an empty array to store the data
+
+				if ($result->num_rows > 0) {
+					while ($row = $result->fetch_assoc()) {
+						$dataArray[] = $row; // Add each row to the array
+					}
+					echo json_encode(
+						array(
+							"message" => "Successfully fetched data.", 
+							"data" => $dataArray
+						)
+					);
+				} else {
+					echo json_encode(
+						array(
+							"message" => "No Data found.",
+							"data" => $dataArray
+						)
+					);
+				}
+												
+												
+}
+
+
 // add marital status
 if($_POST['process']=='addMarital'){
 
@@ -45,7 +93,7 @@ if($_POST['process']=='addMarital'){
 // edit marital
 if($_POST['process']=='editMarital'){
 
-	$edit_maritalID = $_POST['edit_maritalID'];
+	$edit_maritalID = $_POST['marital_id'];
 	$edit_maritalName = $_POST['edit_maritalName'];
 	$edit_isActive = $_POST['edit_isActive'];
 	$pk_id = $_POST['pk_id'];

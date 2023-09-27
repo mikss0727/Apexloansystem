@@ -1,24 +1,3 @@
-function reloadSelectUi(){
-	// Trigger the 'change' event to update the Select2 UI
-	$('.js-example-basic-single').trigger('change');
-}
-// Accept number only 
-function validateDecimalInput(input) {
-    input.value = input.value.replace(/\D/g, '');
-
-    const maxLength = 11;
-  
-    if (input.value.length > maxLength) {
-        input.value = input.value.slice(0, maxLength);
-
-        Swal.fire({
-            icon: 'info',
-            title: 'Oops...',
-            text: 'Only 11 numbers required!'
-          })
-    }
-}
-
 
 // age limit
 const ageLimit = 65;
@@ -94,7 +73,8 @@ function calculateAge(request) {
     
   }
 
-function ValidationFeedback(form) {
+//   form validation 
+function CustomValidationFeedback(form) {
     const inputFields = form.querySelectorAll('.form-control');
     const validFeedbackList = form.querySelectorAll('.valid-feedback');
     const invalidFeedbackList = form.querySelectorAll('.invalid-feedback');
@@ -159,7 +139,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		var v_status = $(this).attr("data-status_name");
 		var v_statusID = $(this).attr("data-status_id");
 
-
 		$('#p_pk_id').val(v_pkID);
 		$('#p_client_id').val(v_clientID);
 		$('#v_statusID').val(v_statusID);
@@ -179,26 +158,43 @@ document.addEventListener('DOMContentLoaded', function() {
 		reloadSelectUi();
 	});
 
-	// approved client button
-	$("#clientApproval_form").submit(function(e) {
-        e.preventDefault();
-		var data = $("#clientApproval_form").serialize();
-		console.log(data);
+
+	// Apply loan Button 
+	$(document).on('click','#applyLoan',function(e) {
+		
+		$('#tbl_client').hide();
+		$('#apply_loan').show();
+
+		
+		var l_pkID = $(this).attr("data-pk_id");
+		var l_clientID = $(this).attr("data-client_id");
+		var l_clientName = $(this).attr("data-last_name")+', '+$(this).attr("data-first_name")+' '+$(this).attr("data-middle_name");
+		var l_branch = $(this).attr("data-branch_id")+' - '+$(this).attr("data-branch_name");
+		
+		$('#l_pk_id').val(l_pkID);
+		$('#l_client_id').val(l_clientID);
+		$('#l_branch_id').val($(this).attr("data-branch_id"));
+
+		$('#l_clientID').val(l_clientID);
+		$('#l_clientName').val(l_clientName);
+		$('#l_branch').val(l_branch);
+		reloadSelectUi();
+	});
 	
-		var p_statusID = document.getElementById("v_statusID").value;
+	// approved client button
+	$("#applyLoan_form").submit(function(e) {
 
-		if (p_statusID =='' || p_statusID ==null || p_statusID =='PND')
-		{
-			e.preventDefault();
+        e.preventDefault();
 
-			// alert("Please Fill All Required Field");
-			Swal.fire({
-				icon: 'error',
-				title: 'Oops...',
-				text: 'Status must be Approved or Reject Only!'
-			})
+		const form = document.getElementById("applyLoan_form");
 
-		}
+        if (!ValidationFeedback(form)) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: 'Some fields are empty or does not meet the condition!'
+				})
+        }
 		else{
         
     
@@ -213,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			}).then((result) => {
 				if (result.isConfirmed) {
 
-					var data = $("#clientApproval_form").serialize();
+					var data = $("#applyLoan_form").serialize();
 					$.ajax({
 						data: data,
 						type: "post",
@@ -223,8 +219,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 							if(dataResult.statusCode==0){
 								
-								$('#view_client').hide();
-								$('#tbl_client').show();
+									$('#tbl_client').show();
+									$('#apply_loan').hide();
 
 									Swal.fire({
 										icon: 'success',
@@ -250,13 +246,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 
-		// show hide div
-		$(document).on('click','#reject_client',function(e) {
-			// get data in form
-			var data = $("#clientApproval_form").serialize();
-
-		console.log(data);
-		});
+	// show hide div
+	$(document).on('click','#back_apply_form',function(e) {
+		// get data in form
+		
+		$('#tbl_client').show();
+		$('#apply_loan').hide();
+		
+	});
 
 
 	// show hide div
@@ -269,6 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	// show hide div
 	$(document).on('click','#addClient',function(e) {
+		resetForm(addClient_form);
 		
 		$('#tbl_client').hide();
 		$('#add_client').show();
@@ -298,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // validate form
         const form = document.getElementById("addClient_form");
 	
-        if (!ValidationFeedback(form)) {
+        if (!CustomValidationFeedback(form)) {
 				Swal.fire({
 					icon: 'error',
 					title: 'Oops...',
@@ -410,7 +408,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // validate form
         const form = document.getElementById("clientEdit_form");
 	
-        if (!ValidationFeedback(form)) {
+        if (!CustomValidationFeedback(form)) {
 				Swal.fire({
 					icon: 'error',
 					title: 'Oops...',
@@ -431,7 +429,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				if (result.isConfirmed) {
 					
 					var data = $("#clientEdit_form").serialize();
-					console.log(data);
 					$.ajax({
 						data: data,
 						type: "post",
@@ -466,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}	
 	});
 
-	// delete position
+	// delete client
 	$(document).on('click','#deleteClient',function(e) {
 		var pk_id=$(this).attr("data-pk_id");
 		var client_id=$(this).attr("data-client_id");
@@ -522,24 +519,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-// 	function activeTab(tabClass) {
-// 		console.log('.'+tabClass);
-// 		console.log($(this));
-	
-// 		$('.'+tabClass).removeClass('active'); // Remove active class from all tabs
-// 		$(this).addClass('active'); // Add active class to clicked tab
-		
-// 		var tabValue = $(this).data('value');
-// 		console.log(tabValue);
-		
-// 	  }
-
-// // tab 
-// 	$('.client-tab').click(function () {
-// 		activeTab('client-tab');
-		
-// 	});
-
 	$(document).ready(function () {
 		// Function to set the active tab value to localStorage
 		function setActiveTabToLocalStorage(activeTabValue) {
@@ -553,12 +532,12 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 		// Function to set the active tab on page load or use a default if none is stored
 		function setActiveTabOnLoad() {
+			
 			$('.client-tab').removeClass('active'); // Remove active class from all tabs
 
 			const storedActiveTab = getActiveTabFromLocalStorage();
-			const defaultActiveTab = 'PND'; // Set your default active tab here
+			const defaultActiveTab = 'ACTV'; // Set your default active tab here
 			
-			console.log(localStorage);
 			if(performance.navigation.type=== 1){
 				// refresh reset tab to pending
 				initialActiveTab = defaultActiveTab;
@@ -567,11 +546,18 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 			else{
 				// not refresh load to same tab 
-				initialActiveTab = storedActiveTab;
+				if(storedActiveTab){
+					initialActiveTab = storedActiveTab;
+				}
+				else{
+					initialActiveTab = defaultActiveTab;
+				}
+				
 			}
 
 			
 			$(`.client-tab[data-value="${initialActiveTab}"]`).addClass('active');
+			
 			loadTable(initialActiveTab);
 		}
 	
@@ -590,7 +576,16 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	function loadTable(activeTabValue) {
-
+		Swal.fire({
+			title: 'Loading',
+			text: 'Please wait while data is being loaded...',
+			allowOutsideClick: false,
+			showCancelButton: false,
+			showConfirmButton: false,
+			onBeforeOpen: () => {
+				Swal.showLoading();
+			}
+		});
         // start ajax 
         $.ajax({
           url: 'sql/client-sql-query.php',
@@ -601,7 +596,7 @@ document.addEventListener('DOMContentLoaded', function() {
             status: activeTabValue
           },
           success: function(res) {
-            
+            swal.close();
             data = res.data;
 
             if(data.length <= 0){
@@ -631,7 +626,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // var title = $(this).text();
                 // $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
               } );
-			  console.log(data);
+
 
               $('#basic-1').DataTable({
                 "data": data,
@@ -665,10 +660,23 @@ document.addEventListener('DOMContentLoaded', function() {
 					}
 				},
                 {
-                  "data": function(item) {
-                    return '<a class="btn btn-pill btn-outline-info btn-xs" id="viewClient"  data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '" data-last_name="' + item.LastName + '" data-first_name="' + item.FirstName + '" data-middle_name="' + item.MiddleName + '" data-branch_name="' + item.BranchName + '" data-branch_id="' + item.BranchID + '" data-birthday="' + item.Birthday + '" data-contact_no="' + item.ContactNo + '" data-address="' + item.Address + '" data-email="' + item.Email + '" data-business_name="' + item.BusinessName + '" data-business_address="' + item.BusinessAddress + '" data-gender="' + item.Gender + '" data-marital_name="' + item.MaritalName + '" data-age="' + item.Age + '" data-status_id="' + item.StatusID + '" data-status_name="' + item.StatusName + '"><i class="fa fa-eye" title="view"></i></a> <a class="btn btn-pill btn-outline-primary btn-xs" id="editClient"  data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '" data-last_name="' + item.LastName + '" data-first_name="' + item.FirstName + '" data-middle_name="' + item.MiddleName + '" data-branch_id="' + item.BranchID + '" data-birthday="' + item.Birthday + '" data-contact_no="' + item.ContactNo + '" data-address="' + item.Address + '" data-email="' + item.Email + '" data-business_name="' + item.BusinessName + '" data-business_address="' + item.BusinessAddress + '" data-gender="' + item.Gender + '" data-marital_status="' + item.MaritalStatus + '" data-age="' + item.Age + '" data-status_id="' + item.StatusID + '"><i class="fa fa-edit" title="Edit"></i></a><a href="#" class="btn btn-pill btn-outline-danger btn-xs" id="deleteClient" data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '" ><i class="fa fa-trash-o"title="Delete"></i></a>';
-
-                  }
+					"data": function(item) {
+						// Check the StatusName and conditionally hide/show buttons
+						var buttonsHtml = '';
+				
+						if (item.StatusName === "Active") {
+						  buttonsHtml += '<a class="btn btn-pill btn-outline-info btn-xs" id="viewClient"  data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '" data-last_name="' + item.LastName + '" data-first_name="' + item.FirstName + '" data-middle_name="' + item.MiddleName + '" data-branch_name="' + item.BranchName + '" data-branch_id="' + item.BranchID + '" data-birthday="' + item.Birthday + '" data-contact_no="' + item.ContactNo + '" data-address="' + item.Address + '" data-email="' + item.Email + '" data-business_name="' + item.BusinessName + '" data-business_address="' + item.BusinessAddress + '" data-gender="' + item.Gender + '" data-marital_name="' + item.MaritalName + '" data-age="' + item.Age + '" data-status_id="' + item.StatusID + '" data-status_name="' + item.StatusName + '"><i class="fa fa-eye" title="view"></i></a>  ';
+						}
+						else{
+						  buttonsHtml += '<a class="btn btn-pill btn-outline-info btn-xs" id="viewClient"  data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '" data-last_name="' + item.LastName + '" data-first_name="' + item.FirstName + '" data-middle_name="' + item.MiddleName + '" data-branch_name="' + item.BranchName + '" data-branch_id="' + item.BranchID + '" data-birthday="' + item.Birthday + '" data-contact_no="' + item.ContactNo + '" data-address="' + item.Address + '" data-email="' + item.Email + '" data-business_name="' + item.BusinessName + '" data-business_address="' + item.BusinessAddress + '" data-gender="' + item.Gender + '" data-marital_name="' + item.MaritalName + '" data-age="' + item.Age + '" data-status_id="' + item.StatusID + '" data-status_name="' + item.StatusName + '"><i class="fa fa-eye" title="view"></i></a>  ';
+						  buttonsHtml += '<a class="btn btn-pill btn-outline-success btn-xs" id="editClient"  data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '" data-last_name="' + item.LastName + '" data-first_name="' + item.FirstName + '" data-middle_name="' + item.MiddleName + '" data-branch_id="' + item.BranchID + '" data-birthday="' + item.Birthday + '" data-contact_no="' + item.ContactNo + '" data-address="' + item.Address + '" data-email="' + item.Email + '" data-business_name="' + item.BusinessName + '" data-business_address="' + item.BusinessAddress + '" data-gender="' + item.Gender + '" data-marital_status="' + item.MaritalStatus + '" data-age="' + item.Age + '" data-status_id="' + item.StatusID + '"><i class="fa fa-edit" title="Edit"></i></a>  ';
+						  buttonsHtml += '<a class="btn btn-pill btn-outline-primary btn-xs" id="applyLoan"  data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '" data-last_name="' + item.LastName + '" data-first_name="' + item.FirstName + '" data-middle_name="' + item.MiddleName + '" data-branch_id="' + item.BranchID + '" data-branch_name="' + item.BranchName + '"><i class="fa fa-file-text-o" title="Apply Loan"></i></a>  ';
+						  buttonsHtml += '<a href="#" class="btn btn-pill btn-outline-danger btn-xs" id="deleteClient" data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '" ><i class="fa fa-trash-o"title="Delete"></i></a>';
+						}
+				
+				
+						return buttonsHtml;
+					  }
                 }
                 ],
                 //      "columnDefs": [

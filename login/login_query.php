@@ -78,7 +78,7 @@ include("../database/connection.php");
 			else
 			{
 
-				echo json_encode(array("statusCode"=>1,"message"=>'Employee ID Does Not Exist!'));
+				echo json_encode(array("statusCode"=>1,"message"=>'Invalid Employee ID or Password!'));
 				
 			}
 		

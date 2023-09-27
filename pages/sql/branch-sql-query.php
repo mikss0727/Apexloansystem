@@ -3,6 +3,52 @@ error_reporting(0);
 
 include("../../database/connection.php");
 
+// get table data 
+if($_POST['process']=='getData'){
+	
+	$query = "SELECT 
+					t1.id,
+					t1.BranchID,
+					t1.BranchName,
+					t1.CreatedAt,
+					CONCAT(t2.LastName,', ',t2.FirstName,' ',t2.MiddleName) AS 'CreatedBy',
+					t1.isActive,
+					t1.UpdatedAt,
+					CONCAT(t3.LastName,', ',t3.FirstName,' ',t3.MiddleName) AS 'UpdatedBy'
+				FROM t_branch t1 
+				LEFT JOIN t_employee t2
+				ON t1.CreatedBy = t2.EmployeeID 
+				LEFT JOIN t_employee t3
+				ON t1.UpdatedBy = t3.EmployeeID";
+
+				$stmt = mysqli_prepare($con, $query);
+				mysqli_stmt_execute($stmt);
+				$result = mysqli_stmt_get_result($stmt);
+
+				$dataArray = array(); // Initialize an empty array to store the data
+
+				if ($result->num_rows > 0) {
+					while ($row = $result->fetch_assoc()) {
+						$dataArray[] = $row; // Add each row to the array
+					}
+					echo json_encode(
+						array(
+							"message" => "Successfully fetched data.", 
+							"data" => $dataArray
+						)
+					);
+				} else {
+					echo json_encode(
+						array(
+							"message" => "No Data found.",
+							"data" => $dataArray
+						)
+					);
+				}
+												
+												
+}
+
 
 // add branch
 if($_POST['process']=='addBranch'){
@@ -45,20 +91,20 @@ if($_POST['process']=='addBranch'){
 // edit Branch
 if($_POST['process']=='editBranch'){
 
-	$edit_branchID = $_POST['edit_branchID'];
+	$pk_id = $_POST['pk_id'];
+	$branch_id = $_POST['branch_id'];
 	$edit_branchName = $_POST['edit_branchName'];
 	$edit_isActive = $_POST['edit_isActive'];
-	$pk_id = $_POST['pk_id'];
     $EmployeeID = $_POST['EmployeeID'];
 
 
-	$query_check=mysqli_query($con,"SELECT * FROM t_branch WHERE (id='$pk_id' AND BranchID='$edit_branchID')");
+	$query_check=mysqli_query($con,"SELECT * FROM t_branch WHERE (id='$pk_id' AND BranchID='$branch_id')");
 	$num_rows=mysqli_num_rows($query_check);
 	if($num_rows)
 	{
 
 			// update
-		$query=mysqli_query($con,"UPDATE t_branch SET BranchName = '$edit_branchName', isActive = '$edit_isActive', UpdatedBy = '$EmployeeID', UpdatedAt = NOW() WHERE (id='$pk_id' AND BranchID='$edit_branchID')");
+		$query=mysqli_query($con,"UPDATE t_branch SET BranchName = '$edit_branchName', isActive = '$edit_isActive', UpdatedBy = '$EmployeeID', UpdatedAt = NOW() WHERE (id='$pk_id' AND BranchID='$branch_id')");
 
 		if($query)
 		{

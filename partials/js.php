@@ -38,3 +38,7 @@
 <script src="../assets/js/script.js"></script>
 <script src="../custom_assets/sweetalert2/sweetalert2.min.js"></script>    
 <script src="../assets/js/theme-customizer/customizer.js"></script>
+<!-- custom js  -->
+<script src="../partials/basic-form-validation.js"></script>
+<script src="../partials/computation-engine.js"></script>
+<script src="../partials/schedule-generator.js"></script>

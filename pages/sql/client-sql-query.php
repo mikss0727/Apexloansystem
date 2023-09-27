@@ -74,7 +74,7 @@ if($_POST['process']=='getData'){
 
 
 
-// add branch
+// add client
 if($_POST['process']=='addClient'){
     
     $EmployeeID = $_POST['EmployeeID'];
@@ -111,16 +111,16 @@ if($_POST['process']=='addClient'){
 
 	if($num_rows)
 	{
-		echo json_encode(array("statusCode"=>1,"message"=>'Error, Client ID Has Already Exist!, Kindly try to re-submit.'));
+		echo json_encode(array("statusCode"=>1,"message"=>'Error, Client ID Has Already Exist! Kindly try to re-submit.'));
 	}
 	else
 	{
 
 	
 
-		// insert new Branch 
+		// insert new Client 
 		$query=mysqli_query($con,"INSERT INTO t_client ( ClientID, BranchID, FirstName, MiddleName, LastName, Birthday, ContactNo, Address, Email, BusinessName, BusinessAddress, Gender, MaritalStatus, Age, CreatedAt, StatusID, CreatedBy, UpdatedAt, UpdatedBy) 
-		VALUES ('$ClientID', '$BranchID', '$FirstName', '$MiddleName', '$LastName', '$Birthday', '$ContactNo', '$Address', '$Email', '$BusinessName', '$BusinessAddress', '$Gender', '$MaritalStatus', '$Age', NOW(), 'PND', '$EmployeeID', null, null)");
+		VALUES ('$ClientID', '$BranchID', '$FirstName', '$MiddleName', '$LastName', '$Birthday', '$ContactNo', '$Address', '$Email', '$BusinessName', '$BusinessAddress', '$Gender', '$MaritalStatus', '$Age', NOW(), 'IACTV', '$EmployeeID', null, null)");
     
 		if($query)
 		{
@@ -136,33 +136,77 @@ if($_POST['process']=='addClient'){
 
 }
 
-// process Client
-if($_POST['process']=='processClient'){
+// process apply Loan
+if($_POST['process']=='processApplyLoan'){
 
-	$pk_id = $_POST['p_pk_id'];
-	$client_id = $_POST['p_client_id'];
+	$pk_id = $_POST['l_pk_id'];
+	$client_id = $_POST['l_client_id'];
+	$branch_id = $_POST['l_branch_id'];
+	$loan_product = $_POST['l_loan_product'];
+	$loan_rate = $_POST['l_loan_rate'];
+	$loan_term_type = $_POST['l_loan_term_type'];
+	$loan_disbDate = $_POST['l_loan_disbDate'];
     $EmployeeID = $_POST['EmployeeID'];
-	$status_id = $_POST['v_statusID'];
 
 
 	$query_check=mysqli_query($con,"SELECT * FROM t_client WHERE (id='$pk_id' AND ClientID='$client_id')");
 	$num_rows=mysqli_num_rows($query_check);
 	if($num_rows)
 	{
+	
+			// Function to generate a formatted Application ID
+			function generateApplicationID($number) {
+				return "AL" . str_pad($number, 10, '0', STR_PAD_LEFT);
+			}
 
-		// Apprved/reject client
-		$query=mysqli_query($con,"UPDATE t_client SET  StatusID = '$status_id', UpdatedAt = NOW(), UpdatedBy = '$EmployeeID'
-		WHERE (id='$pk_id' AND ClientID='$client_id')");
+			$query_checkApplicationID=mysqli_query($con,"SELECT COUNT(ApplicationNo) AS application_count FROM t_client_application");
+			$row = mysqli_fetch_assoc($query_checkApplicationID);
+			$lastNumber = $row['application_count'] ?? 0;
 
-		if($query)
-		{
-			echo json_encode(array("statusCode"=>0,"message"=>'Client process successfully!'));
+			// Generate a new client ID
+			$newNumber = $lastNumber + 1;
+			$ApplicationID = generateApplicationID($newNumber);
 
-		}
-		else
-		{
-			echo json_encode(array("statusCode"=>1,"message"=>'Process Error, Please Contact the IT Administrator!'));
-		}
+
+			$query_check=mysqli_query($con,"SELECT * FROM t_client_application WHERE ApplicationNo='$ApplicationID'");
+			$num_rows=mysqli_num_rows($query_check);
+		
+			if($num_rows)
+			{
+				echo json_encode(array("statusCode"=>1,"message"=>'Error, ApplicationNo Has Already Exist!, Kindly try to re-submit.'));
+			}
+			else
+			{
+				
+				// insert new Application 
+				$query=mysqli_query($con,"INSERT INTO t_client_application ( ApplicationNo, ClientID, BranchID, ProductID, InterestCode, TermType, DisbursementDate, StatusID, LoanType, ClosedDate, CreatedAt, CreatedBy, UpdatedAt, UpdatedBy) 
+				VALUES ('$ApplicationID', '$client_id', '$branch_id', '$loan_product', '$loan_rate', '$loan_term_type', '$loan_disbDate', 'PND', 'NL', null, NOW(), '$EmployeeID', null, null)");
+
+
+				if($query)
+				{
+
+						// update client status
+						$query_updateClientStatus=mysqli_query($con,"UPDATE t_client SET StatusID = 'ACTV' WHERE (id='$pk_id' AND ClientID='$client_id')");
+						// add application process
+						$query_addProcess=mysqli_query($con,"INSERT INTO t_applicationprocess (ApplicationNo, ProcessNo, StatusID, ProcessValue, ProcessBy, CreatedAt) VALUES ('$ApplicationID','1','PND','ENCODE','$EmployeeID',NOW())");
+
+						if($query_updateClientStatus){
+							echo json_encode(array("statusCode"=>0,"message"=>'Application Successfully Created!'));
+						}
+						else{
+							echo json_encode(array("statusCode"=>1,"message"=>'Error, Please Contact the IT Administrator! Application Created, Failed to Update Client Status.'));
+						}
+					
+
+				}
+				else
+				{
+					echo json_encode(array("statusCode"=>1,"message"=>'Error, Please Contact the IT Administrator!'));
+				}
+				
+
+			}
 		
 	}
 	else
@@ -170,8 +214,6 @@ if($_POST['process']=='processClient'){
 
 		echo json_encode(array("statusCode"=>1,"message"=>'Client Does Not Exist!'));
 
-
-		
 	}
 
 }
@@ -242,7 +284,7 @@ if($_POST['process']=='deleteClient'){
 	if($num_rows)
 	{
 
-		$query=mysqli_query($con,"DELETE FROM t_client WHERE (id='$pk_id' AND ClientID='$client_id')");
+		$query=mysqli_query($con,"UPDATE t_client SET StatusID = 'DEL' WHERE (id='$pk_id' AND ClientID='$client_id')");
 
 		if($query)
 		{

@@ -29,9 +29,8 @@
                           </div>
                       </div>
                       <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item"><a class="nav-link client-tab active" data-value="PND" id="pending-tabs" data-bs-toggle="tab" href="#pending" role="tab" aria-controls="pending" aria-selected="true">Pending</a></li>
-                            <li class="nav-item"><a class="nav-link client-tab" data-value="APR" id="approved-tabs" data-bs-toggle="tab" href="#approved" role="tab" aria-controls="approved" aria-selected="false">Approved</a></li>
-                            <li class="nav-item"><a class="nav-link client-tab" data-value="REJ" id="rejected-tabs" data-bs-toggle="tab" href="#rejected" role="tab" aria-controls="rejected" aria-selected="false">Rejected</a></li>
+                            <li class="nav-item"><a class="nav-link client-tab active" data-value="ACTV" id="active-tabs" data-bs-toggle="tab" href="#active" role="tab" aria-controls="active" aria-selected="true">Active Client</a></li>
+                            <li class="nav-item"><a class="nav-link client-tab" data-value="IACTV" id="inactive-tabs" data-bs-toggle="tab" href="#inactive" role="tab" aria-controls="inactive" aria-selected="false">InActive Client</a></li>
                             </ul>
                             <div class="tab-content mt-5" id="myTabContent">
                                 <div class="table-responsive">
@@ -120,7 +119,7 @@
                                   <div class="col">
                                       <div class="mb-3">
                                           <label class="form-label" for="add_contactno">Contact Number <span style="color: red;">*</span></label>
-                                          <input class="form-control" id="add_contactno" name="add_contactno" type="text" required="" oninput="validateDecimalInput(this)">
+                                          <input class="form-control" id="add_contactno" name="add_contactno" type="text" required="" oninput="validateContactNo(this)">
                                           <div class="valid-feedback">Looks good!</div>
                                           <div class="invalid-feedback">Please input a Contact Number.</div>
                                       </div>
@@ -302,7 +301,7 @@
                                   <div class="col">
                                       <div class="mb-3">
                                           <label class="form-label" for="edit_contactno">Contact Number <span style="color: red;">*</span></label>
-                                          <input class="form-control" id="edit_contactno" name="edit_contactno" type="text" required="" oninput="validateDecimalInput(this)">
+                                          <input class="form-control" id="edit_contactno" name="edit_contactno" type="text" required="" oninput="validateContactNo(this)">
                                           <div class="valid-feedback">Looks good!</div>
                                           <div class="invalid-feedback">Please input a Contact Number.</div>
                                       </div>
@@ -426,7 +425,6 @@
                     <div class="card-header pb-0">
                         <h5>Client Details</h5>
                     </div>
-                    <form  class="needs-validation" novalidate="" id="clientApproval_form">
                     <div class="card-body">
                         <div class="row">
                             <div class="col">
@@ -524,25 +522,86 @@
                             </div>
                             </div>
                         </div>
-                        <!-- <div class="row">
-                            <div class="col">
-                            <div class="mb-3">
-                                <label class="form-label" for="v_status">Client Status</label>
-                                <input class="form-control" id="v_status" name="v_status" readonly>
-                            </div>
-                            </div>
-                        </div> -->
+                       
+
+                        
+                    </div>
+                        <div class="card-footer text-end">
+                        <input class="btn btn-light" type="reset" id="back" value="Back">
+                        </div>
+                </div>
+                <!-- END View FORM -->
+
+
+                <!-- APPLY LOAN FORM -->
+                <div class="card"  id="apply_loan" style="display:none">
+                    <div class="card-header pb-0">
+                        <h5>Client Details</h5>
+                    </div>
+                    <div class="card-body">
                         <div class="row">
                             <div class="col">
                                 <div class="mb-3">
-                                <label class="form-label" for="v_statusID">Status <span style="color: red;">*</span></label>
-                                <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="v_statusID" name="v_statusID" required="">
+                                    <label class="form-label" for="l_clientID">Client ID </label>
+                                    <input class="form-control" id="l_clientID" name="l_clientID" type="text" readonly style="text-transform:uppercase">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label" for="l_clientName">Client Name </label>
+                                    <input class="form-control" id="l_clientName" name="l_clientName" type="text" readonly style="text-transform:uppercase">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label" for="l_branch">Branch Name </label>
+                                    <input class="form-control" id="l_branch" name="l_branch" type="text" readonly style="text-transform:uppercase">
+                                </div>
+                            </div>
+                        </div>
+                        
+                    <form  class="needs-validation" novalidate="" id="applyLoan_form">
+                        <!-- loan/ product  -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                <label class="form-label" for="l_loan_product">Product <span style="color: red;">*</span></label>
+                                <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="l_loan_product" name="l_loan_product" required="">
+                                    <option value="">Select Product...</option>
                                         <?php
-                                                $result_type = mysqli_query($con,"SELECT * FROM t_status WHERE isActive = 0 AND StatusID IN ('APR','REJ','PND')");
+                                                $result_type = mysqli_query($con,"SELECT * FROM t_product WHERE isActive = 0");
                                                 
                                                 while($row_type = mysqli_fetch_array($result_type)) {
                                         ?>
-                                        <option value="<?php echo $row_type["StatusID"]; ?>"><?php echo $row_type["StatusName"]; ?></option>
+                                        <option value="<?php echo $row_type["ProductID"]; ?>"><?php echo $row_type["ProductName"].' - '.$row_type["LoanAmount"]; ?>.00</option>
+                                        <?php
+                                        
+                                        }
+                                        ?>
+                                </select>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please Select Product.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- interest rate  -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                <label class="form-label" for="l_loan_rate">Rate <span style="color: red;">*</span></label>
+                                <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="l_loan_rate" name="l_loan_rate" required="">
+                                    <option value="">Select Rate...</option>
+                                        <?php
+                                                $result_type = mysqli_query($con,"SELECT * FROM t_interest_rate WHERE isActive = 0");
+                                                
+                                                while($row_type = mysqli_fetch_array($result_type)) {
+                                        ?>
+                                        <option value="<?php echo $row_type["RateID"]; ?>"><?php echo $row_type["Rate"]; ?></option>
                                         <?php
                                         
                                         }
@@ -553,21 +612,60 @@
                                 </div>
                             </div>
                         </div>
+
+                         <!-- Term  -->
+                         <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                <label class="form-label" for="l_loan_term_type">Term Type <span style="color: red;">*</span></label>
+                                <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="l_loan_ Type_type" name="l_loan_term_type" required="">
+                                    <option value="">Select Term Type...</option>
+                                        <?php
+                                                $result_type = mysqli_query($con,"SELECT * FROM t_term_type WHERE isActive = 0");
+                                                
+                                                while($row_type = mysqli_fetch_array($result_type)) {
+                                        ?>
+                                        <option value="<?php echo $row_type["TypeID"]; ?>"><?php echo $row_type["TypeName"].' Collection'; ?></option>
+                                        <?php
+                                        
+                                        }
+                                        ?>
+                                </select>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please Select Term Type.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- disb date  -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label" for="l_loan_disbDate">Disbursement Date <span style="color: red;">*</span></label>
+                                    <input class="form-control" id="l_loan_disbDate" name="l_loan_disbDate" type="date" required="">
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback">Please input a Disbursement Date.</div>
+                                </div>
+                            </div>
+                        </div>
+                       
+
                         
                     </div>
                         <div class="card-footer text-end">
                          <!-- hidden value process name and sessionid primaryid ,roleid-->
-                         <input value="processClient" name="process" type="hidden">
-                        <input id="p_pk_id" name="p_pk_id" type="hidden">
-                        <input id="p_client_id" name="p_client_id" type="hidden">
+                         <input value="processApplyLoan" name="process" type="hidden">
+                        <input id="l_pk_id" name="l_pk_id" type="hidden">
+                        <input id="l_client_id" name="l_client_id" type="hidden">
+                        <input id="l_branch_id" name="l_branch_id" type="hidden">
                         <input value="<?php echo $_SESSION['EmployeeID']; ?>" name="EmployeeID" type="hidden">
                         <input value="<?php echo $_SESSION['RoleID']; ?>" name="RoleID" type="hidden">
                         <button class="btn btn-primary" type="submit">Submit</button>
-                        <input class="btn btn-light" type="reset" id="back" value="Back">
+                        <input class="btn btn-light" type="reset" id="back_apply_form" value="Back">
                         </div>
                     </form>
                 </div>
-                <!-- END View FORM -->
+                <!-- END APPLY LOAN FORM -->
 
                 
 

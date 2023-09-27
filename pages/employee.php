@@ -45,104 +45,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                            
-                                            $result = mysqli_query($con,"SELECT 
-                                                                            t1.id,
-                                                                            t1.EmployeeID,
-                                                                            t1.LastName,
-                                                                            t1.FirstName,
-                                                                            t1.MiddleName,
-                                                                            t1.DeptID,
-                                                                            t2.DeptName,
-                                                                            t1.PositionID,
-                                                                            t3.PositionName,
-                                                                            t1.ContactNo,
-                                                                            t1.Email,
-                                                                            t1.Birthday,
-                                                                            t1.CreatedAt,
-                                                                            t1.isActive,
-                                                                            CONCAT(t4.LastName,', ',t4.FirstName,' ',t4.MiddleName) AS 'CreatedBy',
-                                                                            t1.UpdatedAt,
-                                                                            CONCAT(t5.LastName,', ',t5.FirstName,' ',t5.MiddleName) AS 'UpdatedBy'
-                                                                        FROM t_employee t1 
-                                                                        LEFT JOIN t_department t2
-                                                                        ON t1.DeptID = t2.DeptID 
-                                                                        LEFT JOIN t_position t3
-                                                                        ON t1.PositionID = t3.PositionID
-                                                                        LEFT JOIN t_employee t4
-                                                                        ON t1.EmployeeID = t4.EmployeeID
-                                                                        LEFT JOIN t_employee t5
-                                                                        ON t1.EmployeeID = t5.EmployeeID");
-
-                                            
-
-                                                while($row = mysqli_fetch_array($result)) {
-                                            ?>
-                                            <tr>
-                                                <td> <?php echo $row["EmployeeID"]; ?></td>
-                                                <td> <?php echo $row["LastName"].', '.$row["FirstName"].' '.$row["MiddleName"]; ?></td>
-                                                <td> <?php echo $row["DeptName"]?></td>
-                                                <td> <?php echo $row["PositionName"]?></td>
-                                                <td> <?php echo $row["ContactNo"]?></td>
-                                                <td> <?php echo $row["Email"]?></td>
-                                                <td> <?php echo $row["Birthday"]?></td>
-                                                <td><?php 
-                                                        if($row["CreatedAt"] == '' || $row["CreatedAt"] == null)
-                                                        {
-                                                            echo '';
-                                                        }
-                                                        else{
-                                                            $date_created=date_create($row["CreatedAt"]);
-                                                            echo date_format($date_created,"Y-m-d g:i a");
-                                                        }
-                                                ?></td>
-
-                                                <td style="text-align: center;">
-                                                    <a href="#" class="btn btn-pill btn-outline-info btn-xs" id="viewEmployee"
-                                                    data-pk_id="<?php echo $row["id"]; ?>"
-                                                    data-employee_id="<?php echo $row["EmployeeID"]; ?>"
-                                                    data-last_name="<?php echo $row["LastName"]; ?>"
-                                                    data-first_name="<?php echo $row["FirstName"]; ?>"
-                                                    data-middle_name="<?php echo $row["MiddleName"]; ?>"
-                                                    data-dept_name="<?php echo $row["DeptName"]; ?>"
-                                                    data-pos_name="<?php echo $row["PositionName"]; ?>"
-                                                    data-birthday="<?php echo $row["Birthday"]; ?>"
-                                                    data-contact_no="<?php echo $row["ContactNo"]; ?>"
-                                                    data-email="<?php echo $row["Email"]; ?>"
-                                                    data-isActive="<?php echo $row["isActive"]; ?>">
-                                                        <i class="fa fa-eye" title="view"></i>
-                                                    </a>
-                                                    
-                                                    <a href="#" class="btn btn-pill btn-outline-primary btn-xs" id="editEmployee"
-                                                    data-pk_id="<?php echo $row["id"]; ?>"
-                                                    data-employee_id="<?php echo $row["EmployeeID"]; ?>"
-                                                    data-last_name="<?php echo $row["LastName"]; ?>"
-                                                    data-first_name="<?php echo $row["FirstName"]; ?>"
-                                                    data-middle_name="<?php echo $row["MiddleName"]; ?>"
-                                                    data-dept_id="<?php echo $row["DeptID"]; ?>"
-                                                    data-pos_id="<?php echo $row["PositionID"]; ?>"
-                                                    data-birthday="<?php echo $row["Birthday"]; ?>"
-                                                    data-contact_no="<?php echo $row["ContactNo"]; ?>"
-                                                    data-email="<?php echo $row["Email"]; ?>"
-                                                    data-isactive="<?php echo $row["isActive"]; ?>">
-                                                        <i class="fa fa-edit"
-                                                        title="Edit"></i>
-                                                    </a>
-                                                    <a href="#" class="btn btn-pill btn-outline-danger btn-xs" id="deleteEmployee"
-                                                    data-pk_id="<?php echo $row["id"]; ?>"
-                                                    data-employee_id="<?php echo $row["EmployeeID"]; ?>">
-                                                        <i class="fa fa-trash-o"
-                                                        title="Delete"></i>
-                                                    </a>
-
-                                                </td>
-                                            </tr>
-                                            <?php
-                                            
-                                            }
-                                            ?>
-                                        </tbody>
+                                    </tbody>
                                 </table>
                             </div>
                           
@@ -204,7 +107,7 @@
                                   <div class="col">
                                       <div class="mb-3">
                                           <label class="form-label" for="add_contactno">Contact Number <span style="color: red;">*</span></label>
-                                          <input class="form-control" id="add_contactno" name="add_contactno" type="text" required="" oninput="validateDecimalInput(this)">
+                                          <input class="form-control" id="add_contactno" name="add_contactno" type="text" required="" oninput="validateContactNo(this)">
                                           <div class="valid-feedback">Looks good!</div>
                                           <div class="invalid-feedback">Please input a Contact Number.</div>
                                       </div>
@@ -346,7 +249,7 @@
                                   <div class="col">
                                       <div class="mb-3">
                                           <label class="form-label" for="edit_contactno">Contact Number <span style="color: red;">*</span></label>
-                                          <input class="form-control" id="edit_contactno" name="edit_contactno" type="text" required="" oninput="validateDecimalInput(this)">
+                                          <input class="form-control" id="edit_contactno" name="edit_contactno" type="text" required="" oninput="validateContactNo(this)">
                                           <div class="valid-feedback">Looks good!</div>
                                           <div class="invalid-feedback">Please input a Contact Number.</div>
                                       </div>
