@@ -485,52 +485,56 @@ document.addEventListener('DOMContentLoaded', function() {
 			cancelButtonColor: '#d33',
 			confirmButtonText: 'Yes, Continue!'
 		}).then((result) => {
-			Swal.fire({
-				title: 'Loading',
-				text: 'Please wait while data is being process...',
-				allowOutsideClick: false,
-				showCancelButton: false,
-				showConfirmButton: false,
-				onBeforeOpen: () => {
-					Swal.showLoading();
-				}
-			});
 
-			$.ajax({
-				data:{
-					process:'DisburseClient',
-					client_data: JSON.stringify(client_data) ,
-					paymentSchedule: JSON.stringify(paymentSchedule) 
-				},
-				type: "post",
-				url: "sql/application-sql.php",
-				success: function(dataResult){
-
-					swal.close();
-					var dataResult = JSON.parse(dataResult);
-
-					if(dataResult.statusCode==0){
-						
-
-							Swal.fire({
-								icon: 'success',
-								title: 'Success...',
-								text: dataResult.message
-							}).then(function() {
-								window.location = 'application.php';
-							});
-
-						}
-						else if(dataResult.statusCode==1){
-							
-							Swal.fire({
-								icon: 'error',
-								title: 'Oops...',
-								text: dataResult.message
-							})
-						}
+			if(result.isConfirmed){
+				Swal.fire({
+					title: 'Loading',
+					text: 'Please wait while data is being process...',
+					allowOutsideClick: false,
+					showCancelButton: false,
+					showConfirmButton: false,
+					onBeforeOpen: () => {
+						Swal.showLoading();
 					}
-				}); //end ajax
+				});
+	
+				$.ajax({
+					data:{
+						process:'DisburseClient',
+						client_data: JSON.stringify(client_data) ,
+						paymentSchedule: JSON.stringify(paymentSchedule) 
+					},
+					type: "post",
+					url: "sql/application-sql.php",
+					success: function(dataResult){
+	
+						swal.close();
+						var dataResult = JSON.parse(dataResult);
+	
+						if(dataResult.statusCode==0){
+							
+	
+								Swal.fire({
+									icon: 'success',
+									title: 'Success...',
+									text: dataResult.message
+								}).then(function() {
+									window.location = 'application.php';
+								});
+	
+							}
+							else if(dataResult.statusCode==1){
+								
+								Swal.fire({
+									icon: 'error',
+									title: 'Oops...',
+									text: dataResult.message
+								})
+							}
+						}
+					}); //end ajax
+			}
+			
 		}) // end swal
 
 	});
