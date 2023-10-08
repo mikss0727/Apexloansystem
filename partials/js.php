@@ -33,6 +33,9 @@
 <script src="../assets/js/datatable/datatable-extension/dataTables.fixedHeader.min.js"></script>
 <script src="../assets/js/datatable/datatable-extension/dataTables.rowReorder.min.js"></script>
 <script src="../assets/js/datatable/datatable-extension/dataTables.scroller.min.js"></script>
+<script src="../assets/js/photoswipe/photoswipe.min.js"></script>
+<script src="../assets/js/photoswipe/photoswipe-ui-default.min.js"></script>
+<script src="../assets/js/photoswipe/photoswipe.js"></script>
 <!-- Plugins JS Ends-->
 <!-- Theme js-->
 <script src="../assets/js/script.js"></script>

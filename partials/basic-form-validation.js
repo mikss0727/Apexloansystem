@@ -73,3 +73,35 @@ function resetForm(myForm) {
             invalidFeedbackList[index].style.display = 'none';
     });
 }
+
+
+
+// view client image
+$(document).on('click','#viewImage',function(e) {
+        
+    var client_id=$(this).attr("data-client_id");
+    var id_front = '../../kyc_images/'+client_id+'/ID_FRONT';
+    var id_back = '../../kyc_images/'+client_id+'/ID_BACK';
+
+    // const modal = document.getElementById('exampleModalLong');
+    const f_id = document.getElementById('f_id');
+    const b_id = document.getElementById('b_id');
+    
+    // Find elements inside the div
+    var f_figure = f_id.querySelector("figure");
+    var f_a = f_figure.querySelector("a");
+    var f_img = f_a.querySelector("img");
+    f_a.setAttribute("href", id_front+'.jpg');
+    f_img.src = id_front+'.jpg';
+
+    var b_figure = b_id.querySelector("figure");
+    var b_a = b_figure.querySelector("a");
+    var b_img = b_a.querySelector("img");
+    b_a.setAttribute("href", id_back+'.jpg');
+    b_img.src = id_back+'.jpg';
+    const spanElement = document.getElementById('exampleModalLongTitle');
+        spanElement.textContent = client_id+' ID Image';
+
+    
+});
+// end view client image

@@ -259,6 +259,16 @@
                             </div>
                         </div>
 
+                        
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label">ID Photo</label>
+                                    <?php include 'components/image-viewer.php'; ?>
+                                </div>
+                            </div>
+                        </div>
+
                     <form  class="needs-validation" novalidate="" id="process_application_form">
                         <div class="row">
                             <div class="col">
@@ -292,9 +302,7 @@
                                 </div>
                             </div>
                         </div>
-                       
-
-                        
+                    
                     </div>
                         <div class="card-footer text-end">
                          <!-- hidden value process name and sessionid primaryid ,roleid-->

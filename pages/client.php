@@ -63,7 +63,7 @@
                       <div class="card-header pb-0">
                           <h5>Add New Client</h5>
                       </div>
-                      <form class="needs-validation" id="addClient_form" novalidate="">
+                      <form class="needs-validation" id="addClient_form" novalidate="" action="sql/client-sql-query.php" method="post" enctype="multipart/form-data">
                           <div class="card-body">
                               <div class="row">
                                   <div class="col">
@@ -222,8 +222,29 @@
                                     <div class="invalid-feedback">Please Select Marital Status.</div>
                                   </div>
                                 </div>
-                              </div>
-                              
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="id_Front">ID Front <span style="color: red;">*</span></label>
+                                            <input class="form-control col-sm-12" id="id_Front" type="file" accept="image/*" name="ID_FRONT" onchange="validateImage('id_Front')" />
+                                            <div class="valid-feedback">Looks good!</div>
+                                            <div class="invalid-feedback">Please Select Image.</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="id_Back">ID Back <span style="color: red;">*</span></label>
+                                            <input class="form-control col-sm-12" id="id_Back" type="file" accept="image/*" name="ID_BACK" onchange="validateImage('id_Back')" />
+                                            <div class="valid-feedback">Looks good!</div>
+                                            <div class="invalid-feedback">Please Select Image.</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
                           </div>
                           <div class="card-footer text-end">
                           <!-- hidden value process name and sessionid, roleid -->
@@ -235,6 +256,7 @@
                           <input class="btn btn-light" type="reset" id="cancel_add" value="Cancel">
                           </div>
                       </form>
+
                       </div>
                      <!-- END ADD FORM -->
 
@@ -245,7 +267,7 @@
                         <div class="card-header pb-0">
                             <h5>Edit Client</h5>
                         </div>
-                        <form  class="needs-validation" novalidate="" id="clientEdit_form">
+                        <form  class="needs-validation" novalidate="" id="clientEdit_form" action="sql/client-sql-query.php" method="post" enctype="multipart/form-data">
                         <div class="card-body">
                               <div class="row">
                                   <div class="col">
@@ -402,6 +424,28 @@
                                   </div>
                                 </div>
                               </div>
+
+                               <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="edit_id_Front">ID Front (Replace Existing)</label>
+                                            <input class="form-control col-sm-12" id="edit_id_Front" type="file" accept="image/*" name="edit_ID_FRONT" />
+                                            <div class="valid-feedback">Looks good!</div>
+                                            <div class="invalid-feedback">Please Select Image.</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="edit_id_Back">ID Back (Replace Existing)</label>
+                                            <input class="form-control col-sm-12" id="edit_id_Back" type="file" accept="image/*" name="edit_ID_BACK" />
+                                            <div class="valid-feedback">Looks good!</div>
+                                            <div class="invalid-feedback">Please Select Image.</div>
+                                        </div>
+                                    </div>
+                                </div>
                               
                           </div>
                             <div class="card-footer text-end">
@@ -667,8 +711,24 @@
                 </div>
                 <!-- END APPLY LOAN FORM -->
 
-                
-
+                <!--start image modal -->
+                <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <?php include 'components/image-viewer.php'; ?>
+                            </div>
+                            <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end image modal -->
 
                 </div>
                 </div>

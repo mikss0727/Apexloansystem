@@ -76,6 +76,7 @@ if($_POST['process']=='getData'){
 
 // add client
 if($_POST['process']=='addClient'){
+
     
     $EmployeeID = $_POST['EmployeeID'];
 	$BranchID = $_POST['add_branchid'];
@@ -91,6 +92,7 @@ if($_POST['process']=='addClient'){
 	$Gender = $_POST['add_gender'];
 	$MaritalStatus = $_POST['add_maritalStatus'];
 	$Age = $_POST['add_age'];
+	
 
 	// Function to generate a formatted client ID
 	function generateClientID($number) {
@@ -106,26 +108,74 @@ if($_POST['process']=='addClient'){
 	$ClientID = generateClientID($newNumber);
 
 
-	$query_check=mysqli_query($con,"SELECT * FROM t_client WHERE ClientID='$ClientID'");
+	$query_check=mysqli_query($con,"SELECT * FROM t_client WHERE (ClientID='$ClientID') OR (FirstName='$FirstName' AND MiddleName='$MiddleName' AND LastName='$LastName')");
 	$num_rows=mysqli_num_rows($query_check);
 
 	if($num_rows)
 	{
-		echo json_encode(array("statusCode"=>1,"message"=>'Error, Client ID Has Already Exist! Kindly try to re-submit.'));
+		echo json_encode(array("statusCode"=>1,"message"=>'Error, Client ID / Client Name Has Already Exist! Kindly try to re-submit.'));
 	}
 	else
 	{
+		// Define the destination path based on $ClientID
+		$path = '../../kyc_images/' . $ClientID . '/';
+		if (!file_exists($path)) {
+			mkdir($path, 0777, true);
+		}
 
-	
+		$valid_extensions = array('jpeg', 'jpg', 'png'); // valid extensions
 
 		// insert new Client 
 		$query=mysqli_query($con,"INSERT INTO t_client ( ClientID, BranchID, FirstName, MiddleName, LastName, Birthday, ContactNo, Address, Email, BusinessName, BusinessAddress, Gender, MaritalStatus, Age, CreatedAt, StatusID, CreatedBy, UpdatedAt, UpdatedBy) 
 		VALUES ('$ClientID', '$BranchID', '$FirstName', '$MiddleName', '$LastName', '$Birthday', '$ContactNo', '$Address', '$Email', '$BusinessName', '$BusinessAddress', '$Gender', '$MaritalStatus', '$Age', NOW(), 'IACTV', '$EmployeeID', null, null)");
-    
+	
 		if($query)
 		{
-			echo json_encode(array("statusCode"=>0,"message"=>'Client Successfully added!'));
+			$loop_count = 0;
+			// Loop through the uploaded files
+			foreach ($_FILES as $key => $value) {
+				// Get the file details
+				$imageView = $key;
+				$tmpFile = $value['tmp_name'];
+				$fileName = $value['name'];
+				// Extract the file extension
+				$ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
+				// Check if the file has a valid format
+				if (in_array($ext, $valid_extensions)) {
+					// Generate a unique name for each image
+					// $finalImgName = $ClientID . '_' . $imageView . '.' . $ext;
+					$finalImgName = $imageView . '.' . $ext;
+					$finalPath = $path . $finalImgName;
+
+					// Move the uploaded file to the destination path
+					if (move_uploaded_file($tmpFile, $finalPath)) {
+						// The image has been successfully saved
+						// You can add any additional processing or database operations here
+						// echo "File '$fileName' has been uploaded and saved as '$finalImgName'.<br>";
+						$loop_count ++;
+					}
+					//  else {
+					// 	echo json_encode(array("statusCode"=>1,"message"=>'Error Uploading, Please Contact the IT Administrator!'));
+					// 	// echo "Error uploading '$fileName'.<br>";
+					// }
+				} 
+				// else {
+				// 		// echo "Invalid file format for '$fileName'.<br>";
+				// 		echo json_encode(array("statusCode"=>1,"message"=>'Error, Invalid File Format!'));
+				// }
+			}
+
+			// Move the uploaded file to the destination path
+			if ($loop_count == 2) {
+				// The image has been successfully saved
+				echo json_encode(array("statusCode"=>0,"message"=>'Client Successfully added!'));
+			}
+			 else {
+				echo json_encode(array("statusCode"=>1,"message"=>'Error Uploading Photo, Please Contact the IT Administrator!'));
+				// echo "Error uploading '$fileName'.<br>";
+			}
+			
 		}
 		else
 		{
@@ -252,7 +302,53 @@ if($_POST['process']=='editClient'){
 
 		if($query)
 		{
-			echo json_encode(array("statusCode"=>0,"message"=>'Update Complete!'));
+				// Define the destination path based on $ClientID
+				$path = '../../kyc_images/' . $client_id . '/';
+				if (!file_exists($path)) {
+					mkdir($path, 0777, true);
+				}
+
+				$valid_extensions = array('jpeg', 'jpg', 'png'); // valid extensions
+
+			$loop_count = 0;
+			// Loop through the uploaded files
+			foreach ($_FILES as $key => $value) {
+				// Get the file details
+				$imageView = ltrim($key, 'edit_');
+				$tmpFile = $value['tmp_name'];
+				$fileName = $value['name'];
+				// Extract the file extension
+				$ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+				// Check if the file has a valid format
+				if (in_array($ext, $valid_extensions)) {
+					// Generate a unique name for each image
+					$finalImgName = $imageView . '.' . $ext;
+					$finalPath = $path . $finalImgName;
+
+					// Move the uploaded file to the destination path
+					if (move_uploaded_file($tmpFile, $finalPath)) {
+						// The image has been successfully saved
+						// You can add any additional processing or database operations here
+						// echo "File '$fileName' has been uploaded and saved as '$finalImgName'.<br>";
+						$loop_count ++;
+					}
+					//  else {
+					// 	echo json_encode(array("statusCode"=>1,"message"=>'Error Uploading, Please Contact the IT Administrator!'));
+					// 	// echo "Error uploading '$fileName'.<br>";
+					// }
+				} 
+			}
+
+			// Move the uploaded file to the destination path
+			if ($loop_count == 2) {
+				// The image has been successfully saved
+				echo json_encode(array("statusCode"=>0,"message"=>'Update Complete!'));
+			}
+			 else {
+				echo json_encode(array("statusCode"=>1,"message"=>'Error Uploading Photo, Please Contact the IT Administrator!'));
+				// echo "Error uploading '$fileName'.<br>";
+			}
 
 		}
 		else
@@ -288,7 +384,28 @@ if($_POST['process']=='deleteClient'){
 
 		if($query)
 		{
-			echo json_encode(array("statusCode"=>0,"message"=>'Successfully Deleted!'));
+			$dirPath = '../../kyc_images/' . $client_id;
+
+			if (! is_dir($dirPath)) {
+				throw new InvalidArgumentException("$dirPath must be a directory");
+			}
+			if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+				$dirPath .= '/';
+			}
+			$files = glob($dirPath . '*', GLOB_MARK);
+			foreach ($files as $file) {
+				if (is_dir($file)) {
+					self::deleteDir($file);
+				} else {
+					unlink($file);
+				}
+			}
+			if(rmdir($dirPath)){
+				echo json_encode(array("statusCode"=>0,"message"=>'Successfully Deleted!'));
+			}
+			else {
+					echo json_encode(array("statusCode"=>1,"message"=>'Successfully Deleted but image retain!'));
+				}
 
 		}
 		else
@@ -308,7 +425,74 @@ if($_POST['process']=='deleteClient'){
 
 }
 
+if($_POST['process']=='upload'){
+$path = '../../kyc_images/';
+if (!file_exists($path)) {
+    mkdir($path, 0777, true);
+}
+	$valid_extensions = array('jpeg', 'jpg', 'png', 'gif', 'bmp' , 'pdf' , 'doc' , 'ppt'); // valid extensions
 
+	if(!empty($_POST['name']) || !empty($_POST['email']) || $_FILES['image'])
+	{
+	$img = $_FILES['image']['name'];
+	$tmp = $_FILES['image']['tmp_name'];
+	// get uploaded file's extension
+	$ext = strtolower(pathinfo($img, PATHINFO_EXTENSION));
+	// can upload same image using rand function
+	$final_image = rand(1000,1000000).$img;
+	// check's valid format
+	if(in_array($ext, $valid_extensions)) 
+	{ 
+	$path = $path.strtolower($final_image); 
+	if(move_uploaded_file($tmp,$path)) 
+	{
+		echo json_encode(array("statusCode"=>0,"message"=>'Successfully saved!'.$path));
+	}
+	else
+	{
+		echo json_encode(array("statusCode"=>1,"message"=>'Error, Please Contact the IT Administrator Image not save!'));
+	}
+	} 
+	else 
+	{
+		echo json_encode(array("statusCode"=>1,"message"=>'Error, Please Contact the IT Administrator!'));
+	}
+	}
+
+// // upload image 
+// $uploadDirectory = '../../kyc_images/';
+
+// if (!file_exists($uploadDirectory)) {
+//     mkdir($uploadDirectory, 0777, true);
+// }
+
+// if (!empty($_FILES['image'])) {
+// print_r($_FILES['image']);
+
+//     $totalFiles = count($_FILES['image']['name']);
+
+//     for ($i = 0; $i < $totalFiles; $i++) {
+//         $tempFile = $_FILES['image']['tmp_name'][$i];
+//         $targetFile = $uploadDirectory . $_FILES['image']['name'][$i];
+
+//         // Check if the file already exists and rename it if necessary
+//         $fileIndex = 0;
+//         while (file_exists($targetFile)) {
+//             $fileIndex++;
+//             $newFileName = pathinfo($_FILES['image']['name'][$i], PATHINFO_FILENAME) . "_$fileIndex." . pathinfo($_FILES['image']['name'][$i], PATHINFO_EXTENSION);
+//             $targetFile = $uploadDirectory . $newFileName;
+//         }
+
+//         if (move_uploaded_file($tempFile, $targetFile)) {
+//             echo "File '{$_FILES['image']['name'][$i]}' uploaded successfully.<br>";
+//         } else {
+//             echo "Error uploading file '{$_FILES['image']['name'][$i]}'.<br>";
+//         }
+//     }
+// } else {
+//     echo "No files were uploaded.";
+// }
+}
 
 ?>
 

@@ -14,7 +14,7 @@ function loadTable(status) {
 	});
 	// start ajax 
 	$.ajax({
-		url: 'sql/application-sql.php',
+		url: 'sql/application-sql-query.php',
 		type: 'POST',
 		dataType: 'json',
 		data: {
@@ -296,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					$.ajax({
 						data: data,
 						type: "post",
-						url: "sql/application-sql.php",
+						url: "sql/application-sql-query.php",
 						success: function(dataResult){
 							var dataResult = JSON.parse(dataResult);
 
@@ -366,6 +366,26 @@ document.addEventListener('DOMContentLoaded', function() {
 		$('#v_loan_product').val(v_loan_product);
 		$('#v_loan_term').val(v_loan_term);
 		$('#v_loan_disbDate').val(v_loan_disbDate);
+
+		
+		var id_front = '../../kyc_images/'+v_clientID+'/ID_FRONT';
+		var id_back = '../../kyc_images/'+v_clientID+'/ID_BACK';
+	
+		const f_id = document.getElementById('f_id');
+		const b_id = document.getElementById('b_id');
+		// Find elements inside the div
+		var f_figure = f_id.querySelector("figure");
+		var f_a = f_figure.querySelector("a");
+		var f_img = f_a.querySelector("img");
+		f_a.setAttribute("href", id_front+'.jpg');
+		f_img.src = id_front+'.jpg';
+	
+		var b_figure = b_id.querySelector("figure");
+		var b_a = b_figure.querySelector("a");
+		var b_img = b_a.querySelector("img");
+		b_a.setAttribute("href", id_back+'.jpg');
+		b_img.src = id_back+'.jpg';
+	
 	});
 
 	$(document).on('click','#cancel_process',function(e) {
@@ -405,7 +425,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     $.ajax({
                         data: data,
                         type: "post",
-                        url: "sql/application-sql.php",
+                        url: "sql/application-sql-query.php",
                         success: function(dataResult){
                             var dataResult = JSON.parse(dataResult);
 
@@ -505,7 +525,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						paymentSchedule: JSON.stringify(paymentSchedule) 
 					},
 					type: "post",
-					url: "sql/application-sql.php",
+					url: "sql/application-sql-query.php",
 					success: function(dataResult){
 	
 						swal.close();

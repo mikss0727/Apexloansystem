@@ -73,6 +73,54 @@ function calculateAge(request) {
     
   }
 
+  
+ // Function to validate the selected image
+ function validateImage(inputID) {
+	const imageInput = document.getElementById(inputID);
+	
+	// Check if an image is selected
+	if (imageInput.files.length === 0) {
+		Swal.fire({
+			icon: 'error',
+			title: 'Oops...',
+			text: 'No Image Selected!'
+		  })
+	}
+	else{
+
+
+	// Get the selected image file
+	const selectedImage = imageInput.files[0];
+	// Check if the file type is an image
+	if (!selectedImage.type.startsWith('image/')) {
+		Swal.fire({
+			icon: 'error',
+			title: 'Oops...',
+			text: 'Please Check the Image Type!',
+			footer: 'Image Type Must be .jpg or .jpeg'
+		  })
+		clearInputField(imageInput);
+		
+	}
+}
+
+
+}
+
+	// Close the modal 
+	function closeModal(id) {
+		const modal = document.getElementById(id);
+		modal.style.display = 'none';
+		modal.style.opacity = '0';
+
+	}
+
+
+// Function to clear the input field
+function clearInputField(inputField) {
+	inputField.value = ''; // Clear the selected file
+}
+
 //   form validation 
 function CustomValidationFeedback(form) {
     const inputFields = form.querySelectorAll('.form-control');
@@ -84,6 +132,17 @@ function CustomValidationFeedback(form) {
     inputFields.forEach((inputField, index) => {
             if(inputField.name == 'add_contactno'){
                 if(inputField.value.length != 11){
+                    validFeedbackList[index].style.display = 'none';
+                    invalidFeedbackList[index].style.display = 'block';
+                    allFieldsValid = false;
+                }
+                else{
+                    validFeedbackList[index].style.display = 'block';
+                    invalidFeedbackList[index].style.display = 'none';
+                }
+            }
+			else if((inputField.name == 'id_Front') || (inputField.name == 'id_Back')){
+                if(inputField.files.length === 0){
                     validFeedbackList[index].style.display = 'none';
                     invalidFeedbackList[index].style.display = 'block';
                     allFieldsValid = false;
@@ -295,7 +354,7 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         // validate form
         const form = document.getElementById("addClient_form");
-	
+
         if (!CustomValidationFeedback(form)) {
 				Swal.fire({
 					icon: 'error',
@@ -316,12 +375,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }).then((result) => {
                 if (result.isConfirmed) {
 
-                    var data = $("#addClient_form").serialize();
+                    // var data = $("#addClient_form").serialize();
                     $.ajax({
-                        data: data,
-                        type: "post",
                         url: "sql/client-sql-query.php",
-                        success: function(dataResult){
+						type: "POST",
+						data:  new FormData(this),
+						contentType: false,
+							cache: false,
+						processData:false,
+						success: function(dataResult){
                             var dataResult = JSON.parse(dataResult);
 
                             if(dataResult.statusCode==0){
@@ -428,11 +490,14 @@ document.addEventListener('DOMContentLoaded', function() {
 			}).then((result) => {
 				if (result.isConfirmed) {
 					
-					var data = $("#clientEdit_form").serialize();
+					// var data = $("#clientEdit_form").serialize();
 					$.ajax({
-						data: data,
-						type: "post",
 						url: "sql/client-sql-query.php",
+						type: "POST",
+						data:  new FormData(this),
+						contentType: false,
+							cache: false,
+						processData:false,
 						success: function(dataResult){
 							var dataResult = JSON.parse(dataResult);
 
@@ -516,6 +581,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		})
 	});
+
+
+
 
 
 
@@ -671,8 +739,9 @@ document.addEventListener('DOMContentLoaded', function() {
 						  buttonsHtml += '<a class="btn btn-pill btn-outline-info btn-xs" id="viewClient"  data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '" data-last_name="' + item.LastName + '" data-first_name="' + item.FirstName + '" data-middle_name="' + item.MiddleName + '" data-branch_name="' + item.BranchName + '" data-branch_id="' + item.BranchID + '" data-birthday="' + item.Birthday + '" data-contact_no="' + item.ContactNo + '" data-address="' + item.Address + '" data-email="' + item.Email + '" data-business_name="' + item.BusinessName + '" data-business_address="' + item.BusinessAddress + '" data-gender="' + item.Gender + '" data-marital_name="' + item.MaritalName + '" data-age="' + item.Age + '" data-status_id="' + item.StatusID + '" data-status_name="' + item.StatusName + '"><i class="fa fa-eye" title="view"></i></a>  ';
 						  buttonsHtml += '<a class="btn btn-pill btn-outline-success btn-xs" id="editClient"  data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '" data-last_name="' + item.LastName + '" data-first_name="' + item.FirstName + '" data-middle_name="' + item.MiddleName + '" data-branch_id="' + item.BranchID + '" data-birthday="' + item.Birthday + '" data-contact_no="' + item.ContactNo + '" data-address="' + item.Address + '" data-email="' + item.Email + '" data-business_name="' + item.BusinessName + '" data-business_address="' + item.BusinessAddress + '" data-gender="' + item.Gender + '" data-marital_status="' + item.MaritalStatus + '" data-age="' + item.Age + '" data-status_id="' + item.StatusID + '"><i class="fa fa-edit" title="Edit"></i></a>  ';
 						  buttonsHtml += '<a class="btn btn-pill btn-outline-primary btn-xs" id="applyLoan"  data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '" data-last_name="' + item.LastName + '" data-first_name="' + item.FirstName + '" data-middle_name="' + item.MiddleName + '" data-branch_id="' + item.BranchID + '" data-branch_name="' + item.BranchName + '"><i class="fa fa-file-text-o" title="Apply Loan"></i></a>  ';
-						  buttonsHtml += '<a href="#" class="btn btn-pill btn-outline-danger btn-xs" id="deleteClient" data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '" ><i class="fa fa-trash-o"title="Delete"></i></a>';
+						  buttonsHtml += '<a href="#" class="btn btn-pill btn-outline-danger btn-xs" id="deleteClient" data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '" ><i class="fa fa-trash-o" title="Delete"></i></a>';
 						}
+						buttonsHtml += '<a href="#" class="btn btn-pill btn-outline-secondary btn-xs" id="viewImage" data-bs-toggle="modal" data-bs-target="#exampleModalLong" data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '" ><i class="fa fa-file-image-o" title="View Image"></i></a>';
 				
 				
 						return buttonsHtml;
@@ -727,6 +796,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }); // end ajax 
 
 }  
-	
+
 
 });
