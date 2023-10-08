@@ -141,7 +141,7 @@ function CustomValidationFeedback(form) {
                     invalidFeedbackList[index].style.display = 'none';
                 }
             }
-			else if((inputField.name == 'id_Front') || (inputField.name == 'id_Back')){
+			else if((inputField.name == 'ID_FRONT') || (inputField.name == 'ID_BACK')){
                 if(inputField.files.length === 0){
                     validFeedbackList[index].style.display = 'none';
                     invalidFeedbackList[index].style.display = 'block';
