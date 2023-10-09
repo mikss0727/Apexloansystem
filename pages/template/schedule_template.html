@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://unpkg.com/gutenberg-css@0.6">
+    <style>
+        table {
+            width: 100%;
+            
+        }
+        td {
+        text-align: center;
+        }
+        footer {
+            margin-top: 15%;
+            text-align: center;
+            font-style: italic;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 48px;
+            margin: 0;
+        }
+        .header p {
+            font-size: 24px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>ApexLoan</h1>
+        <p>Sitio Inuman, Barangay Bayag Norte</p>
+        <p>Iloilo City, Philippines, 5000</p>
+        <p>Phone: (123) 456-7890</p>
+    </div>
+    <!-- <img src="../../assets/images/avtar/3.jpg"  alt="Image"> -->
+    
+    <!-- <h1>ApexLoan</h1> -->
+    
+    <!-- <p>Name: {{CLIENT_NAME}}</p> -->
+    
+    <table style="padding: 5px;">
+        <tr>
+            <td style="text-align: left;">Name: </td>
+            <td style="text-align: left;">{{CLIENT_NAME}}</td>
+            <td style="text-align: left;">Disbursement Date: </td>
+            <td style="text-align: right;">{{DISB_DATE}}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left;">ApplicationNo: </td>
+            <td style="text-align: left;">{{APPLICATION_NO}}</td>
+            <td style="text-align: left;">Branch: </td>
+            <td style="text-align: right;">{{BRANCH}}</td>
+        </tr>
+        <tr>
+            <td style="text-align: left;">Loan Amount: </td>
+            <td style="text-align: left;">{{LOAN_AMOUNT}}</td>
+            <td style="text-align: left;">ClientID: </td>
+            <td style="text-align: right;">{{CLIENT_ID}}</td>
+        </tr>
+    </table>
+    <h1>Installment Schedule</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Installment No</th>
+                <th>Due Date</th>
+                <th>Balance</th>
+                <th>Payment</th>
+                <th>Signature</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{INSTALLMENT_TABLE}}
+        </tbody>
+    </table>
+
+    
+    
+    <footer>
+        <table style="padding: 20px;">
+            <tr>
+                <td>{{CLIENT_NAME}}</td>
+                <td>{{BRANCH_MANAGER}}</td>
+               
+            </tr>
+            <tr>
+                <td style="border-top: 1px solid black; font-style: italic;">( Signature Over Printed Name )</td>
+                <td style="border-top: 1px solid black; font-style: italic;">( Signature of Branch Over Printed Name )</td>
+            </tr>
+        </table>
+    </footer>
+    
+</body>
+</html>

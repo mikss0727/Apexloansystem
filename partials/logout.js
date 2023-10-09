@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 $.ajax({
                     type: 'GET',
-                    url: 'logout/logout_query.php',
+                    url: 'sql/logout-sql-query.php',
                     success: function(dataResult){
                         var dataResult = JSON.parse(dataResult);
 
@@ -38,8 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
     });
-
-
 
 
 });

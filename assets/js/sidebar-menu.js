@@ -221,5 +221,5 @@ $("#left-arrow").click(function () {
         }
     });
     $('.custom-scrollbar').animate({
-        // scrollTop: $('a.nav-link.menu-title.active').offset().top - 500
+        scrollTop: $('a.nav-link.menu-title.active').offset().top - 500
     }, 1000);

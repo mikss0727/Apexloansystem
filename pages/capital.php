@@ -138,7 +138,7 @@ $EmployeeID = $_SESSION['EmployeeID'];
                             </thead>
                             <tbody>
                             <?php
-                                include("../database/connection.php");
+                            
                                 $result = mysqli_query($con,"SELECT * FROM `t_capital`");
                                     while($row = mysqli_fetch_array($result)) {
                                 ?>
@@ -207,7 +207,7 @@ $EmployeeID = $_SESSION['EmployeeID'];
                                 <div class="col">
                                     <div class="mb-3">
                                         <label class="form-label" for="add_isActive">Status</label>
-                                        <select class="form-control col-sm-12" style="width: 100%;" id="add_isActive" name="add_isActive" required="">
+                                        <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="add_isActive" name="add_isActive" required="">
                                         <option value="">Select Status...</option>
                                         <option value="0">Active</option>
                                         <option value="1">Inactive</option>
@@ -260,8 +260,8 @@ $EmployeeID = $_SESSION['EmployeeID'];
                                 <div class="col">
                                     <div class="mb-3">
                                         <label class="form-label" for="edit_isActive">Status</label>
-                                        <select class="form-control col-sm-12" style="width: 100%;" id="edit_isActive" name="edit_isActive" required="">
-                                        <option value="">Select Status...</option>
+                                        <select class="form-control col-sm-12 js-example-basic-single" style="width: 100%;" id="edit_isActive" name="edit_isActive" required="">
+                                        
                                         <option value="0">Active</option>
                                         <option value="1">Inactive</option>
                                         </select>
@@ -332,7 +332,7 @@ $EmployeeID = $_SESSION['EmployeeID'];
       <script src="../assets/js/script.js"></script>
       <script src="../custom_assets/sweetalert2/sweetalert2.min.js"></script>    
       <script src="../assets/js/theme-customizer/customizer.js"></script>
-      <script src="capital/capital_js.js"></script>
+      <script src="js/capital-js.js"></script>
 
       <!-- login js-->
       <!-- Plugin used-->

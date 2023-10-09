@@ -6,6 +6,7 @@ if(!isset($_SESSION['EmployeeID']))
 }
 
 $EmployeeID = $_SESSION['EmployeeID'];
+$RoleID = $_SESSION['RoleID'];
 ?>
 <!-- header.php -->
 <!DOCTYPE html>
@@ -21,8 +22,12 @@ $EmployeeID = $_SESSION['EmployeeID'];
   <link rel="shortcut icon" href="../custom_assets/pic/logo.png" type="image/png">
   <title>APEX FUNDING</title>
   
+  <!-- css -->
   <?php include '../partials/css.php'; ?>
 
+  <!-- database connection -->
+  <?php include '../database/connection.php'; ?>
+  
 </head>
 <body>
   <!-- Loader starts-->

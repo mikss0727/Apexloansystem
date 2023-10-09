@@ -11002,7 +11002,7 @@ strong {
   height: 35px !important; }
 
 label {
-  margin-bottom: 5px;
+  /*margin-bottom: 5px;*/
   font-weight: 600; }
 
 .form-group {
@@ -11011,17 +11011,17 @@ label {
 .form-control, .form-select {
   background-color: #fff;
   font-size: 14px;
-  border-color: #24695cd1;
+  border-color: #e6edef;
   color: #717171; }
   .form-control:focus, .form-select:focus {
-    border-color: #24695c;
+    border-color: #e6edef;
     background-color: #fff;
-    -webkit-box-shadow: 0 0 0 0.2rem rgba(36, 105, 92, 1);
-            box-shadow: 0 0 0 0.2rem rgba(36, 105, 92, 1); }
+    -webkit-box-shadow: 0 0 0 0.2rem rgba(171, 140, 228, 0.05);
+            box-shadow: 0 0 0 0.2rem rgba(171, 140, 228, 0.05); }
 
 .theme-form .form-control :focus {
-  -webkit-box-shadow: 0 0 0 0.2rem rgba(36, 105, 92, 1);
-          box-shadow: 0 0 0 0.2rem rgba(36, 105, 92, 1); }
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(171, 140, 228, 0.05);
+          box-shadow: 0 0 0 0.2rem rgba(171, 140, 228, 0.05); }
 
 .theme-form.sm-form .form-group {
   margin-bottom: 14px; }
@@ -11902,7 +11902,8 @@ table.dataTable {
     bottom: 12px !important; }
   table.dataTable input, table.dataTable select {
     border: 1px solid #efefef;
-    height: 37px; }
+    /*height: 37px; */
+  }
 
 .toolbar {
   padding: 5px 15px;
@@ -22204,10 +22205,10 @@ body.dark-sidebar .main-navbar ul.nav-pills {
       display: inline-block;
       margin-bottom: 7px;
       margin-right: 3px;
-      border: 1px solid #b8b8b8;
+      border: 1px solid #DA2128;
       padding: 3px; }
       .customizer-contain .customizer-body .color-layout > div {
-        background-color: #24695c;
+        background-color: #DA2128;
         height: 100%;
         width: 100%;
         border-radius: 3px; }
@@ -22218,7 +22219,7 @@ body.dark-sidebar .main-navbar ul.nav-pills {
         .customizer-contain .customizer-body .color-layout .body .contain li {
           height: 1px;
           width: 65%;
-          background-color: #24695c;
+          background-color: #DA2128;
           border-radius: 5px;
           padding: 0;
           margin-left: 10px;
@@ -22228,11 +22229,11 @@ body.dark-sidebar .main-navbar ul.nav-pills {
             position: absolute;
             height: 1px;
             width: 3px;
-            background-color: #24695c;
+            background-color: #DA2128;
             left: -6px;
             border-radius: 5px; }
       .customizer-contain .customizer-body .color-layout[data-attr="color-2"] div {
-        background-color: #d97f3d; }
+        background-color: #DA2128 !important; }
       .customizer-contain .customizer-body .color-layout[data-attr="color-3"] div {
         background-color: #168eea; }
       .customizer-contain .customizer-body .color-layout[data-attr="color-4"] div {
@@ -23655,7 +23656,8 @@ body.dark-sidebar .main-navbar ul.nav-pills {
 .timeline-content .comments-box {
   margin-top: 30px; }
   .timeline-content .comments-box .input-group {
-    margin-top: 6px; }
+    margin-top: 6px;
+     }
     .timeline-content .comments-box .input-group .input-txt-bx::-webkit-input-placeholder {
       color: #999; }
     .timeline-content .comments-box .input-group .input-txt-bx::-moz-placeholder {
@@ -23674,7 +23676,8 @@ body.dark-sidebar .main-navbar ul.nav-pills {
       color: #999; }
     .timeline-content .comments-box .input-group .input-group-text {
       background-color: #24695c;
-      padding: 10px; }
+      padding: 10px; 
+    }
       .timeline-content .comments-box .input-group .input-group-text img {
         width: 22px;
         height: 22px; }
@@ -24042,7 +24045,8 @@ body.dark-sidebar .main-navbar ul.nav-pills {
   .cart .qty-box .input-group .btn {
     background-color: #ddd !important;
     border-color: #ddd !important;
-    padding: 5px 12px; }
+    padding: 5px 12px; 
+  }
 
 .cart-buttons {
   margin-top: 30px; }
@@ -26726,7 +26730,7 @@ span.twitter-typeahead .tt-suggestion {
     color: #fff; }
 
 .mobile-clock-widget {
-  /*background: url(../images/other-images/mobile-clock-wallpaper.jpg);*/
+  background: url(../images/other-images/mobile-clock-wallpaper.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   height: 350px;
