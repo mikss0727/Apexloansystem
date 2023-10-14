@@ -1,6 +1,7 @@
 
 // table data 
 function loadTable(status) {
+	
 	var baseUrl = window.location.protocol + "//" + window.location.host;
 	Swal.fire({
 		title: 'Loading',
@@ -95,6 +96,7 @@ function loadTable(status) {
 					if (item.StatusID === "DISB") {
 					// download pdf button 
 					buttonsHtml += '<a class="btn btn-pill btn-outline-warning btn-xs" data-toggle="modal" href="'+baseUrl+'/LoanSchedule/' + item.ApplicationNo + '/' + item.ApplicationNo + '.pdf" download="' + item.ApplicationNo + '.pdf"><i class="fa fa-download" data-toggle="tooltip" title="Download Schedule"></i></a>  ';
+					buttonsHtml += '<a class="btn btn-pill btn-outline-secondary btn-xs" id="paymentSchedule" data-toggle="modal" data-pk_id="' + item.id + '" data-client_id="' + item.ClientID + '"data-application_no="' + item.ApplicationNo + '"data-last_name="' + item.LastName + '"data-first_name="' + item.FirstName + '"data-middle_name="' + item.MiddleName + '"data-branch_id="' + item.BranchID + '"data-branch_name="' + item.BranchName + '"data-product_id="' + item.ProductID + '"data-product_name="' + item.ProductName + '"data-loan_amount="' + item.LoanAmount + '"data-interest_code="' + item.InterestCode + '"data-term_type="' + item.TermType + '"data-term_name="' + item.TypeName + '"data-term_no="' + item.TermNo + '"data-disb_date="' + item.DisbursementDate + '"data-rate="' + item.Rate + '"data-days_no="' + item.DaysNo + '"><i class="fa fa-file-text" data-toggle="tooltip" title="Schedule"></i></a>  ';
 					}
 
 
@@ -162,6 +164,254 @@ function loadTable(status) {
 	}); // end ajax 
 
 }  
+
+
+function loadAmortizationTable(a_applicationNo,a_branch,a_loan_product) {
+	// start ajax 
+	$.ajax({
+		url: 'sql/application-sql-query.php',
+		type: 'POST',
+		dataType: 'json',
+		data: {
+		process: 'getSchedule',
+		application_no: a_applicationNo,
+		branch: a_branch,
+		product_id: a_loan_product
+		},
+		success: function(res) {
+		swal.close();
+		data = res.data;
+		if(data.length <= 0){
+
+			Swal.fire({
+			icon: 'info',
+			title: 'Oopss!...',
+			text: res.message
+			}).then(function() {
+			$('#basic-2').DataTable().clear();
+			$('#basic-2').DataTable().destroy();
+			$('#basic-2').DataTable({
+				dom: 'Bfrtip',
+				lengthMenu: [
+				[ 10, 25, 50 ],
+				[ '10 rows', '25 rows', '50 rows' ]
+				],
+				buttons: [
+				'pageLength'
+				]});
+			});
+		}
+		else{
+			$('#basic-2').DataTable().clear();
+			$('#basic-2').DataTable().destroy();
+
+			// header footer title 
+			// $('#basic-2 tfoot th').each( function () {
+			// var title = $(this).text();
+			// $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+			// } );
+			// get user role 
+			var SESSION_RoleID =  getRoleID();
+
+			$('#basic-2').DataTable({
+			"data": data,
+			"columns": [
+			{ "data": "ApplicationNo"},
+			{ "data": "BranchID"},
+			{ "data": "ProductCode"},
+			{ "data": "InstallmentNo"},
+			{ "data": "InstallmentAmount"},
+			{ "data": "Balance"},
+			// { "data": "DueDate"},
+			 // DueDate column rendering
+			 {
+				"data": "DueDate",
+				"render": function (data, type, row) {
+					if (type === "display" || type === "filter") {
+						if (data === null || data.trim() === "") {
+							return ""; // Display "null" for empty data
+						}
+						var dateTime = new Date(data); // Parse the date/time string
+						return dateTime.toLocaleString('en-US', {
+							year: 'numeric',
+							month: 'short',
+							day: 'numeric',
+							hour: '2-digit',
+							minute: '2-digit',
+							hour12: true
+						});
+					}
+					return data;
+				}
+			},
+			{
+				"data": function(item) {
+					if (item.StatusID == 'PND'){ 
+						return	'<span class="label label-info">Pending</span>'; 
+					}
+					else if (item.StatusID == 'OP'){ 
+						return	'<span class="label label-secondary">On Process</span>'; 
+					}
+					else if (item.StatusID == 'DUE'){ 
+						return	'<span class="label label-danger">Due</span>'; 
+					}
+					else if (item.StatusID == 'PAID'){ 
+						return	'<span class="label label-success">Paid</span>'; 
+					}
+					else { 
+						return '<span class="label label-warning">---</span>';
+					}
+				}
+			  },
+			  { "data": "PostRemarks"},
+			  { "data": "PostedBy"},
+			//   { "data": "PostedAt"},
+			//   { "data": "ConfirmAt"},
+			   // PostedAt column rendering
+			   {
+					"data": "PostedAt",
+					"render": function (data, type, row) {
+						if (type === "display" || type === "filter") {
+							if (data === null || data.trim() === "") {
+								return ""; // Display "null" for empty data
+							}
+							var dateTime = new Date(data); // Parse the date/time string
+							return dateTime.toLocaleString('en-US', {
+								year: 'numeric',
+								month: 'short',
+								day: 'numeric',
+								hour: '2-digit',
+								minute: '2-digit',
+								hour12: true
+							});
+						}
+						return data;
+					}
+				},
+				
+				{ "data": "ConfirmRemarks"},
+				{ "data": "ConfirmBy"},
+		
+				// ConfirmAt column rendering
+				{
+					"data": "ConfirmAt",
+					"render": function (data, type, row) {
+						if (type === "display" || type === "filter") {
+							if (data === null || data.trim() === "") {
+								return ""; // Display "null" for empty data
+							}
+							var dateTime = new Date(data); // Parse the date/time string
+							return dateTime.toLocaleString('en-US', {
+								year: 'numeric',
+								month: 'short',
+								day: 'numeric',
+								hour: '2-digit',
+								minute: '2-digit',
+								hour12: true
+							});
+						}
+						return data;
+					}
+				},
+
+				{
+					"data": function(item) {
+						
+
+					var buttonsHtml = '';
+					if (SESSION_RoleID === "super") {
+						if (item.StatusID === "OP") {
+						// confirm payment button 
+						buttonsHtml += '<a class="btn btn-pill btn-outline-primary btn-xs" id="confirmPayment" data-bs-toggle="modal" data-bs-target="#confirmPaymentModal" data-pk_id="' + item.id + '"data-application_no="' + item.ApplicationNo + '"data-branch_id="' + item.BranchID + '"data-product_id="' + item.ProductCode + '"data-installment_no="' + item.InstallmentNo + '"><i class="fa fa-check-square-o" data-toggle="tooltip" title="Confirm Payment"></i></a>  ';
+						}
+					}
+
+					if (item.StatusID === "PND") {
+					// payment button 
+					buttonsHtml += '<a class="btn btn-pill btn-outline-warning btn-xs" id="postPayment" data-bs-toggle="modal" data-bs-target="#postPaymentModal" data-pk_id="' + item.id + '"data-application_no="' + item.ApplicationNo + '"data-branch_id="' + item.BranchID + '"data-product_id="' + item.ProductCode + '"data-installment_no="' + item.InstallmentNo + '"><i class="fa fa-share-square-o" data-toggle="tooltip" title="Post Payment"></i></a>  ';
+					
+					}
+
+
+					return buttonsHtml;
+					}
+				},
+				],
+				"columnDefs": [
+						{
+							"targets": 4,
+							"render": function(data, type, row) {
+							if (type === 'display' || type === 'filter') {
+								// Format LoanAmount with commas as thousands separators, a dollar sign, and two decimal places
+								return parseFloat(data).toLocaleString(undefined, {
+								style: 'currency',
+								currency: 'PHP',
+								minimumFractionDigits: 2,
+								maximumFractionDigits: 2
+								});
+							}
+							return data;
+							}
+						//   "render": $.fn.dataTable.render.number(',', '$')
+						},
+						{
+							"targets": 5,
+							"render": function(data, type, row) {
+							if (type === 'display' || type === 'filter') {
+								// Format LoanAmount with commas as thousands separators, a dollar sign, and two decimal places
+								return parseFloat(data).toLocaleString(undefined, {
+								style: 'currency',
+								currency: 'PHP',
+								minimumFractionDigits: 2,
+								maximumFractionDigits: 2
+								});
+							}
+							return data;
+							}
+						//   "render": $.fn.dataTable.render.number(',', '$')
+						}
+					],
+					dom: 'Blfrtip',
+					lengthMenu: [
+					[ 10, 25, 50],
+					[ '10 rows', '25 rows', '50 rows']
+					],
+					buttons: [ 'pageLength',
+				//   { extend: 'copyHtml5', footer: true },
+				//   { extend: 'excelHtml5', footer: true },
+				//   { extend: 'csvHtml5', footer: true },
+				//   { extend: 'print', footer: true },
+				//   { extend: 'pdfHtml5', footer: true }
+
+
+					],
+					"bDestroy": true,
+					"deferRender": true,
+					"bLengthChange": false,
+				//   initComplete: function () {
+				//   // Apply the search
+				//   this.api().columns().every( function () {
+				//     var that = this;
+
+				//     $( 'input', this.footer() ).on( 'keyup change clear', function () {
+				//       if ( that.search() !== this.value ) {
+				//         that
+				//         .search( this.value )
+				//         .draw();
+				//       }
+				//     } );
+				//   } );
+				//   }
+				});
+
+			}
+
+			}, error: function(err) {
+			console.log(err);
+			}
+		
+	}); // end ajax 
+}
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -558,5 +808,259 @@ document.addEventListener('DOMContentLoaded', function() {
 		}) // end swal
 
 	});
+
+
+
+	
+	// payment schedule
+	$(document).on('click','#paymentSchedule',function(e) {
+		
+		$('#tbl_application').hide();
+		$('#view_amortization').show();
+
+		var a_applicationNo = $(this).attr("data-application_no");
+		var a_clientName = $(this).attr("data-last_name")+', '+$(this).attr("data-first_name")+' '+$(this).attr("data-middle_name");
+		var a_branch =  $(this).attr("data-branch_id");
+		var a_loan_product = $(this).attr("data-product_id");
+
+			$('#c_name').text(a_clientName);
+			$('#c_appno').text(a_applicationNo);
+
+		Swal.fire({
+			title: 'Loading',
+			text: 'Please wait while data is being loaded...',
+			allowOutsideClick: false,
+			showCancelButton: false,
+			showConfirmButton: false,
+			onBeforeOpen: () => {
+				Swal.showLoading();
+			}
+		});
+		loadAmortizationTable(a_applicationNo,a_branch,a_loan_product);
+
+				// Post Payment Button 
+		$(document).on('click','#postPayment',function(e) {
+			
+
+
+
+			var p_applicationNo = $(this).attr("data-application_no");
+			var p_branchID = $(this).attr("data-branch_id");
+			var p_productCode = $(this).attr("data-product_id");
+			var p_installmentNo = $(this).attr("data-installment_no");
+			
+			$('#postApplicationNo').val(p_applicationNo);
+			$('#postBranchID').val(p_branchID);
+			$('#postProductCode').val(p_productCode);
+			$('#postInstallmentNo').val(p_installmentNo);				
+			
+		});
+
+		// Post Payment Button 
+		$(document).on('click','#confirmPayment',function(e) {
+	
+
+
+
+			var c_applicationNo = $(this).attr("data-application_no");
+			var c_branchID = $(this).attr("data-branch_id");
+			var c_productCode = $(this).attr("data-product_id");
+			var c_installmentNo = $(this).attr("data-installment_no");
+			
+			$('#confirmApplicationNo').val(c_applicationNo);
+			$('#confirmBranchID').val(c_branchID);
+			$('#confirmProductCode').val(c_productCode);
+			$('#confirmInstallmentNo').val(c_installmentNo);				
+			
+		});
+
+		
+	});
+
+	$(document).on('click','#back_view_amort',function(e) {
+		
+		$('#tbl_application').show();
+		$('#view_amortization').hide();
+	});
+
+
+	// post payment button
+	$("#postPaymentForm").submit(function(e) {
+
+        e.preventDefault();
+
+		const form = document.getElementById("postPaymentForm");
+        if (!ValidationFeedback(form)) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: 'Some fields are empty or does not meet the condition!'
+				})
+        }
+		else{
+        
+    
+			Swal.fire({
+				title: 'Are you sure?',
+				text: "You won't be able to revert this!",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Yes, Continue!'
+			}).then((result) => {
+				if (result.isConfirmed) {
+
+					var data = $("#postPaymentForm").serialize();
+
+						// Split the query string into an array of key-value pairs
+						var keyValuePairs = data.split('&');
+
+						// Create an empty object to store the key-value pairs
+						var data = {};
+
+						// Iterate through the key-value pairs and assign them to the object
+						for (var i = 0; i < keyValuePairs.length; i++) {
+							var pair = keyValuePairs[i].split('=');
+							var key = decodeURIComponent(pair[0]);  // Decode the key (in case it contains special characters)
+							var value = decodeURIComponent(pair[1]); // Decode the value
+							data[key] = value;
+						}
+
+						// Now you have an object where each key is a variable name, and each value is the corresponding value
+						var postRemarks = data.postRemarks;
+						var postApplicationNo = data.postApplicationNo;
+						var postBranchID = data.postBranchID;
+						var postProductCode = data.postProductCode;
+						var postInstallmentNo = data.postInstallmentNo;
+						
+					$.ajax({
+						data: data,
+						type: "post",
+						url: "sql/application-sql-query.php",
+						success: function(dataResult){
+							var dataResult = JSON.parse(dataResult);
+
+							if(dataResult.statusCode==0){
+								
+									$('#postPaymentModal').modal('hide');
+
+									Swal.fire({
+										icon: 'success',
+										title: 'Success...',
+										text: dataResult.message
+									}).then(function() {
+										// window.location = 'application.php';
+										loadAmortizationTable(postApplicationNo,postBranchID,postProductCode);
+
+									});
+
+								}
+								else if(dataResult.statusCode==1){
+									
+									Swal.fire({
+										icon: 'error',
+										title: 'Oops...',
+										text: dataResult.message
+									})
+								}
+							}
+						});
+				}
+			})
+		}
+	});
+
+
+		// confirm payment button
+		$("#confirmPaymentForm").submit(function(e) {
+
+			e.preventDefault();
+	
+			const form = document.getElementById("confirmPaymentForm");
+			if (!ValidationFeedback(form)) {
+					Swal.fire({
+						icon: 'error',
+						title: 'Oops...',
+						text: 'Some fields are empty or does not meet the condition!'
+					})
+			}
+			else{
+			
+		
+				Swal.fire({
+					title: 'Are you sure?',
+					text: "You won't be able to revert this!",
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: 'Yes, Continue!'
+				}).then((result) => {
+					if (result.isConfirmed) {
+	
+						var data = $("#confirmPaymentForm").serialize();
+						
+	
+							// Split the query string into an array of key-value pairs
+							var keyValuePairs = data.split('&');
+	
+							// Create an empty object to store the key-value pairs
+							var data = {};
+	
+							// Iterate through the key-value pairs and assign them to the object
+							for (var i = 0; i < keyValuePairs.length; i++) {
+								var pair = keyValuePairs[i].split('=');
+								var key = decodeURIComponent(pair[0]);  // Decode the key (in case it contains special characters)
+								var value = decodeURIComponent(pair[1]); // Decode the value
+								data[key] = value;
+							}
+	
+							// Now you have an object where each key is a variable name, and each value is the corresponding value
+							var confirmRemarks = data.confirmRemarks;
+							var confirmApplicationNo = data.confirmApplicationNo;
+							var confirmBranchID = data.confirmBranchID;
+							var confirmProductCode = data.confirmProductCode;
+							var confirmInstallmentNo = data.confirmInstallmentNo;
+							
+						$.ajax({
+							data: data,
+							type: "post",
+							url: "sql/application-sql-query.php",
+							success: function(dataResult){
+								var dataResult = JSON.parse(dataResult);
+	
+								if(dataResult.statusCode==0){
+									
+										$('#confirmPaymentModal').modal('hide');
+	
+										Swal.fire({
+											icon: 'success',
+											title: 'Success...',
+											text: dataResult.message
+										}).then(function() {
+											// window.location = 'application.php';
+											loadAmortizationTable(confirmApplicationNo,confirmBranchID,confirmProductCode);
+	
+										});
+	
+									}
+									else if(dataResult.statusCode==1){
+										
+										Swal.fire({
+											icon: 'error',
+											title: 'Oops...',
+											text: dataResult.message
+										})
+									}
+								}
+							});
+					}
+				})
+			}
+		});
+
+
+
 	
 });

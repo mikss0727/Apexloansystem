@@ -319,6 +319,139 @@
                 </div>
                 <!-- END View APPLICATION FORM -->
 
+
+
+
+                 <!-- View Payment Schedule -->
+                 <div class="card"  id="view_amortization" style="display:none">
+                    <div class="card-header pb-0">
+                        <h5>Amortization</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label">Client Name : <span id="c_name"></span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3">
+                                    <label class="form-label">ApplicationNo : <span id="c_appno"></span></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="display" id="basic-2">
+                                <thead>
+                                <tr>
+                                    <th>ApplicationNo</th>
+                                    <th>BranchID</th>
+                                    <th>ProductCode</th>
+                                    <th>Installment No</th>
+                                    <th>InstallmentAmount</th>
+                                    <th>Balance</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>PostRemarks</th>
+                                    <th>PostedBy</th>
+                                    <th>PostedAt</th>
+                                    <th>ConfirmRemarks</th>
+                                    <th>ConfirmBy</th>
+                                    <th>ConfirmAt</th>
+                                    <th>ACTION</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer text-end">
+                        <button class="btn btn-light" id="back_view_amort">Back</button>
+                    </div>
+                </div>
+                <!-- END View Payment Schedule -->
+
+
+                  <!-- START modal post payment  -->
+
+                  <div class="modal fade" id="postPaymentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel2">Post Payment</h5>
+                        <button class="btn-close" type="button" data-bs-dismiss="modal"  onClick="resetForm(postPaymentForm)" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                        <form class="needs-validation" novalidate="" id="postPaymentForm">
+                            <div class="mb-3">
+                                <label class="form-label" for="postRemarks">Remarks:</label>
+                                <textarea class="form-control" id="postRemarks" name="postRemarks" rows="3" required=""></textarea>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please Input Remarks.</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <!-- hidden value  -->
+                        <input value="postPayment" name="process" type="hidden">
+                        <input value="<?php echo $_SESSION['EmployeeID']; ?>" name="EmployeeID" type="hidden">
+                        <input value="" id="postApplicationNo" name="postApplicationNo" type="hidden">
+                        <input value="" id="postBranchID" name="postBranchID" type="hidden">
+                        <input value="" id="postProductCode" name="postProductCode" type="hidden">
+                        <input value="" id="postInstallmentNo" name="postInstallmentNo" type="hidden">
+
+                        <button class="btn btn-secondary" type="reset" data-bs-dismiss="modal"  onClick="resetForm(postPaymentForm)">Close</button>
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                        </div>
+                        </form>
+
+                    </div>
+                    </div>
+                </div>
+                <!-- END modal post payment  -->
+
+
+                
+                <!-- START modal confirm payment  -->
+
+                <div class="modal fade" id="confirmPaymentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel2">Confirm Payment</h5>
+                        <button class="btn-close" type="button" data-bs-dismiss="modal"  onClick="resetForm(confirmPaymentForm)" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                        <form class="needs-validation" novalidate="" id="confirmPaymentForm">
+                            <div class="mb-3">
+                                <label class="form-label" for="confirmRemarks">Remarks:</label>
+                                <textarea class="form-control" id="confirmRemarks" name="confirmRemarks" rows="3" required=""></textarea>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback">Please Input Remarks.</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <!-- hidden value  -->
+                        <input value="confirmPayment" name="process" type="hidden">
+                        <input value="<?php echo $_SESSION['EmployeeID']; ?>" name="EmployeeID" type="hidden">
+                        <input value="" id="confirmApplicationNo" name="confirmApplicationNo" type="hidden">
+                        <input value="" id="confirmBranchID" name="confirmBranchID" type="hidden">
+                        <input value="" id="confirmProductCode" name="confirmProductCode" type="hidden">
+                        <input value="" id="confirmInstallmentNo" name="confirmInstallmentNo" type="hidden">
+
+                        <button class="btn btn-secondary" type="reset" data-bs-dismiss="modal"  onClick="resetForm(confirmPaymentForm)">Close</button>
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                        </div>
+                        </form>
+
+                    </div>
+                    </div>
+                </div>
+                <!-- END modal confirm payment  -->
+
                 </div>
                 </div>
             </div>

@@ -105,3 +105,10 @@ $(document).on('click','#viewImage',function(e) {
     
 });
 // end view client image
+
+//get user role
+function getRoleID(){
+	var SESSION_RoleID =  document.getElementById("SESSION_RoleID").value;
+    return SESSION_RoleID;
+}
+

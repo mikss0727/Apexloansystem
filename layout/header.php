@@ -36,6 +36,7 @@ $RoleID = $_SESSION['RoleID'];
       <div class="loader-p"></div>
     </div>
   </div>
+  <input value="<?php echo $_SESSION['RoleID']; ?>" name="SESSION_RoleID" id="SESSION_RoleID" type="hidden">
   <!-- Loader ends-->
   <!-- page-wrapper Start-->
   <div class="page-wrapper" id="pageWrapper">

@@ -83,6 +83,66 @@ if($_POST['process']=='getData'){
 												
 }
 
+// get schedule
+if($_POST['process']=='getSchedule'){
+    $application_no = $_POST['application_no'];
+    $branch = $_POST['branch'];
+    $product_id = $_POST['product_id'];
+
+	$query = "SELECT
+					t1.ApplicationNo,
+					t1.BranchID,
+					t1.ProductCode,
+					t1.InstallmentNo,
+					t1.InstallmentAmount,
+					t1.Balance,
+					t1.DueDate,
+					t1.StatusID,
+					t2.StatusName,
+					t1.PostRemarks,
+					t1.ConfirmRemarks,
+					CONCAT(t3.LastName,', ',t3.FirstName,' ',t3.MiddleName) AS 'PostedBy',
+					CONCAT(t4.LastName,', ',t4.FirstName,' ',t4.MiddleName) AS 'ConfirmBy',
+					t1.PostedAt,
+					t1.ConfirmAt
+			FROM t_loan_schedule t1
+			LEFT JOIN t_status t2
+			ON t2.StatusID = t1.StatusID
+			LEFT JOIN t_employee t3
+			ON t1.PostedBy = t3.EmployeeID
+			LEFT JOIN t_employee t4
+			ON t1.ConfirmBy = t4.EmployeeID
+			WHERE t1.ApplicationNo = ? AND t1.BranchID = ? AND t1.ProductCode = ?
+			ORDER BY t1.InstallmentNo ASC";
+
+				$stmt = mysqli_prepare($con, $query);
+				mysqli_stmt_bind_param($stmt, "sss", $application_no, $branch, $product_id);
+				mysqli_stmt_execute($stmt);
+				$result = mysqli_stmt_get_result($stmt);
+
+				$dataArray = array(); // Initialize an empty array to store the data
+
+				if ($result->num_rows > 0) {
+					while ($row = $result->fetch_assoc()) {
+						$dataArray[] = $row; // Add each row to the array
+					}
+					echo json_encode(
+						array(
+							"message" => "Successfully fetched data.", 
+							"data" => $dataArray
+						)
+					);
+				} else {
+					echo json_encode(
+						array(
+							"message" => "No Data found.",
+							"data" => $dataArray
+						)
+					);
+				}							
+												
+}
+
 
 // edit Application
 if($_POST['process']=='editApplication'){
@@ -228,7 +288,7 @@ if($_POST['process']=='DisburseClient'){
 		if($query)
 		{
 				
-			// SQL query to insert data into a table (assuming you have a table named "users" with columns "name" and "email")
+			// SQL query to insert data into a table 
 			$sql = "INSERT INTO t_loan_schedule (ApplicationNo, BranchID, ProductCode, InstallmentNo, InstallmentAmount, Balance, DueDate, StatusID, CreatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())";
 
 			// Prepare the SQL statement
@@ -320,6 +380,95 @@ if($_POST['process']=='DisburseClient'){
 	
 	
 }	
+
+
+
+// postPayment 
+if($_POST['process']=='postPayment'){
+
+    $EmployeeID = $_POST['EmployeeID'];
+	$applicaiton_no = $_POST['postApplicationNo'];
+	$remarks = $_POST['postRemarks'];
+	$product_code = $_POST['postProductCode'];
+	$branch_code = $_POST['postBranchID'];
+	$installment_no = $_POST['postInstallmentNo'];
+
+
+
+	$query_check=mysqli_query($con,"SELECT * FROM t_loan_schedule WHERE (ApplicationNo='$applicaiton_no' AND BranchID = '$branch_code' AND ProductCode = '$product_code' AND InstallmentNo = '$installment_no' AND StatusID = 'PND')");
+	$num_rows=mysqli_num_rows($query_check);
+
+	if($num_rows)
+	{
+
+			// update
+		$query=mysqli_query($con,"UPDATE t_loan_schedule SET StatusID = 'OP', PostRemarks = '$remarks', PostedBy = '$EmployeeID', PostedAt = NOW() WHERE ApplicationNo='$applicaiton_no' AND BranchID = '$branch_code' AND ProductCode = '$product_code' AND InstallmentNo = '$installment_no' AND StatusID = 'PND'");
+
+		if($query)
+		{
+			echo json_encode(array("statusCode"=>0,"message"=>'Payment in Installment No '.$installment_no.'has been Successfully Posted, Kindly wait for the BM to Confirm the Payment!'));
+
+		}
+		else
+		{
+			echo json_encode(array("statusCode"=>1,"message"=>'Error, Please Contact the IT Administrator!'));
+		}
+		
+	}
+	else
+	{
+
+		echo json_encode(array("statusCode"=>1,"message"=>'Amortization with Installment No '.$installment_no.' is not Pending in Payment!'));
+		
+	}
+
+}
+// end post payment 
+
+
+
+
+// confirm Payment 
+if($_POST['process']=='confirmPayment'){
+
+    $EmployeeID = $_POST['EmployeeID'];
+	$applicaiton_no = $_POST['confirmApplicationNo'];
+	$remarks = $_POST['confirmRemarks'];
+	$product_code = $_POST['confirmProductCode'];
+	$branch_code = $_POST['confirmBranchID'];
+	$installment_no = $_POST['confirmInstallmentNo'];
+
+
+
+	$query_check=mysqli_query($con,"SELECT * FROM t_loan_schedule WHERE (ApplicationNo='$applicaiton_no' AND BranchID = '$branch_code' AND ProductCode = '$product_code' AND InstallmentNo = '$installment_no' AND StatusID = 'OP')");
+	$num_rows=mysqli_num_rows($query_check);
+
+	if($num_rows)
+	{
+
+			// update
+		$query=mysqli_query($con,"UPDATE t_loan_schedule SET StatusID = 'PAID', ConfirmRemarks = '$remarks', ConfirmBy = '$EmployeeID', ConfirmAt = NOW() WHERE ApplicationNo='$applicaiton_no' AND BranchID = '$branch_code' AND ProductCode = '$product_code' AND InstallmentNo = '$installment_no' AND StatusID = 'OP'");
+
+		if($query)
+		{
+			echo json_encode(array("statusCode"=>0,"message"=>'Payment for Installment No '.$installment_no.' Confirm Successfully!'));
+
+		}
+		else
+		{
+			echo json_encode(array("statusCode"=>1,"message"=>'Error, Please Contact the IT Administrator!'));
+		}
+		
+	}
+	else
+	{
+
+		echo json_encode(array("statusCode"=>1,"message"=>'Amortization with Installment No '.$installment_no.' is not Posted!'));
+		
+	}
+
+}
+// end confirm payment 
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
